@@ -1,1 +1,448 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Design</title>
+    <style>
+        /* ========== GLOBAL ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(145deg, #0b0e1a 0%, #141b2b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 40px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 4.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            text-shadow: 0 0 40px rgba(96, 165, 250, 0.2);
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.3rem;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        /* ========== KARTALAR (Tugmalar) ========== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 35px 20px 30px;
+            border-radius: 40px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: rgba(167, 139, 250, 0.5);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.8);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:active {
+            transform: scale(0.95);
+        }
+
+        /* Har bir kartaning o‘ziga xos rangi (border glow) */
+        .card:nth-child(1):hover { border-color: #60a5fa; box-shadow: 0 0 30px rgba(96, 165, 250, 0.15); }
+        .card:nth-child(2):hover { border-color: #a78bfa; box-shadow: 0 0 30px rgba(167, 139, 250, 0.15); }
+        .card:nth-child(3):hover { border-color: #34d399; box-shadow: 0 0 30px rgba(52, 211, 153, 0.15); }
+        .card:nth-child(4):hover { border-color: #fb923c; box-shadow: 0 0 30px rgba(251, 146, 60, 0.15); }
+
+        .card .icon {
+            font-size: 3.8rem;
+            display: block;
+            margin-bottom: 18px;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
+        }
+
+        .card h3 {
+            color: #f1f5f9;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        /* ========== CHIQISH MAYDNI (Natija) ========== */
+        .output-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 40px;
+            padding: 35px 30px;
+            min-height: 160px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .output-area.active {
+            border-color: rgba(167, 139, 250, 0.4);
+            background: rgba(167, 139, 250, 0.05);
+        }
+
+        .output-area .placeholder {
+            color: #475569;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .output-area .placeholder span {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .output-content {
+            display: none;
+            width: 100%;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .output-content.show {
+            display: block;
+        }
+
+        .output-content h2 {
+            color: #e2e8f0;
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .output-content p {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .output-content .badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 25px;
+            border-radius: 100px;
+            background: rgba(167, 139, 250, 0.2);
+            color: #a78bfa;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #475569;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding-top: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer .brand {
+            font-weight: 700;
+            color: #64748b;
+            letter-spacing: 2px;
+        }
+
+        .footer .time {
+            color: #334155;
+            font-family: monospace;
+        }
+
+        /* ========== ANIMATSIYA ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== RESPONSIVE (Mobil) ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+                border-radius: 40px;
+            }
+            .header h1 {
+                font-size: 2.8rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+            .card {
+                padding: 25px 12px 20px;
+                border-radius: 30px;
+            }
+            .card .icon {
+                font-size: 2.8rem;
+            }
+            .card h3 {
+                font-size: 1.3rem;
+            }
+            .card p {
+                font-size: 0.8rem;
+            }
+            .output-area {
+                padding: 25px 20px;
+                min-height: 130px;
+            }
+            .output-content h2 {
+                font-size: 1.5rem;
+            }
+            .output-content p {
+                font-size: 0.95rem;
+            }
+            .footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .card {
+                padding: 18px 8px 15px;
+                border-radius: 20px;
+            }
+            .card .icon {
+                font-size: 2.2rem;
+                margin-bottom: 8px;
+            }
+            .card h3 {
+                font-size: 1rem;
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>AI DESIGN</h1>
+        <p>G'oyangizni dizaynga aylantiring</p>
+    </div>
+
+    <!-- KARTALAR (4 TA) -->
+    <div class="cards-grid">
+        <div class="card" data-tab="fon">
+            <span class="icon">🖼️</span>
+            <h3>Fon</h3>
+            <p>Telefon va kompyuter uchun</p>
+        </div>
+        <div class="card" data-tab="logo">
+            <span class="icon">✨</span>
+            <h3>Logo</h3>
+            <p>Biznes va shaxsiy</p>
+        </div>
+        <div class="card" data-tab="proyekt">
+            <span class="icon">🚀</span>
+            <h3>Proyekt</h3>
+            <p>Loyihalar va chizmalar</p>
+        </div>
+        <div class="card" data-tab="profil">
+            <span class="icon">👤</span>
+            <h3>Profil</h3>
+            <p>Shaxsiy dizaynlar</p>
+        </div>
+    </div>
+
+    <!-- CHIQISH MAYDONI -->
+    <div class="output-area" id="outputArea">
+        <div class="placeholder" id="placeholder">
+            🌟 <span>Bo'limni tanlang</span> — yuqoridagi kartalardan birini bosing
+        </div>
+
+        <!-- Fon -->
+        <div class="output-content" id="content-fon">
+            <h2>🖼️ Fon dizayni</h2>
+            <p>Gradientlar, abstrakt shakllar yoki tabiat rasmlari. Telefon va kompyuter ekranlariga moslab beramiz.</p>
+            <div class="badge">4K sifat</div>
+        </div>
+
+        <!-- Logo -->
+        <div class="output-content" id="content-logo">
+            <h2>✨ Logotip</h2>
+            <p>Zamonaviy, minimal va esda qolarli logotip. Brendingiz uchun 5 ta variant tayyorlaymiz.</p>
+            <div class="badge">Vektor format</div>
+        </div>
+
+        <!-- Proyekt -->
+        <div class="output-content" id="content-proyekt">
+            <h2>🚀 Loyiha dizayni</h2>
+            <p>UI/UX, arxitektura vizualizatsiyasi yoki 3D modellar. Har qanday murakkablikdagi loyiha.</p>
+            <div class="badge">Interaktiv</div>
+        </div>
+
+        <!-- Profil -->
+        <div class="output-content" id="content-profil">
+            <h2>👤 Profil dizayni</h2>
+            <p>Shaxsiy brending, ijtimoiy tarmoq profillari yoki CV uchun zamonaviy dizaynlar.</p>
+            <div class="badge">Shaxsiylashtirilgan</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <span class="brand">⚡ AI DESIGN</span>
+        <span class="time" id="clock">--:--</span>
+    </div>
+
+</div>
+
+<script>
+    // ========== VAQTNI KO'RSATISH ==========
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('clock').textContent = hours + ':' + minutes;
+    }
+    updateClock();
+    setInterval(updateClock, 30000); // har 30 sekundda yangilaydi
+
+    // ========== KARTALAR BOSILGANDA ==========
+    const cards = document.querySelectorAll('.card');
+    const outputArea = document.getElementById('outputArea');
+    const placeholder = document.getElementById('placeholder');
+
+    // Barcha kontentlarni yashirish
+    const contents = document.querySelectorAll('.output-content');
+
+    function hideAllContents() {
+        contents.forEach(c => c.classList.remove('show'));
+        // CSS da .show bo'lmaganda display:none ishlaydi
+        contents.forEach(c => c.style.display = 'none');
+    }
+
+    // Boshlanishda placeholder ko'rinadi, kontentlar yashirin
+    hideAllContents();
+    placeholder.style.display = 'block';
+    outputArea.classList.remove('active');
+
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            const tab = this.dataset.tab; // fon, logo, proyekt, profil
+
+            // 1. Placeholderni yashirish
+            placeholder.style.display = 'none';
+
+            // 2. Hamma kontentlarni yashirish
+            hideAllContents();
+
+            // 3. Tegishli kontentni ko'rsatish
+            const targetContent = document.getElementById('content-' + tab);
+            if (targetContent) {
+                targetContent.style.display = 'block';
+                // Animatsiya uchun class qo'shamiz (faqat bir marta ishlashi uchun avval olib tashlaymiz)
+                targetContent.classList.remove('show');
+                // Force reflow
+                void targetContent.offsetWidth;
+                targetContent.classList.add('show');
+            }
+
+            // 4. Output maydonini aktiv holatga o'tkazish
+            outputArea.classList.add('active');
+        });
+    });
+
+    // Agar foydalanuvchi birinchi marta ochganda placeholder ko'rinishi uchun
+    // (yuqorida allaqachon placeholder ko'rinib turibdi)
+</script>
+
+</body>
+</html>
