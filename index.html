@@ -1,1116 +1,434 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Design — Premium Plus</title>
-    <style>
-        /* ===== GLOBAL ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+<script>
+/* ================================
+   AI DESIGN PRO — IMAGE GENERATOR
+   ================================ */
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background: #0b0e1a;
-            position: relative;
-            overflow-x: hidden;
-        }
+const aiPrompt = document.getElementById("aiPrompt");
+const aiBtn = document.getElementById("aiGenerateBtn");
+const aiResult = document.getElementById("aiResult");
+const aiPlaceholder = document.getElementById("aiPlaceholder");
 
-        /* ===== FON: HARAKATLANUVCHI GRADIENT ===== */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, #0b0e1a, #1a1040, #0b1a2e, #2a1a3a, #0b0e1a);
-            animation: rotateBg 20s linear infinite;
-            z-index: -2;
-        }
-        @keyframes rotateBg {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(ellipse at 30% 50%, rgba(167, 139, 250, 0.08), transparent 70%);
-            z-index: -1;
-        }
+/* AI sozlamalari */
+const aiControls = document.createElement("div");
+aiControls.className = "ai-controls";
 
-        /* ===== CONTAINER ===== */
-        .container {
-            max-width: 1240px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border-radius: 70px;
-            padding: 38px 32px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-            animation: floatIn 1s ease-out;
-        }
-        @keyframes floatIn {
-            0% {
-                opacity: 0;
-                transform: translateY(40px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
+aiControls.innerHTML = `
+    <select id="aiStyle">
+        <option value="photorealistic">📷 Fotorealistik</option>
+        <option value="cinematic">🎬 Cinematic</option>
+        <option value="digital art">🎨 Digital Art</option>
+        <option value="anime">🌸 Anime</option>
+        <option value="3d render">🧊 3D Render</option>
+        <option value="fantasy art">🧙 Fantasy</option>
+        <option value="minimalist">◽ Minimalist</option>
+    </select>
 
-        /* ===== HEADER ===== */
-        .header {
-            text-align: center;
-            margin-bottom: 42px;
-        }
-        .header h1 {
-            font-size: 5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399, #fbbf24, #f472b6);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradShift 6s ease-in-out infinite;
-            letter-spacing: -2px;
-            text-shadow: 0 0 80px rgba(96, 165, 250, 0.1);
-        }
-        @keyframes gradShift {
-            0%,
-            100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-        .header p {
-            color: #94a3b8;
-            font-size: 1.3rem;
-            margin-top: 6px;
-            letter-spacing: 4px;
-            font-weight: 300;
-        }
+    <select id="aiSize">
+        <option value="1024x1024">⬛ 1024 × 1024</option>
+        <option value="1280x720">🖥️ 1280 × 720</option>
+        <option value="720x1280">📱 720 × 1280</option>
+        <option value="1536x1024">🖼️ 1536 × 1024</option>
+    </select>
+`;
 
-        /* ===== KARTALAR 3D ===== */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 24px;
-            margin-bottom: 44px;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 32px 16px 28px;
-            border-radius: 50px;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            perspective: 800px;
-            transform-style: preserve-3d;
-            backdrop-filter: blur(8px);
-        }
-        .card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50px;
-            padding: 1.5px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 60%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        .card:hover::after {
-            opacity: 1;
-        }
-        .card:hover {
-            transform: translateY(-16px) scale(1.04) rotateX(4deg) rotateY(2deg);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 40px 70px -20px rgba(0, 0, 0, 0.9), 0 0 40px rgba(167, 139, 250, 0.04);
-        }
-        .card:active {
-            transform: scale(0.94);
-        }
-        .card:nth-child(1):hover {
-            border-color: rgba(96, 165, 250, 0.4);
-        }
-        .card:nth-child(2):hover {
-            border-color: rgba(167, 139, 250, 0.4);
-        }
-        .card:nth-child(3):hover {
-            border-color: rgba(52, 211, 153, 0.4);
-        }
-        .card:nth-child(4):hover {
-            border-color: rgba(251, 146, 60, 0.4);
-        }
-        .card .icon {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
-            transition: transform 0.4s;
-        }
-        .card:hover .icon {
-            transform: scale(1.1) rotate(-4deg);
-        }
-        .card h3 {
-            color: #f1f5f9;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-        .card p {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
+document.querySelector(".ai-input-group").after(aiControls);
 
-        /* ===== GALEREYA ===== */
-        .output-area {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50px;
-            padding: 32px 28px;
-            min-height: 160px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: all 0.6s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 44px;
-            backdrop-filter: blur(4px);
-        }
-        .output-area.active {
-            border-color: rgba(167, 139, 250, 0.15);
-            background: rgba(167, 139, 250, 0.03);
-            box-shadow: inset 0 0 60px rgba(167, 139, 250, 0.02);
-        }
-        .output-area .placeholder {
-            color: #475569;
-            font-size: 1.1rem;
-        }
-        .output-area .placeholder span {
-            color: #64748b;
-            font-weight: 600;
-        }
-        .gallery-grid {
-            display: none;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 18px;
-            width: 100%;
-            animation: fadeUp 0.6s ease;
-        }
-        .gallery-grid.show {
-            display: grid;
-        }
-        @keyframes fadeUp {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .gallery-item {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 24px 12px;
-            border-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: 0.4s ease;
-            color: #e2e8f0;
-            backdrop-filter: blur(4px);
-        }
-        .gallery-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-6px) scale(1.03);
-            border-color: rgba(167, 139, 250, 0.15);
-        }
-        .gallery-item .gi-icon {
-            font-size: 3.2rem;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .gallery-item .gi-label {
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
+const aiStyle = document.getElementById("aiStyle");
+const aiSize = document.getElementById("aiSize");
 
-        /* ===== AI SECTION ===== */
-        .ai-section {
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 50px;
-            padding: 32px 28px;
-            margin-bottom: 44px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .ai-section h2 {
-            color: #e2e8f0;
-            font-size: 2rem;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-        .ai-section h2 .badge {
-            background: linear-gradient(135deg, #a78bfa, #60a5fa);
-            padding: 2px 18px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            color: #fff;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .ai-input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        .ai-input-group input {
-            flex: 1;
-            min-width: 200px;
-            padding: 18px 24px;
-            border-radius: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            background: rgba(0, 0, 0, 0.35);
-            color: #f1f5f9;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.4s;
-        }
-        .ai-input-group input:focus {
-            border-color: #a78bfa;
-            box-shadow: 0 0 30px rgba(167, 139, 250, 0.05);
-        }
-        .ai-input-group input::placeholder {
-            color: #475569;
-        }
-        .ai-input-group button {
-            padding: 18px 44px;
-            border-radius: 60px;
-            border: none;
-            background: linear-gradient(135deg, #a78bfa, #60a5fa);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: 0.4s;
-            box-shadow: 0 16px 32px -14px rgba(167, 139, 250, 0.3);
-        }
-        .ai-input-group button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 24px 48px -14px rgba(167, 139, 250, 0.5);
-        }
-        .ai-result {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 36px;
-            padding: 24px;
-            min-height: 170px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            position: relative;
-        }
-        .ai-result .ai-placeholder {
-            color: #475569;
-            font-size: 1rem;
-        }
-        .ai-result canvas {
-            max-width: 100%;
-            border-radius: 28px;
-            background: #0b0e1a;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
-            transition: 0.4s;
-        }
+/* Natija oynasi */
+const imageBox = document.createElement("div");
 
-        /* ===== UPLOAD ===== */
-        .upload-section {
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 50px;
-            padding: 32px 28px;
-            margin-bottom: 44px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .upload-section h2 {
-            color: #e2e8f0;
-            font-size: 2rem;
-            margin-bottom: 16px;
-        }
-        .upload-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 18px;
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
-        .upload-area .file-label {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 20px 32px;
-            border-radius: 60px;
-            border: 2px dashed rgba(255, 255, 255, 0.05);
-            color: #94a3b8;
-            cursor: pointer;
-            transition: 0.4s;
-            width: 100%;
-            text-align: center;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-        .upload-area .file-label:hover {
-            border-color: #a78bfa;
-            color: #e2e8f0;
-            background: rgba(167, 139, 250, 0.04);
-        }
-        .upload-preview {
-            display: none;
-            max-width: 300px;
-            max-height: 220px;
-            border-radius: 32px;
-            border: 2px solid rgba(167, 139, 250, 0.15);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
-            transition: 0.4s;
-        }
-        .upload-preview.show {
-            display: block;
-            animation: fadeUp 0.5s ease;
-        }
+imageBox.className = "generated-image-box";
 
-        /* ===== CONTACT + TELEGRAM ===== */
-        .contact-section {
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 50px;
-            padding: 32px 28px;
-            margin-bottom: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .contact-section h2 {
-            color: #e2e8f0;
-            font-size: 2rem;
-            margin-bottom: 4px;
-        }
-        .contact-section .sub {
-            color: #64748b;
-            font-size: 0.95rem;
-            margin-bottom: 22px;
-        }
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
-        }
-        @media (max-width: 820px) {
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 28px;
-            }
-        }
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .contact-form input,
-        .contact-form textarea {
-            padding: 18px 22px;
-            border-radius: 36px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            background: rgba(0, 0, 0, 0.3);
-            color: #f1f5f9;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.4s;
-        }
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            border-color: #a78bfa;
-            box-shadow: 0 0 30px rgba(167, 139, 250, 0.04);
-        }
-        .contact-form textarea {
-            min-height: 110px;
-            resize: vertical;
-            border-radius: 36px;
-        }
-        .contact-form button {
-            padding: 18px 40px;
-            border-radius: 60px;
-            border: none;
-            background: linear-gradient(135deg, #34d399, #60a5fa);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.4s;
-            align-self: flex-start;
-            box-shadow: 0 16px 32px -14px rgba(52, 211, 153, 0.2);
-        }
-        .contact-form button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 24px 48px -14px rgba(52, 211, 153, 0.4);
-        }
-        .form-status {
-            color: #34d399;
-            margin-top: 4px;
-            font-weight: 500;
-        }
+imageBox.innerHTML = `
+    <img id="generatedImage"
+         alt="AI tomonidan yaratilgan rasm">
 
-        /* ===== TELEGRAM KARTA ===== */
-        .telegram-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 40px;
-            padding: 32px 24px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: 0.5s;
-            backdrop-filter: blur(4px);
-        }
-        .telegram-card:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(167, 139, 250, 0.06);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6);
-        }
-        .telegram-card .tg-avatar {
-            font-size: 5.2rem;
-            filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.6));
-            animation: pulse 3s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.04);
-            }
-        }
-        .telegram-card .tg-name {
-            color: #f1f5f9;
-            font-size: 1.7rem;
-            font-weight: 700;
-        }
-        .telegram-card .tg-username {
-            color: #60a5fa;
-            font-size: 1.1rem;
-            font-weight: 400;
-        }
-        .telegram-card .tg-phone {
-            color: #94a3b8;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 8px 24px;
-            border-radius: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-        .telegram-card .tg-btn {
-            margin-top: 10px;
-            padding: 16px 48px;
-            border-radius: 60px;
-            border: none;
-            background: linear-gradient(135deg, #0088cc, #26a0da);
-            color: #fff;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.4s;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 16px 32px -14px rgba(0, 136, 204, 0.25);
-        }
-        .telegram-card .tg-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 24px 48px -14px rgba(0, 136, 204, 0.45);
-        }
+    <div class="image-actions">
+        <button id="downloadImage">
+            ⬇️ Yuklab olish
+        </button>
 
-        /* ===== FOOTER ===== */
-        .footer {
-            margin-top: 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #475569;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
-            padding-top: 24px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .footer .brand {
-            font-weight: 700;
-            color: #64748b;
-            letter-spacing: 3px;
-        }
-        .footer .time {
-            color: #334155;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-        }
+        <button id="openImage">
+            🔎 Katta ko‘rish
+        </button>
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .container {
-                padding: 22px 16px;
-                border-radius: 44px;
-            }
-            .header h1 {
-                font-size: 3.2rem;
-            }
-            .header p {
-                font-size: 1rem;
-            }
-            .cards-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 14px;
-            }
-            .card {
-                padding: 22px 10px 18px;
-                border-radius: 34px;
-            }
-            .card .icon {
-                font-size: 2.8rem;
-            }
-            .card h3 {
-                font-size: 1.3rem;
-            }
-            .ai-section,
-            .upload-section,
-            .contact-section {
-                padding: 22px 18px;
-                border-radius: 36px;
-            }
-            .ai-section h2,
-            .upload-section h2,
-            .contact-section h2 {
-                font-size: 1.6rem;
-            }
-            .telegram-card .tg-avatar {
-                font-size: 4rem;
-            }
-            .telegram-card .tg-name {
-                font-size: 1.3rem;
-            }
-        }
-        @media (max-width: 480px) {
-            .cards-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .card {
-                padding: 16px 6px 14px;
-                border-radius: 26px;
-            }
-            .card .icon {
-                font-size: 2.2rem;
-            }
-            .card h3 {
-                font-size: 1rem;
-            }
-            .card p {
-                font-size: 0.7rem;
-            }
-            .header h1 {
-                font-size: 2.4rem;
-            }
-            .ai-input-group input {
-                min-width: 120px;
-                padding: 14px 18px;
-            }
-            .ai-input-group button {
-                padding: 14px 28px;
-                font-size: 0.9rem;
-            }
-            .gallery-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .gallery-item {
-                padding: 14px 6px;
-            }
-            .gallery-item .gi-icon {
-                font-size: 2.4rem;
-            }
-            .telegram-card .tg-btn {
-                padding: 14px 32px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-
-        <!-- HEADER -->
-        <div class="header">
-            <h1>AI DESIGN</h1>
-            <p>G'oyangizni dizaynga aylantiring</p>
-        </div>
-
-        <!-- KARTALAR -->
-        <div class="cards-grid">
-            <div class="card" data-gallery="fon">
-                <span class="icon">🖼️</span>
-                <h3>Fon</h3>
-                <p>Telefon va kompyuter</p>
-            </div>
-            <div class="card" data-gallery="logo">
-                <span class="icon">✨</span>
-                <h3>Logo</h3>
-                <p>Biznes va shaxsiy</p>
-            </div>
-            <div class="card" data-gallery="proyekt">
-                <span class="icon">🚀</span>
-                <h3>Proyekt</h3>
-                <p>Loyihalar va chizmalar</p>
-            </div>
-            <div class="card" data-gallery="profil">
-                <span class="icon">👤</span>
-                <h3>Profil</h3>
-                <p>Shaxsiy dizaynlar</p>
-            </div>
-        </div>
-
-        <!-- GALEREYA -->
-        <div class="output-area" id="outputArea">
-            <div class="placeholder" id="placeholder">
-                🌟 <span>Bo'limni tanlang</span> — yuqoridagi kartalardan birini bosing
-            </div>
-            <div id="galleryContainer" class="gallery-grid"></div>
-        </div>
-
-        <!-- AI GENERATOR -->
-        <div class="ai-section">
-            <h2>🧠 AI rasm yaratish <span class="badge">BETA</span></h2>
-            <div class="ai-input-group">
-                <input type="text" id="aiPrompt" placeholder="Masalan: quyosh, oy, yulduz, daraxt, gul...">
-                <button id="aiGenerateBtn">✨ Yaratish</button>
-            </div>
-            <div class="ai-result" id="aiResult">
-                <span class="ai-placeholder">📝 Matn yozib, tugmani bosing — AI rasm yaratadi</span>
-                <canvas id="aiCanvas" style="display:none; width:100%; max-width:440px; height:auto;"></canvas>
-            </div>
-        </div>
-
-        <!-- FILE UPLOAD -->
-        <div class="upload-section">
-            <h2>📁 Fayl yuklash</h2>
-            <div class="upload-area">
-                <label class="file-label" for="fileInput">📤 Rasm yuklash uchun bosing yoki sudrang</label>
-                <input type="file" id="fileInput" accept="image/*">
-                <img id="uploadPreview" class="upload-preview" src="#" alt="Yuklangan rasm">
-            </div>
-        </div>
-
-        <!-- CONTACT + TELEGRAM -->
-        <div class="contact-section">
-            <h2>📩 Bog‘lanish</h2>
-            <p class="sub">Admin bilan bog‘lanish yoki Telegram orqali murojaat qiling</p>
-            <div class="contact-grid">
-                <form class="contact-form" id="contactForm">
-                    <input type="text" placeholder="Ismingiz" id="contactName" required>
-                    <input type="email" placeholder="Email manzilingiz" id="contactEmail" required>
-                    <textarea placeholder="Xabaringiz..." id="contactMessage" required></textarea>
-                    <button type="submit">📨 Yuborish</button>
-                    <div class="form-status" id="formStatus"></div>
-                </form>
-
-                <div class="telegram-card">
-                    <span class="tg-avatar">👨‍💻</span>
-                    <div class="tg-name">Mirjalol Murodqosimov</div>
-                    <div class="tg-username">@mirjalol_dev</div>
-                    <div class="tg-phone">📞 +998 93 059 8776</div>
-                    <a href="https://t.me/mirjalol_dev" target="_blank" class="tg-btn">💬 Telegramda yozish</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer">
-            <span class="brand">⚡ AI DESIGN</span>
-            <span class="time" id="clock">--:--</span>
-        </div>
+        <button id="regenerateImage">
+            🔄 Qayta yaratish
+        </button>
     </div>
+`;
 
-    <script>
-        // ===== SOAT =====
-        function updateClock() {
-            const n = new Date();
-            document.getElementById('clock').textContent =
-                String(n.getHours()).padStart(2, '0') + ':' +
-                String(n.getMinutes()).padStart(2, '0');
+aiResult.appendChild(imageBox);
+
+const generatedImage =
+    document.getElementById("generatedImage");
+
+const downloadImage =
+    document.getElementById("downloadImage");
+
+const openImage =
+    document.getElementById("openImage");
+
+const regenerateImage =
+    document.getElementById("regenerateImage");
+
+let lastImageUrl = "";
+
+
+/* ================================
+   MUHIM:
+   PROMPTNI TO‘G‘RI QURISH
+   ================================ */
+
+function createProfessionalPrompt(userText) {
+
+    const text = userText.trim();
+
+    /*
+       Foydalanuvchi nima yozgan bo‘lsa,
+       shu asosiy obyekt bo‘lib qoladi.
+    */
+
+    let mainObject = text;
+
+    /* Oddiy so‘zlarni aniq AI tavsifiga aylantiramiz */
+
+    const keywords = {
+
+        "quyosh":
+            "a single bright sun in the sky, clearly visible",
+
+        "oy":
+            "a single realistic moon in the night sky",
+
+        "yulduz":
+            "a beautiful star in the night sky",
+
+        "daraxt":
+            "a single large green tree",
+
+        "gul":
+            "a beautiful single flower",
+
+        "tog":
+            "majestic mountains",
+
+        "tog‘":
+            "majestic mountains",
+
+        "dengiz":
+            "beautiful blue ocean",
+
+        "okean":
+            "beautiful blue ocean",
+
+        "mashina":
+            "a modern car",
+
+        "uy":
+            "a beautiful house",
+
+        "shahar":
+            "a modern city",
+
+        "kosmos":
+            "outer space with planets and stars",
+
+        "koinot":
+            "outer space with planets and stars"
+    };
+
+    const lower = text.toLowerCase();
+
+    for (const word in keywords) {
+
+        if (lower === word) {
+            mainObject = keywords[word];
+            break;
         }
-        updateClock();
-        setInterval(updateClock, 30000);
+    }
 
-        // ===== GALEREYA =====
-        const galleryData = {
-            fon: [
-                { icon: '🌄', label: 'Togʻ' },
-                { icon: '🏞️', label: 'Tabiat' },
-                { icon: '🌌', label: 'Koinot' },
-                { icon: '🎨', label: 'Abstrakt' },
-                { icon: '🌊', label: 'Okean' },
-                { icon: '🌅', label: 'Botish' }
-            ],
-            logo: [
-                { icon: '🔷', label: 'Geometrik' },
-                { icon: '🔶', label: 'Minimal' },
-                { icon: '⭐', label: 'Yulduzli' },
-                { icon: '💎', label: 'Premium' },
-                { icon: '🌀', label: 'Dinamik' },
-                { icon: '🎯', label: 'Maqsad' }
-            ],
-            proyekt: [
-                { icon: '📱', label: 'Mobil app' },
-                { icon: '💻', label: 'Veb sayt' },
-                { icon: '🖥️', label: 'Dasturiy' },
-                { icon: '🏗️', label: 'Arxitektura' },
-                { icon: '🎮', label: 'Oʻyin' },
-                { icon: '🤖', label: 'AI loyiha' }
-            ],
-            profil: [
-                { icon: '👤', label: 'Shaxsiy' },
-                { icon: '👩‍💼', label: 'Ishbilarmon' },
-                { icon: '🧑‍🎤', label: 'Ijodiy' },
-                { icon: '👨‍💻', label: 'Dasturchi' },
-                { icon: '📸', label: 'Fotograf' },
-                { icon: '🎓', label: 'Talaba' }
-            ]
-        };
 
-        const cards = document.querySelectorAll('.card');
-        const outputArea = document.getElementById('outputArea');
-        const placeholder = document.getElementById('placeholder');
-        const galleryContainer = document.getElementById('galleryContainer');
+    /* Style */
 
-        function renderGallery(type) {
-            const items = galleryData[type];
-            if (!items) return;
-            galleryContainer.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'gallery-item';
-                div.innerHTML =
-                    `<span class="gi-icon">${item.icon}</span><span class="gi-label">${item.label}</span>`;
-                galleryContainer.appendChild(div);
-            });
-            galleryContainer.classList.add('show');
-            placeholder.style.display = 'none';
-            outputArea.classList.add('active');
-        }
+    const style = aiStyle.value;
 
-        galleryContainer.classList.remove('show');
-        placeholder.style.display = 'block';
-        outputArea.classList.remove('active');
 
-        cards.forEach(card => {
-            card.addEventListener('click', function() {
-                renderGallery(this.dataset.gallery);
-            });
-        });
+    /*
+       NEGATIVE PROMPT:
+       keraksiz odam, qiz, yuz va boshqa
+       obyektlarning chiqishini kamaytiradi.
+    */
 
-        // ===== AI GENERATOR =====
-        const aiPrompt = document.getElementById('aiPrompt');
-        const aiBtn = document.getElementById('aiGenerateBtn');
-        const aiResultDiv = document.getElementById('aiResult');
-        const aiCanvas = document.getElementById('aiCanvas');
-        const aiPlaceholder = aiResultDiv.querySelector('.ai-placeholder');
+    const negativePrompt = `
+unwanted people,
+woman,
+girl,
+man,
+person,
+human,
+face,
+portrait,
+body,
+extra objects,
+random objects,
+text,
+letters,
+watermark,
+logo,
+distorted objects,
+duplicate objects,
+blurry,
+low quality
+`;
 
-        aiBtn.addEventListener('click', function() {
-            const prompt = aiPrompt.value.trim().toLowerCase() || 'abstrakt';
-            aiPlaceholder.style.display = 'none';
-            aiCanvas.style.display = 'block';
 
-            const ctx = aiCanvas.getContext('2d');
-            const w = 440,
-                h = 300;
-            aiCanvas.width = w;
-            aiCanvas.height = h;
-            ctx.clearRect(0, 0, w, h);
+    return `
+Create an image of ONLY this main subject:
 
-            // ===== SO'ZGA QARAB RASM =====
-            if (prompt.includes('quyosh') || prompt.includes('sun')) {
-                const g = ctx.createRadialGradient(220, 150, 10, 220, 150, 130);
-                g.addColorStop(0, '#FFD93D');
-                g.addColorStop(0.5, '#FFB347');
-                g.addColorStop(1, '#FF6B35');
-                ctx.fillStyle = g;
-                ctx.shadowColor = '#FFD93D';
-                ctx.shadowBlur = 50;
-                ctx.beginPath();
-                ctx.arc(220, 150, 100, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                for (let i = 0; i < 14; i++) {
-                    const a = (i / 14) * Math.PI * 2;
-                    ctx.beginPath();
-                    ctx.moveTo(220 + Math.cos(a) * 110, 150 + Math.sin(a) * 110);
-                    ctx.lineTo(220 + Math.cos(a) * 165, 150 + Math.sin(a) * 165);
-                    ctx.strokeStyle = '#FFD93D';
-                    ctx.lineWidth = 6;
-                    ctx.shadowColor = '#FFB347';
-                    ctx.shadowBlur = 25;
-                    ctx.stroke();
-                }
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#8B4513';
-                ctx.beginPath();
-                ctx.arc(190, 128, 13, 0, Math.PI);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(250, 128, 13, 0, Math.PI);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(220, 170, 30, 0, Math.PI);
-                ctx.strokeStyle = '#8B4513';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                ctx.fillStyle = '#FF6B6B';
-                ctx.beginPath();
-                ctx.arc(200, 146, 4, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(240, 146, 4, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (prompt.includes('oy') || prompt.includes('moon')) {
-                const g = ctx.createRadialGradient(220, 150, 10, 220, 150, 100);
-                g.addColorStop(0, '#F5F5DC');
-                g.addColorStop(0.6, '#E8E8D0');
-                g.addColorStop(1, '#B0B0A0');
-                ctx.fillStyle = g;
-                ctx.shadowColor = '#F5F5DC';
-                ctx.shadowBlur = 50;
-                ctx.beginPath();
-                ctx.arc(220, 150, 85, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = 'rgba(180,180,160,0.25)';
-                ctx.beginPath();
-                ctx.arc(180, 120, 22, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(250, 180, 18, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(200, 200, 12, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(260, 130, 10, 0, Math.PI * 2);
-                ctx.fill();
-                for (let i = 0; i < 40; i++) {
-                    const x = Math.random() * w,
-                        y = Math.random() * h;
-                    ctx.fillStyle = `rgba(255,255,220,${Math.random() * 0.7 + 0.2})`;
-                    ctx.shadowColor = '#FFF8DC';
-                    ctx.shadowBlur = 8;
-                    ctx.beginPath();
-                    ctx.arc(x, y, Math.random() * 2 + 0.5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.shadowBlur = 0;
-            } else if (prompt.includes('yulduz') || prompt.includes('star')) {
-                const g = ctx.createLinearGradient(0, 0, 0, h);
-                g.addColorStop(0, '#0a0a2a');
-                g.addColorStop(1, '#1a1a5a');
-                ctx.fillStyle = g;
-                ctx.fillRect(0, 0, w, h);
-                for (let i = 0; i < 100; i++) {
-                    const x = Math.random() * w,
-                        y = Math.random() * h;
-                    ctx.fillStyle = `rgba(255,255,200,${Math.random() * 0.8 + 0.1})`;
-                    ctx.shadowColor = '#FFF8DC';
-                    ctx.shadowBlur = 6;
-                    ctx.beginPath();
-                    ctx.arc(x, y, Math.random() * 2 + 0.5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.shadowBlur = 40;
-                ctx.fillStyle = '#FFD700';
-                ctx.beginPath();
-                ctx.arc(220, 150, 22, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#FFF8DC';
-                ctx.beginPath();
-                ctx.arc(220, 150, 10, 0, Math.PI * 2);
-                ctx.fill();
-                for (let i = 0; i < 8; i++) {
-                    const a = (i / 8) * Math.PI * 2;
-                    ctx.beginPath();
-                    ctx.moveTo(220 + Math.cos(a) * 28, 150 + Math.sin(a) * 28);
-                    ctx.lineTo(220 + Math.cos(a) * 42, 150 + Math.sin(a) * 42);
-                    ctx.strokeStyle = '#FFD700';
-                    ctx.lineWidth = 2.5;
-                    ctx.shadowBlur = 15;
-                    ctx.stroke();
-                }
-                ctx.shadowBlur = 0;
-            } else if (prompt.includes('daraxt') || prompt.includes('tree')) {
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#5D4037';
-                ctx.fillRect(205, 200, 30, 100);
-                ctx.fillStyle = '#2E7D32';
-                ctx.beginPath();
-                ctx.arc(220, 160, 70, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#388E3C';
-                ctx.beginPath();
-                ctx.arc(180, 180, 40, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(260, 180, 40, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#43A047';
-                ctx.beginPath();
-                ctx.arc(220, 130, 42, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#66BB6A';
-                ctx.beginPath();
-                ctx.arc(190, 150, 32, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(250, 150, 32, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (prompt.includes('gul') || prompt.includes('flower')) {
-                const cols = ['#FF6B6B', '#FF9FF3', '#F368E0', '#FF6B6B', '#FF9FF3', '#F368E0', '#FF85A1'];
-                for (let i = 0; i < 7; i++) {
-                    const a = (i / 7) * Math.PI * 2;
-                    const x = 220 + Math.cos(a) * 58,
-                        y = 150 + Math.sin(a) * 58;
-                    ctx.shadowColor = cols[i % cols.length];
-                    ctx.shadowBlur = 20;
-                    ctx.fillStyle = cols[i % cols.length];
-                    ctx.beginPath();
-                    ctx.arc(x, y, 30, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                ctx.shadowBlur = 30;
-                ctx.fillStyle = '#FFD93D';
-                ctx.beginPath();
-                ctx.arc(220, 150, 22, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#4A7C59';
-                ctx.fillRect(213, 175, 14, 90);
-                ctx.fillStyle = '#388E3C';
-                ctx.beginPath();
-                ctx.arc(220, 185, 18, 0, Math.PI * 2);
-                ctx.fill();
-            } else {
-                const g = ctx.createLinearGradient(0, 0, w, h);
-                const c = ['#a78bfa', '#60a5fa', '#34d399', '#fb923c', '#f472b6'];
-                g.addColorStop(0, c[Math.floor(Math.random() * c.length)]);
-                g.addColorStop(0.5, c[Math.floor(Math.random() * c.length)]);
-                g.addColorStop(1, c[Math.floor(Math.random() * c.length)]);
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = g;
-                ctx.fillRect(0, 0, w, h);
-                for (let i = 0; i < 35; i++) {
-                    ctx.beginPath();
-                    ctx.arc(Math.random() * w, Math.random() * h, Math.random() * 35 + 8, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.2 + 0.05})`;
-                    ctx.shadowBlur = 25;
-                    ctx.shadowColor = '#fff';
-                    ctx.fill();
-                }
-                ctx.shadowBlur = 0;
-            }
+${mainObject}
 
-            // ===== PASTKI MATN =====
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = 'rgba(0,0,0,0.5)';
-            ctx.roundRect(20, h - 50, w - 40, 34, 16);
-            ctx.fill();
-            ctx.font = '15px Segoe UI, sans-serif';
-            ctx.fillStyle = '#e2e8f0';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(`"${prompt}"`, w / 2, h - 33);
-        });
+The main subject must be the clear focus of the image.
 
-        if (!CanvasRenderingContext2D.prototype.roundRect) {
-            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
-                if (r > w / 2) r = w / 2;
-                if (r > h / 2) r = h / 2;
-                this.moveTo(x + r, y);
-                this.lineTo(x + w - r, y);
-                this.quadraticCurveTo(x + w, y, x + w, y + r);
-                this.lineTo(x + w, y + h - r);
-                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-                this.lineTo(x + r, y + h);
-                this.quadraticCurveTo(x, y + h, x, y + h - r);
-                this.lineTo(x, y + r);
-                this.quadraticCurveTo(x, y, x + r, y);
-                return this;
-            };
+Do NOT invent unrelated subjects.
+
+If the user says "sun", show a sun.
+If the user says "moon", show a moon.
+If the user says "tree", show a tree.
+
+Do not add a person unless the user explicitly asks for a person.
+
+Style:
+${style}
+
+Professional composition,
+high detail,
+sharp focus,
+beautiful lighting,
+natural colors,
+high quality,
+detailed background,
+professional photography,
+4K quality.
+
+Negative prompt:
+${negativePrompt}
+`;
+}
+
+
+/* ================================
+   RASM YARATISH
+   ================================ */
+
+async function generateImage() {
+
+    const text = aiPrompt.value.trim();
+
+    if (!text) {
+
+        aiPlaceholder.style.display = "block";
+
+        aiPlaceholder.textContent =
+            "⚠️ Avval rasm nima bo‘lishini yozing.";
+
+        aiPrompt.focus();
+
+        return;
+    }
+
+
+    const [width, height] =
+        aiSize.value.split("x").map(Number);
+
+
+    /* Professional prompt */
+
+    const finalPrompt =
+        createProfessionalPrompt(text);
+
+
+    /*
+       Har safar yangi rasm olish uchun
+       random seed.
+    */
+
+    const seed =
+        Math.floor(Math.random() * 999999999);
+
+
+    /*
+       Pollinations AI
+    */
+
+    const url =
+        "https://image.pollinations.ai/prompt/" +
+        encodeURIComponent(finalPrompt) +
+        "?width=" + width +
+        "&height=" + height +
+        "&seed=" + seed +
+        "&nologo=true" +
+        "&enhance=true";
+
+
+    /* Loading */
+
+    aiBtn.disabled = true;
+
+    aiBtn.innerHTML =
+        "⏳ Rasm yaratilmoqda...";
+
+    aiPlaceholder.style.display =
+        "block";
+
+    aiPlaceholder.textContent =
+        "🧠 AI siz yozgan g‘oya asosida rasm yaratmoqda...";
+
+    imageBox.classList.remove("ready");
+
+
+    /* Rasm yuklash */
+
+    generatedImage.onload = function() {
+
+        aiBtn.disabled = false;
+
+        aiBtn.innerHTML =
+            "✨ Yaratish";
+
+        aiPlaceholder.style.display =
+            "none";
+
+        imageBox.classList.add("ready");
+
+        lastImageUrl = url;
+    };
+
+
+    /* Xatolik */
+
+    generatedImage.onerror = function() {
+
+        aiBtn.disabled = false;
+
+        aiBtn.innerHTML =
+            "✨ Yaratish";
+
+        aiPlaceholder.style.display =
+            "block";
+
+        aiPlaceholder.textContent =
+            "❌ Rasm yaratishda xatolik. Internetni tekshiring.";
+
+        imageBox.classList.remove("ready");
+    };
+
+
+    generatedImage.src = url;
+}
+
+
+/* Tugma */
+
+aiBtn.addEventListener(
+    "click",
+    generateImage
+);
+
+
+/* Enter bilan yaratish */
+
+aiPrompt.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            generateImage();
         }
 
-        // ===== FILE UPLOAD =====
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    const preview = document.getElementById('uploadPreview');
-                    preview.src = ev.target.result;
-                    preview.classList.add('show');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+    }
+);
 
-        // ===== KONTAKT =====
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('contactName').value.trim();
-            const email = document.getElementById('contactEmail').value.trim();
-            const msg = document.getElementById('contactMessage').value.trim();
-            const st = document.getElementById('formStatus');
-            if (name && email && msg) {
-                st.textContent = `✅ Rahmat, ${name}! Xabaringiz qabul qilindi.`;
-                st.style.color = '#34d399';
-                this.reset();
-                setTimeout(() => st.textContent = '', 5000);
-            } else {
-                st.textContent = '❌ Iltimos, barcha maydonlarni toʻldiring.';
-                st.style.color = '#f87171';
-            }
-        });
-    </script>
 
-</body>
-</html>
+/* Qayta yaratish */
+
+regenerateImage.addEventListener(
+    "click",
+    generateImage
+);
+
+
+/* Katta ko‘rish */
+
+openImage.addEventListener(
+    "click",
+    function() {
+
+        if (lastImageUrl) {
+            window.open(
+                lastImageUrl,
+                "_blank"
+            );
+        }
+
+    }
+);
+
+
+/* ================================
+   YUKLAB OLISH
+   ================================ */
+
+downloadImage.addEventListener(
+    "click",
+    async function() {
+
+        if (!lastImageUrl)
+            return;
+
+        try {
+
+            const response =
+                await fetch(lastImageUrl);
+
+            const blob =
+                await response.blob();
+
+            const blobUrl =
+                URL.createObjectURL(blob);
+
+            const a =
+                document.createElement("a");
+
+            a.href = blobUrl;
+
+            a.download =
+                "AI-DESIGN-" +
+                Date.now() +
+                ".jpg";
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            a.remove();
+
+            setTimeout(
+                () => URL.revokeObjectURL(blobUrl),
+                2000
+            );
+
+        } catch (error) {
+
+            window.open(
+                lastImageUrl,
+                "_blank"
+            );
+
+        }
+
+    }
+);
+</script>
