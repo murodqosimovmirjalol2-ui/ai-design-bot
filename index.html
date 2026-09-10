@@ -1,434 +1,1268 @@
-<script>
-/* ================================
-   AI DESIGN PRO — IMAGE GENERATOR
-   ================================ */
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>⚽ Futbol O'yini — Stadion</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            background: #0a0e1a;
+            overflow: hidden;
+            touch-action: none;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border-radius: 36px;
+            padding: 14px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #34d399, #60a5fa, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .score-board {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 16px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .score-board .team {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+        .score-board .team.blue { color: #60a5fa; }
+        .score-board .team.red { color: #f87171; }
+        .score-board .score {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #f1f5f9;
+            min-width: 55px;
+            text-align: center;
+        }
+        .score-board .timer {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-family: monospace;
+            min-width: 45px;
+            text-align: center;
+        }
+        .game-area {
+            position: relative;
+            background: #1B5E20;
+            border-radius: 18px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            touch-action: none;
+            cursor: crosshair;
+        }
 
-const aiPrompt = document.getElementById("aiPrompt");
-const aiBtn = document.getElementById("aiGenerateBtn");
-const aiResult = document.getElementById("aiResult");
-const aiPlaceholder = document.getElementById("aiPlaceholder");
+        /* ===== DUMAOLOQ BOSHQARUV ===== */
+        .joystick-container {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 130px;
+            height: 130px;
+            z-index: 10;
+            touch-action: none;
+        }
+        .joystick-container.active {
+            display: block;
+        }
+        .joystick-base {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+        .joystick-stick {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
+            transition: transform 0.05s;
+        }
+        .joystick-arrow {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .joystick-arrow.up { top: 4px; left: 50%; transform: translateX(-50%); }
+        .joystick-arrow.down { bottom: 4px; left: 50%; transform: translateX(-50%); }
+        .joystick-arrow.left { left: 6px; top: 50%; transform: translateY(-50%); }
+        .joystick-arrow.right { right: 6px; top: 50%; transform: translateY(-50%); }
 
-/* AI sozlamalari */
-const aiControls = document.createElement("div");
-aiControls.className = "ai-controls";
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .controls button {
+            padding: 9px 24px;
+            border-radius: 60px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #34d399, #10b981);
+            color: #fff;
+            box-shadow: 0 8px 24px -8px rgba(52, 211, 153, 0.4);
+        }
+        .btn-start:hover:not(:disabled) { transform: scale(1.05); }
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.06);
+            color: #e2e8f0;
+        }
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+        .controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .info-bar {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 0.7rem;
+            flex-wrap: wrap;
+        }
 
-aiControls.innerHTML = `
-    <select id="aiStyle">
-        <option value="photorealistic">📷 Fotorealistik</option>
-        <option value="cinematic">🎬 Cinematic</option>
-        <option value="digital art">🎨 Digital Art</option>
-        <option value="anime">🌸 Anime</option>
-        <option value="3d render">🧊 3D Render</option>
-        <option value="fantasy art">🧙 Fantasy</option>
-        <option value="minimalist">◽ Minimalist</option>
-    </select>
+        @media (max-width: 600px) {
+            .container { padding: 10px 8px; border-radius: 24px; }
+            .header h1 { font-size: 1.1rem; }
+            .score-board { padding: 4px 10px; gap: 6px; }
+            .score-board .score { font-size: 1.1rem; min-width: 40px; }
+            .score-board .team { font-size: 0.65rem; }
+            .score-board .timer { font-size: 0.7rem; }
+            .controls button { padding: 7px 16px; font-size: 0.7rem; }
+            .joystick-container { width: 110px; height: 110px; bottom: 14px; left: 14px; }
+            .joystick-base { width: 110px; height: 110px; }
+            .joystick-stick { width: 46px; height: 46px; }
+        }
+    </style>
+</head>
+<body>
 
-    <select id="aiSize">
-        <option value="1024x1024">⬛ 1024 × 1024</option>
-        <option value="1280x720">🖥️ 1280 × 720</option>
-        <option value="720x1280">📱 720 × 1280</option>
-        <option value="1536x1024">🖼️ 1536 × 1024</option>
-    </select>
-`;
+    <div class="container">
+        <div class="header">
+            <h1>⚽ FUTBOL</h1>
+            <div class="score-board">
+                <div class="team blue">🔵 SIZ</div>
+                <div class="score" id="scoreDisplay">0 : 0</div>
+                <div class="team red">🔴 AI</div>
+                <div class="timer" id="timerDisplay">00:00</div>
+            </div>
+        </div>
 
-document.querySelector(".ai-input-group").after(aiControls);
+        <div class="game-area">
+            <canvas id="gameCanvas" width="880" height="520"></canvas>
 
-const aiStyle = document.getElementById("aiStyle");
-const aiSize = document.getElementById("aiSize");
+            <div class="joystick-container" id="joystickContainer">
+                <div class="joystick-base" id="joystickBase">
+                    <div class="joystick-arrow up">▲</div>
+                    <div class="joystick-arrow down">▼</div>
+                    <div class="joystick-arrow left">◀</div>
+                    <div class="joystick-arrow right">▶</div>
+                    <div class="joystick-stick" id="joystickStick"></div>
+                </div>
+            </div>
+        </div>
 
-/* Natija oynasi */
-const imageBox = document.createElement("div");
+        <div class="controls">
+            <button class="btn-start" id="startBtn">▶️ Boshlash</button>
+            <button class="btn-reset" id="resetBtn">🔄 Qayta</button>
+        </div>
 
-imageBox.className = "generated-image-box";
-
-imageBox.innerHTML = `
-    <img id="generatedImage"
-         alt="AI tomonidan yaratilgan rasm">
-
-    <div class="image-actions">
-        <button id="downloadImage">
-            ⬇️ Yuklab olish
-        </button>
-
-        <button id="openImage">
-            🔎 Katta ko‘rish
-        </button>
-
-        <button id="regenerateImage">
-            🔄 Qayta yaratish
-        </button>
+        <div class="info-bar">
+            <span>🕹️ Dumaloq bilan boshqaring</span>
+            <span>⚽ To'p oyoqqa yopishadi</span>
+            <span>🔄 Aylantirib qo'yib yuborsangiz — tepadi</span>
+        </div>
     </div>
-`;
 
-aiResult.appendChild(imageBox);
-
-const generatedImage =
-    document.getElementById("generatedImage");
-
-const downloadImage =
-    document.getElementById("downloadImage");
-
-const openImage =
-    document.getElementById("openImage");
-
-const regenerateImage =
-    document.getElementById("regenerateImage");
-
-let lastImageUrl = "";
-
-
-/* ================================
-   MUHIM:
-   PROMPTNI TO‘G‘RI QURISH
-   ================================ */
-
-function createProfessionalPrompt(userText) {
-
-    const text = userText.trim();
-
-    /*
-       Foydalanuvchi nima yozgan bo‘lsa,
-       shu asosiy obyekt bo‘lib qoladi.
-    */
-
-    let mainObject = text;
-
-    /* Oddiy so‘zlarni aniq AI tavsifiga aylantiramiz */
-
-    const keywords = {
-
-        "quyosh":
-            "a single bright sun in the sky, clearly visible",
-
-        "oy":
-            "a single realistic moon in the night sky",
-
-        "yulduz":
-            "a beautiful star in the night sky",
-
-        "daraxt":
-            "a single large green tree",
-
-        "gul":
-            "a beautiful single flower",
-
-        "tog":
-            "majestic mountains",
-
-        "tog‘":
-            "majestic mountains",
-
-        "dengiz":
-            "beautiful blue ocean",
-
-        "okean":
-            "beautiful blue ocean",
-
-        "mashina":
-            "a modern car",
-
-        "uy":
-            "a beautiful house",
-
-        "shahar":
-            "a modern city",
-
-        "kosmos":
-            "outer space with planets and stars",
-
-        "koinot":
-            "outer space with planets and stars"
-    };
-
-    const lower = text.toLowerCase();
-
-    for (const word in keywords) {
-
-        if (lower === word) {
-            mainObject = keywords[word];
-            break;
-        }
-    }
-
-
-    /* Style */
-
-    const style = aiStyle.value;
-
-
-    /*
-       NEGATIVE PROMPT:
-       keraksiz odam, qiz, yuz va boshqa
-       obyektlarning chiqishini kamaytiradi.
-    */
-
-    const negativePrompt = `
-unwanted people,
-woman,
-girl,
-man,
-person,
-human,
-face,
-portrait,
-body,
-extra objects,
-random objects,
-text,
-letters,
-watermark,
-logo,
-distorted objects,
-duplicate objects,
-blurry,
-low quality
-`;
-
-
-    return `
-Create an image of ONLY this main subject:
-
-${mainObject}
-
-The main subject must be the clear focus of the image.
-
-Do NOT invent unrelated subjects.
-
-If the user says "sun", show a sun.
-If the user says "moon", show a moon.
-If the user says "tree", show a tree.
-
-Do not add a person unless the user explicitly asks for a person.
-
-Style:
-${style}
-
-Professional composition,
-high detail,
-sharp focus,
-beautiful lighting,
-natural colors,
-high quality,
-detailed background,
-professional photography,
-4K quality.
-
-Negative prompt:
-${negativePrompt}
-`;
-}
-
-
-/* ================================
-   RASM YARATISH
-   ================================ */
-
-async function generateImage() {
-
-    const text = aiPrompt.value.trim();
-
-    if (!text) {
-
-        aiPlaceholder.style.display = "block";
-
-        aiPlaceholder.textContent =
-            "⚠️ Avval rasm nima bo‘lishini yozing.";
-
-        aiPrompt.focus();
-
-        return;
-    }
-
-
-    const [width, height] =
-        aiSize.value.split("x").map(Number);
-
-
-    /* Professional prompt */
-
-    const finalPrompt =
-        createProfessionalPrompt(text);
-
-
-    /*
-       Har safar yangi rasm olish uchun
-       random seed.
-    */
-
-    const seed =
-        Math.floor(Math.random() * 999999999);
-
-
-    /*
-       Pollinations AI
-    */
-
-    const url =
-        "https://image.pollinations.ai/prompt/" +
-        encodeURIComponent(finalPrompt) +
-        "?width=" + width +
-        "&height=" + height +
-        "&seed=" + seed +
-        "&nologo=true" +
-        "&enhance=true";
-
-
-    /* Loading */
-
-    aiBtn.disabled = true;
-
-    aiBtn.innerHTML =
-        "⏳ Rasm yaratilmoqda...";
-
-    aiPlaceholder.style.display =
-        "block";
-
-    aiPlaceholder.textContent =
-        "🧠 AI siz yozgan g‘oya asosida rasm yaratmoqda...";
-
-    imageBox.classList.remove("ready");
-
-
-    /* Rasm yuklash */
-
-    generatedImage.onload = function() {
-
-        aiBtn.disabled = false;
-
-        aiBtn.innerHTML =
-            "✨ Yaratish";
-
-        aiPlaceholder.style.display =
-            "none";
-
-        imageBox.classList.add("ready");
-
-        lastImageUrl = url;
-    };
-
-
-    /* Xatolik */
-
-    generatedImage.onerror = function() {
-
-        aiBtn.disabled = false;
-
-        aiBtn.innerHTML =
-            "✨ Yaratish";
-
-        aiPlaceholder.style.display =
-            "block";
-
-        aiPlaceholder.textContent =
-            "❌ Rasm yaratishda xatolik. Internetni tekshiring.";
-
-        imageBox.classList.remove("ready");
-    };
-
-
-    generatedImage.src = url;
-}
-
-
-/* Tugma */
-
-aiBtn.addEventListener(
-    "click",
-    generateImage
-);
-
-
-/* Enter bilan yaratish */
-
-aiPrompt.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-            generateImage();
+    <script>
+        /* =====================================================
+           TELEGRAM WEB APP
+           ===================================================== */
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            tg.setHeaderColor('#0a0e1a');
+            tg.setBackgroundColor('#0a0e1a');
         }
 
-    }
-);
+        /* =====================================================
+           CANVAS
+           ===================================================== */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = 880, H = 520;
 
+        /* =====================================================
+           O'YIN O'LCHAMLARI
+           ===================================================== */
+        const FIELD = {
+            x: 40, y: 40,
+            w: W - 80, h: H - 80,
+            goalH: 140,
+            goalDepth: 20
+        };
+        const GOAL_TOP = H / 2 - FIELD.goalH / 2;
+        const GOAL_BOTTOM = H / 2 + FIELD.goalH / 2;
 
-/* Qayta yaratish */
+        /* =====================================================
+           O'YIN HOLATI
+           ===================================================== */
+        let gameState = {
+            running: false,
+            scoreBlue: 0,
+            scoreRed: 0,
+            time: 0,
+            lastTime: 0,
+            goalScored: null,
+            goalTimer: 0,
+            matchTime: 90,
+            finished: false
+        };
 
-regenerateImage.addEventListener(
-    "click",
-    generateImage
-);
+        /* =====================================================
+           O'YINCHILAR
+           ===================================================== */
+        let player = {
+            x: 200, y: H / 2,
+            r: 18,
+            vx: 0, vy: 0,
+            speed: 1.1,
+            maxSpeed: 9,
+            color: '#3b82f6',
+            accent: '#60a5fa',
+            hasBall: false,
+            kickPower: 15,
+            direction: 0,
+            kickAnim: 0
+        };
 
+        let aiPlayer = {
+            x: W - 200, y: H / 2,
+            r: 18,
+            vx: 0, vy: 0,
+            speed: 0.9,
+            maxSpeed: 7,
+            color: '#ef4444',
+            accent: '#f87171',
+            hasBall: false,
+            kickPower: 13,
+            direction: Math.PI,
+            kickAnim: 0,
+            kickTimer: 0
+        };
 
-/* Katta ko‘rish */
+        let ball = {
+            x: W / 2, y: H / 2,
+            r: 10,
+            vx: 0, vy: 0,
+            friction: 0.985,
+            maxSpeed: 18,
+            lastTouch: null
+        };
 
-openImage.addEventListener(
-    "click",
-    function() {
+        /* =====================================================
+           MUXLISLAR VA BAYROQLAR
+           ===================================================== */
+        let crowd = [];
+        let flags = [];
+        let confetti = [];
 
-        if (lastImageUrl) {
-            window.open(
-                lastImageUrl,
-                "_blank"
-            );
+        function initCrowd() {
+            crowd = [];
+            for (let i = 0; i < 40; i++) {
+                crowd.push({
+                    x: 20 + Math.random() * (W - 40),
+                    y: 5 + Math.random() * 20,
+                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.05 + Math.random() * 0.1,
+                    size: 3 + Math.random() * 3
+                });
+            }
+            for (let i = 0; i < 40; i++) {
+                crowd.push({
+                    x: 20 + Math.random() * (W - 40),
+                    y: H - 25 + Math.random() * 20,
+                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.05 + Math.random() * 0.1,
+                    size: 3 + Math.random() * 3
+                });
+            }
+            for (let i = 0; i < 20; i++) {
+                crowd.push({
+                    x: 5 + Math.random() * 15,
+                    y: 40 + Math.random() * (H - 80),
+                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.05 + Math.random() * 0.1,
+                    size: 3 + Math.random() * 3
+                });
+            }
+            for (let i = 0; i < 20; i++) {
+                crowd.push({
+                    x: W - 20 + Math.random() * 15,
+                    y: 40 + Math.random() * (H - 80),
+                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.05 + Math.random() * 0.1,
+                    size: 3 + Math.random() * 3
+                });
+            }
         }
 
-    }
-);
-
-
-/* ================================
-   YUKLAB OLISH
-   ================================ */
-
-downloadImage.addEventListener(
-    "click",
-    async function() {
-
-        if (!lastImageUrl)
-            return;
-
-        try {
-
-            const response =
-                await fetch(lastImageUrl);
-
-            const blob =
-                await response.blob();
-
-            const blobUrl =
-                URL.createObjectURL(blob);
-
-            const a =
-                document.createElement("a");
-
-            a.href = blobUrl;
-
-            a.download =
-                "AI-DESIGN-" +
-                Date.now() +
-                ".jpg";
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            a.remove();
-
-            setTimeout(
-                () => URL.revokeObjectURL(blobUrl),
-                2000
-            );
-
-        } catch (error) {
-
-            window.open(
-                lastImageUrl,
-                "_blank"
-            );
-
+        function initFlags() {
+            flags = [];
+            for (let i = 0; i < 12; i++) {
+                flags.push({
+                    x: 30 + Math.random() * (W - 60),
+                    y: 8 + Math.random() * 15,
+                    color: ['#1EB53A', '#0099B5', '#B22234', '#0039A6', '#DE2910', '#BC002D'][Math.floor(Math.random() * 6)],
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.03 + Math.random() * 0.05,
+                    size: 8 + Math.random() * 6,
+                    side: Math.random() > 0.5 ? 1 : -1
+                });
+            }
+            for (let i = 0; i < 8; i++) {
+                flags.push({
+                    x: 30 + Math.random() * (W - 60),
+                    y: H - 18 + Math.random() * 12,
+                    color: ['#1EB53A', '#0099B5', '#B22234', '#0039A6', '#DE2910', '#BC002D'][Math.floor(Math.random() * 6)],
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.03 + Math.random() * 0.05,
+                    size: 8 + Math.random() * 6,
+                    side: Math.random() > 0.5 ? 1 : -1
+                });
+            }
         }
 
-    }
-);
-</script>
+        function initConfetti() {
+            confetti = [];
+            for (let i = 0; i < 60; i++) {
+                confetti.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: Math.random() * 2 + 0.5,
+                    size: 2 + Math.random() * 4,
+                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6', '#fff'][Math.floor(Math.random() * 7)],
+                    rotation: Math.random() * Math.PI * 2,
+                    rotSpeed: (Math.random() - 0.5) * 0.2,
+                    life: 100 + Math.random() * 200
+                });
+            }
+        }
+
+        initCrowd();
+        initFlags();
+        initConfetti();
+
+        /* =====================================================
+           AUDIO TIZIMI — MUXLISLAR OVOZI
+           ===================================================== */
+        let audioCtx = null;
+        let crowdGain = null;
+        let ambientNoise = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                createAmbientCrowd();
+            }
+        }
+
+        function createAmbientCrowd() {
+            if (!audioCtx) return;
+            const bufferSize = 2 * audioCtx.sampleRate;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.05;
+            }
+            ambientNoise = audioCtx.createBufferSource();
+            ambientNoise.buffer = buffer;
+            ambientNoise.loop = true;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 800;
+            filter.Q.value = 0.5;
+            crowdGain = audioCtx.createGain();
+            crowdGain.gain.value = 0.02;
+            ambientNoise.connect(filter);
+            filter.connect(crowdGain);
+            crowdGain.connect(audioCtx.destination);
+            ambientNoise.start();
+        }
+
+        function setCrowdVolume(volume) {
+            if (crowdGain && audioCtx) {
+                crowdGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.5);
+            }
+        }
+
+        function playCrowdCheer() {
+            if (!audioCtx) return;
+            const duration = 3;
+            const sampleRate = audioCtx.sampleRate;
+            const buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < data.length; i++) {
+                const t = i / sampleRate;
+                const envelope = Math.exp(-t * 1.5) * (1 - Math.exp(-t * 30));
+                const voice1 = Math.sin(t * 200 + Math.random() * 100) * 0.3;
+                const voice2 = Math.sin(t * 400 + Math.random() * 200) * 0.2;
+                const noise = (Math.random() * 2 - 1) * 0.5;
+                data[i] = (voice1 + voice2 + noise) * envelope * 0.4;
+            }
+            const source = audioCtx.createBufferSource();
+            source.buffer = buffer;
+            const gain = audioCtx.createGain();
+            gain.gain.value = 0.6;
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 600;
+            filter.Q.value = 0.3;
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+            source.start();
+            setCrowdVolume(0.15);
+            setTimeout(() => setCrowdVolume(0.03), 2000);
+        }
+
+        function playKickSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        function playWhistleSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(1500, audioCtx.currentTime + 0.05);
+            osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        /* =====================================================
+           DUMAOLOQ BOSHQARUV (JOYSTICK)
+           ===================================================== */
+        const joystickContainer = document.getElementById('joystickContainer');
+        const joystickBase = document.getElementById('joystickBase');
+        const joystickStick = document.getElementById('joystickStick');
+
+        let joystickActive = false;
+        let joystickVector = { x: 0, y: 0 };
+        let joystickMaxDist = 42;
+
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            joystickContainer.classList.add('active');
+        }
+
+        function getJoystickCenter() {
+            const rect = joystickBase.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+        }
+
+        function updateJoystick(clientX, clientY) {
+            const center = getJoystickCenter();
+            let dx = clientX - center.x;
+            let dy = clientY - center.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist > joystickMaxDist) {
+                dx = (dx / dist) * joystickMaxDist;
+                dy = (dy / dist) * joystickMaxDist;
+            }
+
+            joystickStick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+
+            const ndx = dx / joystickMaxDist;
+            const ndy = dy / joystickMaxDist;
+            joystickVector.x = ndx;
+            joystickVector.y = ndy;
+
+            if (Math.hypot(ndx, ndy) > 0.1) {
+                player.direction = Math.atan2(ndy, ndx);
+            }
+        }
+
+        function resetJoystick() {
+            joystickStick.style.transform = 'translate(-50%, -50%)';
+            joystickVector.x = 0;
+            joystickVector.y = 0;
+        }
+
+        joystickBase.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            joystickActive = true;
+            updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
+
+        joystickBase.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!joystickActive) return;
+            updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
+
+        joystickBase.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) {
+                kickBall();
+            }
+            joystickActive = false;
+            resetJoystick();
+        }, { passive: false });
+
+        joystickBase.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            joystickActive = true;
+            updateJoystick(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!joystickActive) return;
+            updateJoystick(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (joystickActive && player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) {
+                kickBall();
+            }
+            joystickActive = false;
+            resetJoystick();
+        });
+
+        /* =====================================================
+           TEPISH
+           ===================================================== */
+        function kickBall() {
+            if (!player.hasBall) return;
+            let dx, dy;
+            if (joystickActive || Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
+                dx = joystickVector.x;
+                dy = joystickVector.y;
+            } else {
+                dx = Math.cos(player.direction);
+                dy = Math.sin(player.direction);
+            }
+            const dist = Math.hypot(dx, dy);
+            if (dist < 0.1) return;
+            ball.vx = (dx / dist) * player.kickPower;
+            ball.vy = (dy / dist) * player.kickPower;
+            player.hasBall = false;
+            player.kickAnim = 15;
+            ball.lastTouch = 'blue';
+            playKickSound();
+        }
+
+        function kickBallAI() {
+            if (!aiPlayer.hasBall) return;
+            const goalX = FIELD.x;
+            const goalY = H / 2;
+            const dx = goalX - aiPlayer.x;
+            const dy = goalY - aiPlayer.y;
+            const dist = Math.hypot(dx, dy);
+            ball.vx = (dx / dist) * aiPlayer.kickPower;
+            ball.vy = (dy / dist) * aiPlayer.kickPower;
+            aiPlayer.hasBall = false;
+            aiPlayer.kickAnim = 15;
+            ball.lastTouch = 'red';
+            playKickSound();
+        }
+
+        /* =====================================================
+           O'YINCHI HARAKATI
+           ===================================================== */
+        function updatePlayer() {
+            if (!gameState.running) return;
+
+            if (Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
+                const speed = player.speed * (1 + Math.hypot(joystickVector.x, joystickVector.y) * 2);
+                player.vx = joystickVector.x * speed * 3;
+                player.vy = joystickVector.y * speed * 3;
+                player.direction = Math.atan2(joystickVector.y, joystickVector.x);
+            } else if (mouse.active) {
+                const dx = mouse.x - player.x;
+                const dy = mouse.y - player.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist > 5) {
+                    const speed = Math.min(player.speed * (1 + dist / 150), player.maxSpeed);
+                    player.vx = (dx / dist) * speed;
+                    player.vy = (dy / dist) * speed;
+                    player.direction = Math.atan2(dy, dx);
+                } else {
+                    player.vx *= 0.7;
+                    player.vy *= 0.7;
+                }
+            } else {
+                player.vx *= 0.9;
+                player.vy *= 0.9;
+            }
+
+            player.x += player.vx;
+            player.y += player.vy;
+            player.x = clamp(player.x, FIELD.x + player.r, FIELD.x + FIELD.w - player.r);
+            player.y = clamp(player.y, FIELD.y + player.r, FIELD.y + FIELD.h - player.r);
+            if (player.kickAnim > 0) player.kickAnim--;
+        }
+
+        let mouse = { x: W / 2, y: H / 2, active: false };
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = (e.clientX - rect.left) * (W / rect.width);
+            mouse.y = (e.clientY - rect.top) * (H / rect.height);
+            mouse.active = true;
+        });
+
+        canvas.addEventListener('mouseleave', () => { mouse.active = false; });
+        canvas.addEventListener('mouseup', () => { if (player.hasBall) kickBall(); });
+
+        /* =====================================================
+           AI
+           ===================================================== */
+        function updateAI() {
+            if (!gameState.running) return;
+            let targetX, targetY;
+
+            if (ball.x > W / 2) {
+                targetX = ball.x + 10;
+                targetY = ball.y;
+            } else {
+                targetX = ball.x + (FIELD.x - ball.x) * 0.3;
+                targetY = ball.y + (H / 2 - ball.y) * 0.3;
+            }
+
+            const dx = targetX - aiPlayer.x;
+            const dy = targetY - aiPlayer.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist > 5) {
+                const speed = Math.min(aiPlayer.speed * (1 + dist / 200), aiPlayer.maxSpeed);
+                aiPlayer.vx = (dx / dist) * speed;
+                aiPlayer.vy = (dy / dist) * speed;
+                aiPlayer.direction = Math.atan2(dy, dx);
+            } else {
+                aiPlayer.vx *= 0.8;
+                aiPlayer.vy *= 0.8;
+            }
+
+            aiPlayer.x += aiPlayer.vx;
+            aiPlayer.y += aiPlayer.vy;
+            aiPlayer.x = clamp(aiPlayer.x, FIELD.x + aiPlayer.r, FIELD.x + FIELD.w - aiPlayer.r);
+            aiPlayer.y = clamp(aiPlayer.y, FIELD.y + aiPlayer.r, FIELD.y + FIELD.h - aiPlayer.r);
+
+            if (aiPlayer.hasBall) {
+                aiPlayer.kickTimer++;
+                if (aiPlayer.kickTimer > 48) {
+                    kickBallAI();
+                    aiPlayer.kickTimer = 0;
+                }
+            } else {
+                aiPlayer.kickTimer = 0;
+            }
+            if (aiPlayer.kickAnim > 0) aiPlayer.kickAnim--;
+        }
+
+        /* =====================================================
+           TO'P
+           ===================================================== */
+        function updateBall() {
+            if (player.hasBall) {
+                const angle = player.direction;
+                ball.x = player.x + Math.cos(angle) * (player.r + ball.r - 2);
+                ball.y = player.y + Math.sin(angle) * (player.r + ball.r - 2);
+                ball.vx = 0;
+                ball.vy = 0;
+                return;
+            }
+
+            if (aiPlayer.hasBall) {
+                const angle = aiPlayer.direction;
+                ball.x = aiPlayer.x + Math.cos(angle) * (aiPlayer.r + ball.r - 2);
+                ball.y = aiPlayer.y + Math.sin(angle) * (aiPlayer.r + ball.r - 2);
+                ball.vx = 0;
+                ball.vy = 0;
+                return;
+            }
+
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            ball.vx *= ball.friction;
+            ball.vy *= ball.friction;
+
+            const speed = Math.hypot(ball.vx, ball.vy);
+            if (speed > ball.maxSpeed) {
+                ball.vx = (ball.vx / speed) * ball.maxSpeed;
+                ball.vy = (ball.vy / speed) * ball.maxSpeed;
+            }
+            if (speed < 0.05) { ball.vx = 0; ball.vy = 0; }
+
+            if (ball.y - ball.r < FIELD.y) { ball.y = FIELD.y + ball.r; ball.vy = -ball.vy * 0.8; }
+            if (ball.y + ball.r > FIELD.y + FIELD.h) { ball.y = FIELD.y + FIELD.h - ball.r; ball.vy = -ball.vy * 0.8; }
+
+            if (ball.x - ball.r < FIELD.x) {
+                if (ball.y > GOAL_TOP && ball.y < GOAL_BOTTOM) {
+                    if (gameState.goalScored === null) {
+                        gameState.goalScored = 'red';
+                        gameState.goalTimer = 60;
+                        gameState.scoreRed++;
+                        updateScoreDisplay();
+                        playCrowdCheer();
+                        initConfetti();
+                    }
+                } else {
+                    ball.x = FIELD.x + ball.r;
+                    ball.vx = -ball.vx * 0.8;
+                }
+            }
+
+            if (ball.x + ball.r > FIELD.x + FIELD.w) {
+                if (ball.y > GOAL_TOP && ball.y < GOAL_BOTTOM) {
+                    if (gameState.goalScored === null) {
+                        gameState.goalScored = 'blue';
+                        gameState.goalTimer = 60;
+                        gameState.scoreBlue++;
+                        updateScoreDisplay();
+                        playCrowdCheer();
+                        initConfetti();
+                    }
+                } else {
+                    ball.x = FIELD.x + FIELD.w - ball.r;
+                    ball.vx = -ball.vx * 0.8;
+                }
+            }
+        }
+
+        /* =====================================================
+           TO'QNASHUV
+           ===================================================== */
+        function checkPlayerBallCollision() {
+            if (!player.hasBall) {
+                const dist = distance(player, ball);
+                if (dist < player.r + ball.r + 4) {
+                    player.hasBall = true;
+                    ball.lastTouch = 'blue';
+                    const angle = Math.atan2(ball.y - player.y, ball.x - player.x);
+                    player.direction = angle;
+                }
+            }
+            if (!aiPlayer.hasBall) {
+                const distAI = distance(aiPlayer, ball);
+                if (distAI < aiPlayer.r + ball.r + 4) {
+                    aiPlayer.hasBall = true;
+                    ball.lastTouch = 'red';
+                    const angle = Math.atan2(ball.y - aiPlayer.y, ball.x - aiPlayer.x);
+                    aiPlayer.direction = angle;
+                }
+            }
+        }
+
+        function checkPlayerCollision() {
+            const dist = distance(player, aiPlayer);
+            const minDist = player.r + aiPlayer.r;
+            if (dist < minDist) {
+                const angle = Math.atan2(aiPlayer.y - player.y, aiPlayer.x - player.x);
+                const overlap = minDist - dist;
+                player.x -= Math.cos(angle) * overlap * 0.5;
+                player.y -= Math.sin(angle) * overlap * 0.5;
+                aiPlayer.x += Math.cos(angle) * overlap * 0.5;
+                aiPlayer.y += Math.sin(angle) * overlap * 0.5;
+                if (player.hasBall && Math.random() < 0.02) {
+                    player.hasBall = false;
+                    aiPlayer.hasBall = true;
+                }
+            }
+        }
+
+        /* =====================================================
+           GOL
+           ===================================================== */
+        function handleGoal() {
+            if (gameState.goalScored) {
+                gameState.goalTimer--;
+                if (gameState.goalTimer <= 0) {
+                    gameState.goalScored = null;
+                    resetPositions();
+                }
+            }
+        }
+
+        function resetPositions() {
+            player.x = 200; player.y = H / 2;
+            player.vx = 0; player.vy = 0; player.hasBall = false;
+            aiPlayer.x = W - 200; aiPlayer.y = H / 2;
+            aiPlayer.vx = 0; aiPlayer.vy = 0; aiPlayer.hasBall = false;
+            ball.x = W / 2; ball.y = H / 2; ball.vx = 0; ball.vy = 0;
+        }
+
+        function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        /* =====================================================
+           RASM CHIZISH
+           ===================================================== */
+        function drawStadium() {
+            const stadiumGrad = ctx.createRadialGradient(W / 2, H / 2, 100, W / 2, H / 2, 500);
+            stadiumGrad.addColorStop(0, '#0a0e1a');
+            stadiumGrad.addColorStop(1, '#05050f');
+            ctx.fillStyle = stadiumGrad;
+            ctx.fillRect(0, 0, W, H);
+        }
+
+        function drawCrowd() {
+            crowd.forEach(c => {
+                const bounce = Math.sin(Date.now() * c.speed + c.phase) * 3;
+                ctx.fillStyle = c.color;
+                ctx.globalAlpha = 0.6 + Math.sin(Date.now() * c.speed + c.phase) * 0.3;
+                ctx.beginPath();
+                ctx.arc(c.x, c.y + bounce, c.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function drawFlags() {
+            flags.forEach(f => {
+                const wave = Math.sin(Date.now() * f.speed + f.phase) * 3;
+                ctx.save();
+                ctx.translate(f.x, f.y);
+                ctx.rotate(wave * 0.05 * f.side);
+                ctx.fillStyle = f.color;
+                ctx.fillRect(0, 0, f.size, f.size * 0.6);
+                ctx.strokeStyle = '#888';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, f.size * 0.8);
+                ctx.stroke();
+                ctx.restore();
+            });
+        }
+
+        function drawField() {
+            const grad = ctx.createLinearGradient(0, 0, 0, H);
+            grad.addColorStop(0, '#1B5E20');
+            grad.addColorStop(1, '#0D3B0F');
+            ctx.fillStyle = grad;
+            ctx.fillRect(FIELD.x, FIELD.y, FIELD.w, FIELD.h);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(FIELD.x, FIELD.y, FIELD.w, FIELD.h);
+
+            ctx.beginPath();
+            ctx.moveTo(W / 2, FIELD.y);
+            ctx.lineTo(W / 2, FIELD.y + FIELD.h);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(W / 2, H / 2, 60, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            ctx.beginPath();
+            ctx.arc(W / 2, H / 2, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeRect(FIELD.x, H / 2 - 90, 110, 180);
+            ctx.strokeRect(FIELD.x, H / 2 - 50, 50, 100);
+            ctx.strokeRect(FIELD.x + FIELD.w - 110, H / 2 - 90, 110, 180);
+            ctx.strokeRect(FIELD.x + FIELD.w - 50, H / 2 - 50, 50, 100);
+
+            ctx.beginPath(); ctx.arc(FIELD.x, FIELD.y, 15, 0, Math.PI / 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(FIELD.x + FIELD.w, FIELD.y, 15, Math.PI / 2, Math.PI); ctx.stroke();
+            ctx.beginPath(); ctx.arc(FIELD.x, FIELD.y + FIELD.h, 15, -Math.PI / 2, 0); ctx.stroke();
+            ctx.beginPath(); ctx.arc(FIELD.x + FIELD.w, FIELD.y + FIELD.h, 15, Math.PI, Math.PI * 1.5); ctx.stroke();
+
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.fillRect(FIELD.x - FIELD.goalDepth, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
+            ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(FIELD.x - FIELD.goalDepth, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.fillRect(FIELD.x + FIELD.w, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
+            ctx.strokeRect(FIELD.x + FIELD.w, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 6; i++) {
+                const y = GOAL_TOP + (FIELD.goalH / 6) * i;
+                ctx.beginPath(); ctx.moveTo(FIELD.x - FIELD.goalDepth, y); ctx.lineTo(FIELD.x, y); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(FIELD.x + FIELD.w, y); ctx.lineTo(FIELD.x + FIELD.w + FIELD.goalDepth, y); ctx.stroke();
+            }
+        }
+
+        function drawHumanPlayer(p, isAI) {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(0, p.r * 0.9, p.r * 1.1, p.r * 0.4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            const angle = p.direction;
+            ctx.rotate(angle + Math.PI / 2);
+
+            const kickOffset = p.kickAnim > 0 ? Math.sin(p.kickAnim / 15 * Math.PI) * 8 : 0;
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(-7, 8 + kickOffset, 5, 14);
+            ctx.fillRect(2, 8, 5, 14);
+
+            const bodyGrad = ctx.createLinearGradient(-p.r, 0, p.r, 0);
+            bodyGrad.addColorStop(0, p.color);
+            bodyGrad.addColorStop(1, p.accent);
+            ctx.fillStyle = bodyGrad;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.r * 0.9, p.r * 0.75, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = p.accent;
+            ctx.beginPath();
+            ctx.ellipse(-p.r * 0.9, -2, 5, 9, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(p.r * 0.9, -2, 5, 9, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#F5D0A9';
+            ctx.beginPath();
+            ctx.arc(0, -p.r * 0.9, p.r * 0.55, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#3E2723';
+            ctx.beginPath();
+            ctx.arc(0, -p.r * 0.95, p.r * 0.55, Math.PI, 0);
+            ctx.fill();
+
+            ctx.fillStyle = '#000';
+            ctx.beginPath(); ctx.arc(-3, -p.r * 0.9, 1.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(3, -p.r * 0.9, 1.5, 0, Math.PI * 2); ctx.fill();
+
+            ctx.rotate(-(angle + Math.PI / 2));
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 11px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(isAI ? 'AI' : '10', 0, 2);
+
+            ctx.restore();
+
+            if (p.hasBall) {
+                ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r + 6, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+
+        function drawBall() {
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(ball.x, ball.y + ball.r * 0.8, ball.r * 0.9, ball.r * 0.3, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            const grad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 1, ball.x, ball.y, ball.r);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(1, '#cccccc');
+            ctx.fillStyle = grad;
+            ctx.shadowColor = '#fff';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = '#222';
+            ctx.beginPath(); ctx.arc(ball.x - 3, ball.y - 3, 2.5, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(ball.x + 3, ball.y + 2, 2, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(ball.x - 2, ball.y + 4, 1.8, 0, Math.PI * 2); ctx.fill();
+        }
+
+        function drawConfetti() {
+            confetti.forEach((c) => {
+                ctx.save();
+                ctx.translate(c.x, c.y);
+                ctx.rotate(c.rotation);
+                ctx.fillStyle = c.color;
+                ctx.globalAlpha = Math.min(1, c.life / 60);
+                ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
+                ctx.restore();
+
+                c.x += c.vx;
+                c.y += c.vy;
+                c.vy += 0.05;
+                c.rotation += c.rotSpeed;
+                c.life--;
+
+                if (c.y > H + 10 || c.life <= 0) {
+                    c.x = Math.random() * W;
+                    c.y = -10;
+                    c.vy = Math.random() * 2 + 0.5;
+                    c.life = 100 + Math.random() * 200;
+                }
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function drawGoalMessage() {
+            if (gameState.goalScored) {
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                ctx.fillRect(0, H / 2 - 50, W, 100);
+                const text = gameState.goalScored === 'blue' ? '⚽ GOL! SIZ URDINGIZ!' : '⚽ GOL! AI URDII!';
+                const color = gameState.goalScored === 'blue' ? '#60a5fa' : '#f87171';
+                ctx.fillStyle = color;
+                ctx.font = 'bold 42px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 30;
+                ctx.fillText(text, W / 2, H / 2);
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function drawFinishMessage() {
+            if (gameState.finished) {
+                ctx.fillStyle = 'rgba(0,0,0,0.75)';
+                ctx.fillRect(0, 0, W, H);
+
+                let resultText = '';
+                let resultColor = '';
+                if (gameState.scoreBlue > gameState.scoreRed) {
+                    resultText = '🏆 SIZ G\'OLIB BO\'LDINGIZ!';
+                    resultColor = '#34d399';
+                } else if (gameState.scoreBlue < gameState.scoreRed) {
+                    resultText = '😢 SIZ YUTQAZDINGIZ!';
+                    resultColor = '#f87171';
+                } else {
+                    resultText = '🤝 DURRANG!';
+                    resultColor = '#fbbf24';
+                }
+
+                ctx.fillStyle = resultColor;
+                ctx.font = 'bold 48px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = resultColor;
+                ctx.shadowBlur = 30;
+                ctx.fillText(resultText, W / 2, H / 2 - 40);
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = '#f1f5f9';
+                ctx.font = 'bold 32px Segoe UI';
+                ctx.fillText(`${gameState.scoreBlue} : ${gameState.scoreRed}`, W / 2, H / 2 + 30);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '18px Segoe UI';
+                ctx.fillText('Qayta o\'ynash uchun "Qayta" tugmasini bosing', W / 2, H / 2 + 80);
+            }
+        }
+
+        function draw() {
+            drawStadium();
+            drawField();
+            drawCrowd();
+            drawFlags();
+            drawHumanPlayer(player, false);
+            drawHumanPlayer(aiPlayer, true);
+            drawBall();
+            drawConfetti();
+            drawGoalMessage();
+            drawFinishMessage();
+        }
+
+        /* =====================================================
+           ASOSIY LOOP
+           ===================================================== */
+        function gameLoop(timestamp) {
+            if (!gameState.lastTime) gameState.lastTime = timestamp;
+            const dt = Math.min((timestamp - gameState.lastTime) / 1000, 0.05);
+            gameState.lastTime = timestamp;
+
+            if (gameState.running && !gameState.finished && !gameState.goalScored) {
+                gameState.time += dt;
+                updateTimerDisplay();
+                if (gameState.time >= gameState.matchTime) {
+                    gameState.finished = true;
+                    gameState.running = false;
+                    document.getElementById('startBtn').disabled = true;
+                    playWhistleSound();
+                    sendResultToTelegram();
+                }
+            }
+
+            if (!gameState.goalScored && !gameState.finished) {
+                updatePlayer();
+                updateAI();
+                updateBall();
+                checkPlayerBallCollision();
+                checkPlayerCollision();
+            }
+
+            handleGoal();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        /* =====================================================
+           TELEGRAMGA NATIJA YUBORISH
+           ===================================================== */
+        function sendResultToTelegram() {
+            if (!tg) return;
+            const result = gameState.scoreBlue > gameState.scoreRed ? 'win' :
+                gameState.scoreBlue < gameState.scoreRed ? 'lose' : 'draw';
+            try {
+                tg.sendData(JSON.stringify({
+                    score: `${gameState.scoreBlue}:${gameState.scoreRed}`,
+                    time: gameState.time.toFixed(0),
+                    result: result
+                }));
+            } catch (e) {
+                console.log('Telegramga yuborishda xatolik:', e);
+            }
+        }
+
+        /* =====================================================
+           UI
+           ===================================================== */
+        function updateScoreDisplay() {
+            document.getElementById('scoreDisplay').textContent =
+                `${gameState.scoreBlue} : ${gameState.scoreRed}`;
+        }
+
+        function updateTimerDisplay() {
+            const min = Math.floor(gameState.time / 60);
+            const sec = Math.floor(gameState.time % 60);
+            document.getElementById('timerDisplay').textContent =
+                `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
+        /* =====================================================
+           TUGMALAR
+           ===================================================== */
+        document.getElementById('startBtn').addEventListener('click', () => {
+            if (gameState.finished) return;
+            initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            gameState.running = !gameState.running;
+            document.getElementById('startBtn').textContent =
+                gameState.running ? '⏸️ Pauza' : '▶️ Davom etish';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            gameState = {
+                running: false, scoreBlue: 0, scoreRed: 0, time: 0,
+                lastTime: 0, goalScored: null, goalTimer: 0,
+                matchTime: 90, finished: false
+            };
+            resetPositions();
+            updateScoreDisplay();
+            updateTimerDisplay();
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = '▶️ Boshlash';
+        });
+
+        /* =====================================================
+           BOSHLASH
+           ===================================================== */
+        updateScoreDisplay();
+        updateTimerDisplay();
+        requestAnimationFrame(gameLoop);
+    </script>
+
+</body>
+</html>
