@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>⚽ Futbol O'yini — Stadion</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>⚽ Futbol O'yini</title>
     <style>
         * {
             margin: 0;
@@ -99,8 +98,6 @@
             touch-action: none;
             cursor: crosshair;
         }
-
-        /* ===== DUMAOLOQ BOSHQARUV ===== */
         .joystick-container {
             display: none;
             position: absolute;
@@ -121,7 +118,7 @@
             background: rgba(255, 255, 255, 0.08);
             border: 2px solid rgba(255, 255, 255, 0.15);
             position: relative;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         .joystick-stick {
             width: 55px;
@@ -133,7 +130,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
-            transition: transform 0.05s;
         }
         .joystick-arrow {
             position: absolute;
@@ -145,7 +141,6 @@
         .joystick-arrow.down { bottom: 4px; left: 50%; transform: translateX(-50%); }
         .joystick-arrow.left { left: 6px; top: 50%; transform: translateY(-50%); }
         .joystick-arrow.right { right: 6px; top: 50%; transform: translateY(-50%); }
-
         .controls {
             display: flex;
             justify-content: center;
@@ -164,16 +159,10 @@
         .btn-start {
             background: linear-gradient(135deg, #34d399, #10b981);
             color: #fff;
-            box-shadow: 0 8px 24px -8px rgba(52, 211, 153, 0.4);
         }
-        .btn-start:hover:not(:disabled) { transform: scale(1.05); }
         .btn-reset {
             background: rgba(255, 255, 255, 0.06);
             color: #e2e8f0;
-        }
-        .btn-reset:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: scale(1.05);
         }
         .controls button:disabled {
             opacity: 0.4;
@@ -188,7 +177,6 @@
             font-size: 0.7rem;
             flex-wrap: wrap;
         }
-
         @media (max-width: 600px) {
             .container { padding: 10px 8px; border-radius: 24px; }
             .header h1 { font-size: 1.1rem; }
@@ -204,7 +192,6 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="header">
             <h1>⚽ FUTBOL</h1>
@@ -215,10 +202,8 @@
                 <div class="timer" id="timerDisplay">00:00</div>
             </div>
         </div>
-
         <div class="game-area">
             <canvas id="gameCanvas" width="880" height="520"></canvas>
-
             <div class="joystick-container" id="joystickContainer">
                 <div class="joystick-base" id="joystickBase">
                     <div class="joystick-arrow up">▲</div>
@@ -229,149 +214,58 @@
                 </div>
             </div>
         </div>
-
         <div class="controls">
             <button class="btn-start" id="startBtn">▶️ Boshlash</button>
             <button class="btn-reset" id="resetBtn">🔄 Qayta</button>
         </div>
-
         <div class="info-bar">
             <span>🕹️ Dumaloq bilan boshqaring</span>
             <span>⚽ To'p oyoqqa yopishadi</span>
             <span>🔄 Aylantirib qo'yib yuborsangiz — tepadi</span>
         </div>
     </div>
-
     <script>
-        /* =====================================================
-           TELEGRAM WEB APP
-           ===================================================== */
-        const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-            tg.setHeaderColor('#0a0e1a');
-            tg.setBackgroundColor('#0a0e1a');
-        }
-
-        /* =====================================================
-           CANVAS
-           ===================================================== */
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const W = 880, H = 520;
-
-        /* =====================================================
-           O'YIN O'LCHAMLARI
-           ===================================================== */
-        const FIELD = {
-            x: 40, y: 40,
-            w: W - 80, h: H - 80,
-            goalH: 140,
-            goalDepth: 20
-        };
+        const FIELD = { x: 40, y: 40, w: W - 80, h: H - 80, goalH: 140, goalDepth: 20 };
         const GOAL_TOP = H / 2 - FIELD.goalH / 2;
         const GOAL_BOTTOM = H / 2 + FIELD.goalH / 2;
 
-        /* =====================================================
-           O'YIN HOLATI
-           ===================================================== */
         let gameState = {
-            running: false,
-            scoreBlue: 0,
-            scoreRed: 0,
-            time: 0,
-            lastTime: 0,
-            goalScored: null,
-            goalTimer: 0,
-            matchTime: 90,
-            finished: false
+            running: false, scoreBlue: 0, scoreRed: 0, time: 0, lastTime: 0,
+            goalScored: null, goalTimer: 0, matchTime: 90, finished: false
         };
 
-        /* =====================================================
-           O'YINCHILAR
-           ===================================================== */
         let player = {
-            x: 200, y: H / 2,
-            r: 18,
-            vx: 0, vy: 0,
-            speed: 1.1,
-            maxSpeed: 9,
-            color: '#3b82f6',
-            accent: '#60a5fa',
-            hasBall: false,
-            kickPower: 15,
-            direction: 0,
-            kickAnim: 0
+            x: 200, y: H / 2, r: 18, vx: 0, vy: 0, speed: 1.1, maxSpeed: 9,
+            color: '#3b82f6', accent: '#60a5fa', hasBall: false, kickPower: 15,
+            direction: 0, kickAnim: 0
         };
 
         let aiPlayer = {
-            x: W - 200, y: H / 2,
-            r: 18,
-            vx: 0, vy: 0,
-            speed: 0.9,
-            maxSpeed: 7,
-            color: '#ef4444',
-            accent: '#f87171',
-            hasBall: false,
-            kickPower: 13,
-            direction: Math.PI,
-            kickAnim: 0,
-            kickTimer: 0
+            x: W - 200, y: H / 2, r: 18, vx: 0, vy: 0, speed: 0.9, maxSpeed: 7,
+            color: '#ef4444', accent: '#f87171', hasBall: false, kickPower: 13,
+            direction: Math.PI, kickAnim: 0, kickTimer: 0
         };
 
         let ball = {
-            x: W / 2, y: H / 2,
-            r: 10,
-            vx: 0, vy: 0,
-            friction: 0.985,
-            maxSpeed: 18,
-            lastTouch: null
+            x: W / 2, y: H / 2, r: 10, vx: 0, vy: 0,
+            friction: 0.985, maxSpeed: 18, lastTouch: null
         };
 
-        /* =====================================================
-           MUXLISLAR VA BAYROQLAR
-           ===================================================== */
-        let crowd = [];
-        let flags = [];
-        let confetti = [];
+        let crowd = [], flags = [], confetti = [];
 
         function initCrowd() {
             crowd = [];
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 120; i++) {
+                let x, y;
+                if (i < 40) { x = 20 + Math.random() * (W - 40); y = 5 + Math.random() * 20; }
+                else if (i < 80) { x = 20 + Math.random() * (W - 40); y = H - 25 + Math.random() * 20; }
+                else if (i < 100) { x = 5 + Math.random() * 15; y = 40 + Math.random() * (H - 80); }
+                else { x = W - 20 + Math.random() * 15; y = 40 + Math.random() * (H - 80); }
                 crowd.push({
-                    x: 20 + Math.random() * (W - 40),
-                    y: 5 + Math.random() * 20,
-                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
-                    phase: Math.random() * Math.PI * 2,
-                    speed: 0.05 + Math.random() * 0.1,
-                    size: 3 + Math.random() * 3
-                });
-            }
-            for (let i = 0; i < 40; i++) {
-                crowd.push({
-                    x: 20 + Math.random() * (W - 40),
-                    y: H - 25 + Math.random() * 20,
-                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
-                    phase: Math.random() * Math.PI * 2,
-                    speed: 0.05 + Math.random() * 0.1,
-                    size: 3 + Math.random() * 3
-                });
-            }
-            for (let i = 0; i < 20; i++) {
-                crowd.push({
-                    x: 5 + Math.random() * 15,
-                    y: 40 + Math.random() * (H - 80),
-                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
-                    phase: Math.random() * Math.PI * 2,
-                    speed: 0.05 + Math.random() * 0.1,
-                    size: 3 + Math.random() * 3
-                });
-            }
-            for (let i = 0; i < 20; i++) {
-                crowd.push({
-                    x: W - 20 + Math.random() * 15,
-                    y: 40 + Math.random() * (H - 80),
+                    x, y,
                     color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
                     phase: Math.random() * Math.PI * 2,
                     speed: 0.05 + Math.random() * 0.1,
@@ -382,21 +276,12 @@
 
         function initFlags() {
             flags = [];
-            for (let i = 0; i < 12; i++) {
+            for (let i = 0; i < 20; i++) {
+                let x, y;
+                if (i < 12) { x = 30 + Math.random() * (W - 60); y = 8 + Math.random() * 15; }
+                else { x = 30 + Math.random() * (W - 60); y = H - 18 + Math.random() * 12; }
                 flags.push({
-                    x: 30 + Math.random() * (W - 60),
-                    y: 8 + Math.random() * 15,
-                    color: ['#1EB53A', '#0099B5', '#B22234', '#0039A6', '#DE2910', '#BC002D'][Math.floor(Math.random() * 6)],
-                    phase: Math.random() * Math.PI * 2,
-                    speed: 0.03 + Math.random() * 0.05,
-                    size: 8 + Math.random() * 6,
-                    side: Math.random() > 0.5 ? 1 : -1
-                });
-            }
-            for (let i = 0; i < 8; i++) {
-                flags.push({
-                    x: 30 + Math.random() * (W - 60),
-                    y: H - 18 + Math.random() * 12,
+                    x, y,
                     color: ['#1EB53A', '#0099B5', '#B22234', '#0039A6', '#DE2910', '#BC002D'][Math.floor(Math.random() * 6)],
                     phase: Math.random() * Math.PI * 2,
                     speed: 0.03 + Math.random() * 0.05,
@@ -410,10 +295,8 @@
             confetti = [];
             for (let i = 0; i < 60; i++) {
                 confetti.push({
-                    x: Math.random() * W,
-                    y: Math.random() * H,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: Math.random() * 2 + 0.5,
+                    x: Math.random() * W, y: Math.random() * H,
+                    vx: (Math.random() - 0.5) * 2, vy: Math.random() * 2 + 0.5,
                     size: 2 + Math.random() * 4,
                     color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6', '#fff'][Math.floor(Math.random() * 7)],
                     rotation: Math.random() * Math.PI * 2,
@@ -427,12 +310,8 @@
         initFlags();
         initConfetti();
 
-        /* =====================================================
-           AUDIO TIZIMI — MUXLISLAR OVOZI
-           ===================================================== */
-        let audioCtx = null;
-        let crowdGain = null;
-        let ambientNoise = null;
+        /* ===== AUDIO ===== */
+        let audioCtx = null, crowdGain = null, ambientNoise = null;
 
         function initAudio() {
             if (!audioCtx) {
@@ -446,9 +325,7 @@
             const bufferSize = 2 * audioCtx.sampleRate;
             const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = (Math.random() * 2 - 1) * 0.05;
-            }
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
             ambientNoise = audioCtx.createBufferSource();
             ambientNoise.buffer = buffer;
             ambientNoise.loop = true;
@@ -465,19 +342,16 @@
         }
 
         function setCrowdVolume(volume) {
-            if (crowdGain && audioCtx) {
-                crowdGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.5);
-            }
+            if (crowdGain && audioCtx) crowdGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.5);
         }
 
         function playCrowdCheer() {
             if (!audioCtx) return;
             const duration = 3;
-            const sampleRate = audioCtx.sampleRate;
-            const buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
+            const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * duration, audioCtx.sampleRate);
             const data = buffer.getChannelData(0);
             for (let i = 0; i < data.length; i++) {
-                const t = i / sampleRate;
+                const t = i / audioCtx.sampleRate;
                 const envelope = Math.exp(-t * 1.5) * (1 - Math.exp(-t * 30));
                 const voice1 = Math.sin(t * 200 + Math.random() * 100) * 0.3;
                 const voice2 = Math.sin(t * 400 + Math.random() * 200) * 0.2;
@@ -530,13 +404,10 @@
             osc.stop(audioCtx.currentTime + 0.3);
         }
 
-        /* =====================================================
-           DUMAOLOQ BOSHQARUV (JOYSTICK)
-           ===================================================== */
+        /* ===== JOYSTICK ===== */
         const joystickContainer = document.getElementById('joystickContainer');
         const joystickBase = document.getElementById('joystickBase');
         const joystickStick = document.getElementById('joystickStick');
-
         let joystickActive = false;
         let joystickVector = { x: 0, y: 0 };
         let joystickMaxDist = 42;
@@ -547,10 +418,7 @@
 
         function getJoystickCenter() {
             const rect = joystickBase.getBoundingClientRect();
-            return {
-                x: rect.left + rect.width / 2,
-                y: rect.top + rect.height / 2
-            };
+            return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
         }
 
         function updateJoystick(clientX, clientY) {
@@ -558,22 +426,16 @@
             let dx = clientX - center.x;
             let dy = clientY - center.y;
             const dist = Math.hypot(dx, dy);
-
             if (dist > joystickMaxDist) {
                 dx = (dx / dist) * joystickMaxDist;
                 dy = (dy / dist) * joystickMaxDist;
             }
-
             joystickStick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-
             const ndx = dx / joystickMaxDist;
             const ndy = dy / joystickMaxDist;
             joystickVector.x = ndx;
             joystickVector.y = ndy;
-
-            if (Math.hypot(ndx, ndy) > 0.1) {
-                player.direction = Math.atan2(ndy, ndx);
-            }
+            if (Math.hypot(ndx, ndy) > 0.1) player.direction = Math.atan2(ndy, ndx);
         }
 
         function resetJoystick() {
@@ -596,9 +458,7 @@
 
         joystickBase.addEventListener('touchend', (e) => {
             e.preventDefault();
-            if (player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) {
-                kickBall();
-            }
+            if (player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) kickBall();
             joystickActive = false;
             resetJoystick();
         }, { passive: false });
@@ -615,25 +475,19 @@
         });
 
         window.addEventListener('mouseup', () => {
-            if (joystickActive && player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) {
-                kickBall();
-            }
+            if (joystickActive && player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) kickBall();
             joystickActive = false;
             resetJoystick();
         });
 
-        /* =====================================================
-           TEPISH
-           ===================================================== */
+        /* ===== TEPISH ===== */
         function kickBall() {
             if (!player.hasBall) return;
             let dx, dy;
             if (joystickActive || Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
-                dx = joystickVector.x;
-                dy = joystickVector.y;
+                dx = joystickVector.x; dy = joystickVector.y;
             } else {
-                dx = Math.cos(player.direction);
-                dy = Math.sin(player.direction);
+                dx = Math.cos(player.direction); dy = Math.sin(player.direction);
             }
             const dist = Math.hypot(dx, dy);
             if (dist < 0.1) return;
@@ -647,10 +501,8 @@
 
         function kickBallAI() {
             if (!aiPlayer.hasBall) return;
-            const goalX = FIELD.x;
-            const goalY = H / 2;
-            const dx = goalX - aiPlayer.x;
-            const dy = goalY - aiPlayer.y;
+            const dx = FIELD.x - aiPlayer.x;
+            const dy = H / 2 - aiPlayer.y;
             const dist = Math.hypot(dx, dy);
             ball.vx = (dx / dist) * aiPlayer.kickPower;
             ball.vy = (dy / dist) * aiPlayer.kickPower;
@@ -660,42 +512,7 @@
             playKickSound();
         }
 
-        /* =====================================================
-           O'YINCHI HARAKATI
-           ===================================================== */
-        function updatePlayer() {
-            if (!gameState.running) return;
-
-            if (Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
-                const speed = player.speed * (1 + Math.hypot(joystickVector.x, joystickVector.y) * 2);
-                player.vx = joystickVector.x * speed * 3;
-                player.vy = joystickVector.y * speed * 3;
-                player.direction = Math.atan2(joystickVector.y, joystickVector.x);
-            } else if (mouse.active) {
-                const dx = mouse.x - player.x;
-                const dy = mouse.y - player.y;
-                const dist = Math.hypot(dx, dy);
-                if (dist > 5) {
-                    const speed = Math.min(player.speed * (1 + dist / 150), player.maxSpeed);
-                    player.vx = (dx / dist) * speed;
-                    player.vy = (dy / dist) * speed;
-                    player.direction = Math.atan2(dy, dx);
-                } else {
-                    player.vx *= 0.7;
-                    player.vy *= 0.7;
-                }
-            } else {
-                player.vx *= 0.9;
-                player.vy *= 0.9;
-            }
-
-            player.x += player.vx;
-            player.y += player.vy;
-            player.x = clamp(player.x, FIELD.x + player.r, FIELD.x + FIELD.w - player.r);
-            player.y = clamp(player.y, FIELD.y + player.r, FIELD.y + FIELD.h - player.r);
-            if (player.kickAnim > 0) player.kickAnim--;
-        }
-
+        /* ===== HARAKAT ===== */
         let mouse = { x: W / 2, y: H / 2, active: false };
 
         canvas.addEventListener('mousemove', (e) => {
@@ -708,89 +525,81 @@
         canvas.addEventListener('mouseleave', () => { mouse.active = false; });
         canvas.addEventListener('mouseup', () => { if (player.hasBall) kickBall(); });
 
-        /* =====================================================
-           AI
-           ===================================================== */
+        function updatePlayer() {
+            if (!gameState.running) return;
+            if (Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
+                const speed = player.speed * (1 + Math.hypot(joystickVector.x, joystickVector.y) * 2);
+                player.vx = joystickVector.x * speed * 3;
+                player.vy = joystickVector.y * speed * 3;
+                player.direction = Math.atan2(joystickVector.y, joystickVector.x);
+            } else if (mouse.active) {
+                const dx = mouse.x - player.x, dy = mouse.y - player.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist > 5) {
+                    const speed = Math.min(player.speed * (1 + dist / 150), player.maxSpeed);
+                    player.vx = (dx / dist) * speed;
+                    player.vy = (dy / dist) * speed;
+                    player.direction = Math.atan2(dy, dx);
+                } else { player.vx *= 0.7; player.vy *= 0.7; }
+            } else { player.vx *= 0.9; player.vy *= 0.9; }
+            player.x += player.vx;
+            player.y += player.vy;
+            player.x = clamp(player.x, FIELD.x + player.r, FIELD.x + FIELD.w - player.r);
+            player.y = clamp(player.y, FIELD.y + player.r, FIELD.y + FIELD.h - player.r);
+            if (player.kickAnim > 0) player.kickAnim--;
+        }
+
         function updateAI() {
             if (!gameState.running) return;
             let targetX, targetY;
-
-            if (ball.x > W / 2) {
-                targetX = ball.x + 10;
-                targetY = ball.y;
-            } else {
-                targetX = ball.x + (FIELD.x - ball.x) * 0.3;
-                targetY = ball.y + (H / 2 - ball.y) * 0.3;
-            }
-
-            const dx = targetX - aiPlayer.x;
-            const dy = targetY - aiPlayer.y;
+            if (ball.x > W / 2) { targetX = ball.x + 10; targetY = ball.y; }
+            else { targetX = ball.x + (FIELD.x - ball.x) * 0.3; targetY = ball.y + (H / 2 - ball.y) * 0.3; }
+            const dx = targetX - aiPlayer.x, dy = targetY - aiPlayer.y;
             const dist = Math.hypot(dx, dy);
-
             if (dist > 5) {
                 const speed = Math.min(aiPlayer.speed * (1 + dist / 200), aiPlayer.maxSpeed);
                 aiPlayer.vx = (dx / dist) * speed;
                 aiPlayer.vy = (dy / dist) * speed;
                 aiPlayer.direction = Math.atan2(dy, dx);
-            } else {
-                aiPlayer.vx *= 0.8;
-                aiPlayer.vy *= 0.8;
-            }
-
+            } else { aiPlayer.vx *= 0.8; aiPlayer.vy *= 0.8; }
             aiPlayer.x += aiPlayer.vx;
             aiPlayer.y += aiPlayer.vy;
             aiPlayer.x = clamp(aiPlayer.x, FIELD.x + aiPlayer.r, FIELD.x + FIELD.w - aiPlayer.r);
             aiPlayer.y = clamp(aiPlayer.y, FIELD.y + aiPlayer.r, FIELD.y + FIELD.h - aiPlayer.r);
-
             if (aiPlayer.hasBall) {
                 aiPlayer.kickTimer++;
-                if (aiPlayer.kickTimer > 48) {
-                    kickBallAI();
-                    aiPlayer.kickTimer = 0;
-                }
-            } else {
-                aiPlayer.kickTimer = 0;
-            }
+                if (aiPlayer.kickTimer > 48) { kickBallAI(); aiPlayer.kickTimer = 0; }
+            } else aiPlayer.kickTimer = 0;
             if (aiPlayer.kickAnim > 0) aiPlayer.kickAnim--;
         }
 
-        /* =====================================================
-           TO'P
-           ===================================================== */
         function updateBall() {
             if (player.hasBall) {
                 const angle = player.direction;
                 ball.x = player.x + Math.cos(angle) * (player.r + ball.r - 2);
                 ball.y = player.y + Math.sin(angle) * (player.r + ball.r - 2);
-                ball.vx = 0;
-                ball.vy = 0;
+                ball.vx = 0; ball.vy = 0;
                 return;
             }
-
             if (aiPlayer.hasBall) {
                 const angle = aiPlayer.direction;
                 ball.x = aiPlayer.x + Math.cos(angle) * (aiPlayer.r + ball.r - 2);
                 ball.y = aiPlayer.y + Math.sin(angle) * (aiPlayer.r + ball.r - 2);
-                ball.vx = 0;
-                ball.vy = 0;
+                ball.vx = 0; ball.vy = 0;
                 return;
             }
-
             ball.x += ball.vx;
             ball.y += ball.vy;
             ball.vx *= ball.friction;
             ball.vy *= ball.friction;
-
             const speed = Math.hypot(ball.vx, ball.vy);
             if (speed > ball.maxSpeed) {
                 ball.vx = (ball.vx / speed) * ball.maxSpeed;
                 ball.vy = (ball.vy / speed) * ball.maxSpeed;
             }
             if (speed < 0.05) { ball.vx = 0; ball.vy = 0; }
-
             if (ball.y - ball.r < FIELD.y) { ball.y = FIELD.y + ball.r; ball.vy = -ball.vy * 0.8; }
             if (ball.y + ball.r > FIELD.y + FIELD.h) { ball.y = FIELD.y + FIELD.h - ball.r; ball.vy = -ball.vy * 0.8; }
-
             if (ball.x - ball.r < FIELD.x) {
                 if (ball.y > GOAL_TOP && ball.y < GOAL_BOTTOM) {
                     if (gameState.goalScored === null) {
@@ -801,12 +610,8 @@
                         playCrowdCheer();
                         initConfetti();
                     }
-                } else {
-                    ball.x = FIELD.x + ball.r;
-                    ball.vx = -ball.vx * 0.8;
-                }
+                } else { ball.x = FIELD.x + ball.r; ball.vx = -ball.vx * 0.8; }
             }
-
             if (ball.x + ball.r > FIELD.x + FIELD.w) {
                 if (ball.y > GOAL_TOP && ball.y < GOAL_BOTTOM) {
                     if (gameState.goalScored === null) {
@@ -817,24 +622,17 @@
                         playCrowdCheer();
                         initConfetti();
                     }
-                } else {
-                    ball.x = FIELD.x + FIELD.w - ball.r;
-                    ball.vx = -ball.vx * 0.8;
-                }
+                } else { ball.x = FIELD.x + FIELD.w - ball.r; ball.vx = -ball.vx * 0.8; }
             }
         }
 
-        /* =====================================================
-           TO'QNASHUV
-           ===================================================== */
         function checkPlayerBallCollision() {
             if (!player.hasBall) {
                 const dist = distance(player, ball);
                 if (dist < player.r + ball.r + 4) {
                     player.hasBall = true;
                     ball.lastTouch = 'blue';
-                    const angle = Math.atan2(ball.y - player.y, ball.x - player.x);
-                    player.direction = angle;
+                    player.direction = Math.atan2(ball.y - player.y, ball.x - player.x);
                 }
             }
             if (!aiPlayer.hasBall) {
@@ -842,8 +640,7 @@
                 if (distAI < aiPlayer.r + ball.r + 4) {
                     aiPlayer.hasBall = true;
                     ball.lastTouch = 'red';
-                    const angle = Math.atan2(ball.y - aiPlayer.y, ball.x - aiPlayer.x);
-                    aiPlayer.direction = angle;
+                    aiPlayer.direction = Math.atan2(ball.y - aiPlayer.y, ball.x - aiPlayer.x);
                 }
             }
         }
@@ -865,9 +662,6 @@
             }
         }
 
-        /* =====================================================
-           GOL
-           ===================================================== */
         function handleGoal() {
             if (gameState.goalScored) {
                 gameState.goalTimer--;
@@ -889,14 +683,12 @@
         function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
         function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
-        /* =====================================================
-           RASM CHIZISH
-           ===================================================== */
+        /* ===== CHIZISH ===== */
         function drawStadium() {
-            const stadiumGrad = ctx.createRadialGradient(W / 2, H / 2, 100, W / 2, H / 2, 500);
-            stadiumGrad.addColorStop(0, '#0a0e1a');
-            stadiumGrad.addColorStop(1, '#05050f');
-            ctx.fillStyle = stadiumGrad;
+            const grad = ctx.createRadialGradient(W / 2, H / 2, 100, W / 2, H / 2, 500);
+            grad.addColorStop(0, '#0a0e1a');
+            grad.addColorStop(1, '#05050f');
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, W, H);
         }
 
@@ -936,45 +728,29 @@
             grad.addColorStop(1, '#0D3B0F');
             ctx.fillStyle = grad;
             ctx.fillRect(FIELD.x, FIELD.y, FIELD.w, FIELD.h);
-
             ctx.strokeStyle = 'rgba(255,255,255,0.5)';
             ctx.lineWidth = 2;
             ctx.strokeRect(FIELD.x, FIELD.y, FIELD.w, FIELD.h);
-
-            ctx.beginPath();
-            ctx.moveTo(W / 2, FIELD.y);
-            ctx.lineTo(W / 2, FIELD.y + FIELD.h);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(W / 2, H / 2, 60, 0, Math.PI * 2);
-            ctx.stroke();
-
+            ctx.beginPath(); ctx.moveTo(W / 2, FIELD.y); ctx.lineTo(W / 2, FIELD.y + FIELD.h); ctx.stroke();
+            ctx.beginPath(); ctx.arc(W / 2, H / 2, 60, 0, Math.PI * 2); ctx.stroke();
             ctx.fillStyle = 'rgba(255,255,255,0.5)';
-            ctx.beginPath();
-            ctx.arc(W / 2, H / 2, 4, 0, Math.PI * 2);
-            ctx.fill();
-
+            ctx.beginPath(); ctx.arc(W / 2, H / 2, 4, 0, Math.PI * 2); ctx.fill();
             ctx.strokeRect(FIELD.x, H / 2 - 90, 110, 180);
             ctx.strokeRect(FIELD.x, H / 2 - 50, 50, 100);
             ctx.strokeRect(FIELD.x + FIELD.w - 110, H / 2 - 90, 110, 180);
             ctx.strokeRect(FIELD.x + FIELD.w - 50, H / 2 - 50, 50, 100);
-
             ctx.beginPath(); ctx.arc(FIELD.x, FIELD.y, 15, 0, Math.PI / 2); ctx.stroke();
             ctx.beginPath(); ctx.arc(FIELD.x + FIELD.w, FIELD.y, 15, Math.PI / 2, Math.PI); ctx.stroke();
             ctx.beginPath(); ctx.arc(FIELD.x, FIELD.y + FIELD.h, 15, -Math.PI / 2, 0); ctx.stroke();
             ctx.beginPath(); ctx.arc(FIELD.x + FIELD.w, FIELD.y + FIELD.h, 15, Math.PI, Math.PI * 1.5); ctx.stroke();
-
             ctx.fillStyle = 'rgba(255,255,255,0.1)';
             ctx.fillRect(FIELD.x - FIELD.goalDepth, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
             ctx.strokeStyle = 'rgba(255,255,255,0.7)';
             ctx.lineWidth = 3;
             ctx.strokeRect(FIELD.x - FIELD.goalDepth, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
-
             ctx.fillStyle = 'rgba(255,255,255,0.1)';
             ctx.fillRect(FIELD.x + FIELD.w, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
             ctx.strokeRect(FIELD.x + FIELD.w, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
-
             ctx.strokeStyle = 'rgba(255,255,255,0.15)';
             ctx.lineWidth = 1;
             for (let i = 0; i <= 6; i++) {
@@ -987,20 +763,16 @@
         function drawHumanPlayer(p, isAI) {
             ctx.save();
             ctx.translate(p.x, p.y);
-
             ctx.fillStyle = 'rgba(0,0,0,0.3)';
             ctx.beginPath();
             ctx.ellipse(0, p.r * 0.9, p.r * 1.1, p.r * 0.4, 0, 0, Math.PI * 2);
             ctx.fill();
-
             const angle = p.direction;
             ctx.rotate(angle + Math.PI / 2);
-
             const kickOffset = p.kickAnim > 0 ? Math.sin(p.kickAnim / 15 * Math.PI) * 8 : 0;
             ctx.fillStyle = '#1a1a2e';
             ctx.fillRect(-7, 8 + kickOffset, 5, 14);
             ctx.fillRect(2, 8, 5, 14);
-
             const bodyGrad = ctx.createLinearGradient(-p.r, 0, p.r, 0);
             bodyGrad.addColorStop(0, p.color);
             bodyGrad.addColorStop(1, p.accent);
@@ -1008,7 +780,6 @@
             ctx.beginPath();
             ctx.ellipse(0, 0, p.r * 0.9, p.r * 0.75, 0, 0, Math.PI * 2);
             ctx.fill();
-
             ctx.fillStyle = p.accent;
             ctx.beginPath();
             ctx.ellipse(-p.r * 0.9, -2, 5, 9, -0.3, 0, Math.PI * 2);
@@ -1016,30 +787,24 @@
             ctx.beginPath();
             ctx.ellipse(p.r * 0.9, -2, 5, 9, 0.3, 0, Math.PI * 2);
             ctx.fill();
-
             ctx.fillStyle = '#F5D0A9';
             ctx.beginPath();
             ctx.arc(0, -p.r * 0.9, p.r * 0.55, 0, Math.PI * 2);
             ctx.fill();
-
             ctx.fillStyle = '#3E2723';
             ctx.beginPath();
             ctx.arc(0, -p.r * 0.95, p.r * 0.55, Math.PI, 0);
             ctx.fill();
-
             ctx.fillStyle = '#000';
             ctx.beginPath(); ctx.arc(-3, -p.r * 0.9, 1.5, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(3, -p.r * 0.9, 1.5, 0, Math.PI * 2); ctx.fill();
-
             ctx.rotate(-(angle + Math.PI / 2));
             ctx.fillStyle = '#fff';
             ctx.font = 'bold 11px Segoe UI';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(isAI ? 'AI' : '10', 0, 2);
-
             ctx.restore();
-
             if (p.hasBall) {
                 ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)';
                 ctx.lineWidth = 3;
@@ -1054,7 +819,6 @@
             ctx.beginPath();
             ctx.ellipse(ball.x, ball.y + ball.r * 0.8, ball.r * 0.9, ball.r * 0.3, 0, 0, Math.PI * 2);
             ctx.fill();
-
             const grad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 1, ball.x, ball.y, ball.r);
             grad.addColorStop(0, '#ffffff');
             grad.addColorStop(1, '#cccccc');
@@ -1065,7 +829,6 @@
             ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
             ctx.fill();
             ctx.shadowBlur = 0;
-
             ctx.fillStyle = '#222';
             ctx.beginPath(); ctx.arc(ball.x - 3, ball.y - 3, 2.5, 0, Math.PI * 2); ctx.fill();
             ctx.beginPath(); ctx.arc(ball.x + 3, ball.y + 2, 2, 0, Math.PI * 2); ctx.fill();
@@ -1073,7 +836,7 @@
         }
 
         function drawConfetti() {
-            confetti.forEach((c) => {
+            confetti.forEach(c => {
                 ctx.save();
                 ctx.translate(c.x, c.y);
                 ctx.rotate(c.rotation);
@@ -1081,13 +844,11 @@
                 ctx.globalAlpha = Math.min(1, c.life / 60);
                 ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
                 ctx.restore();
-
                 c.x += c.vx;
                 c.y += c.vy;
                 c.vy += 0.05;
                 c.rotation += c.rotSpeed;
                 c.life--;
-
                 if (c.y > H + 10 || c.life <= 0) {
                     c.x = Math.random() * W;
                     c.y = -10;
@@ -1119,20 +880,14 @@
             if (gameState.finished) {
                 ctx.fillStyle = 'rgba(0,0,0,0.75)';
                 ctx.fillRect(0, 0, W, H);
-
-                let resultText = '';
-                let resultColor = '';
+                let resultText = '', resultColor = '';
                 if (gameState.scoreBlue > gameState.scoreRed) {
-                    resultText = '🏆 SIZ G\'OLIB BO\'LDINGIZ!';
-                    resultColor = '#34d399';
+                    resultText = '🏆 SIZ G\'OLIB BO\'LDINGIZ!'; resultColor = '#34d399';
                 } else if (gameState.scoreBlue < gameState.scoreRed) {
-                    resultText = '😢 SIZ YUTQAZDINGIZ!';
-                    resultColor = '#f87171';
+                    resultText = '😢 SIZ YUTQAZDINGIZ!'; resultColor = '#f87171';
                 } else {
-                    resultText = '🤝 DURRANG!';
-                    resultColor = '#fbbf24';
+                    resultText = '🤝 DURRANG!'; resultColor = '#fbbf24';
                 }
-
                 ctx.fillStyle = resultColor;
                 ctx.font = 'bold 48px Segoe UI';
                 ctx.textAlign = 'center';
@@ -1141,11 +896,9 @@
                 ctx.shadowBlur = 30;
                 ctx.fillText(resultText, W / 2, H / 2 - 40);
                 ctx.shadowBlur = 0;
-
                 ctx.fillStyle = '#f1f5f9';
                 ctx.font = 'bold 32px Segoe UI';
                 ctx.fillText(`${gameState.scoreBlue} : ${gameState.scoreRed}`, W / 2, H / 2 + 30);
-
                 ctx.fillStyle = '#94a3b8';
                 ctx.font = '18px Segoe UI';
                 ctx.fillText('Qayta o\'ynash uchun "Qayta" tugmasini bosing', W / 2, H / 2 + 80);
@@ -1165,14 +918,10 @@
             drawFinishMessage();
         }
 
-        /* =====================================================
-           ASOSIY LOOP
-           ===================================================== */
         function gameLoop(timestamp) {
             if (!gameState.lastTime) gameState.lastTime = timestamp;
             const dt = Math.min((timestamp - gameState.lastTime) / 1000, 0.05);
             gameState.lastTime = timestamp;
-
             if (gameState.running && !gameState.finished && !gameState.goalScored) {
                 gameState.time += dt;
                 updateTimerDisplay();
@@ -1181,10 +930,8 @@
                     gameState.running = false;
                     document.getElementById('startBtn').disabled = true;
                     playWhistleSound();
-                    sendResultToTelegram();
                 }
             }
-
             if (!gameState.goalScored && !gameState.finished) {
                 updatePlayer();
                 updateAI();
@@ -1192,63 +939,31 @@
                 checkPlayerBallCollision();
                 checkPlayerCollision();
             }
-
             handleGoal();
             draw();
             requestAnimationFrame(gameLoop);
         }
 
-        /* =====================================================
-           TELEGRAMGA NATIJA YUBORISH
-           ===================================================== */
-        function sendResultToTelegram() {
-            if (!tg) return;
-            const result = gameState.scoreBlue > gameState.scoreRed ? 'win' :
-                gameState.scoreBlue < gameState.scoreRed ? 'lose' : 'draw';
-            try {
-                tg.sendData(JSON.stringify({
-                    score: `${gameState.scoreBlue}:${gameState.scoreRed}`,
-                    time: gameState.time.toFixed(0),
-                    result: result
-                }));
-            } catch (e) {
-                console.log('Telegramga yuborishda xatolik:', e);
-            }
-        }
-
-        /* =====================================================
-           UI
-           ===================================================== */
         function updateScoreDisplay() {
-            document.getElementById('scoreDisplay').textContent =
-                `${gameState.scoreBlue} : ${gameState.scoreRed}`;
+            document.getElementById('scoreDisplay').textContent = `${gameState.scoreBlue} : ${gameState.scoreRed}`;
         }
 
         function updateTimerDisplay() {
             const min = Math.floor(gameState.time / 60);
             const sec = Math.floor(gameState.time % 60);
-            document.getElementById('timerDisplay').textContent =
-                `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
         }
 
-        /* =====================================================
-           TUGMALAR
-           ===================================================== */
         document.getElementById('startBtn').addEventListener('click', () => {
             if (gameState.finished) return;
             initAudio();
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             gameState.running = !gameState.running;
-            document.getElementById('startBtn').textContent =
-                gameState.running ? '⏸️ Pauza' : '▶️ Davom etish';
+            document.getElementById('startBtn').textContent = gameState.running ? '⏸️ Pauza' : '▶️ Davom etish';
         });
 
         document.getElementById('resetBtn').addEventListener('click', () => {
-            gameState = {
-                running: false, scoreBlue: 0, scoreRed: 0, time: 0,
-                lastTime: 0, goalScored: null, goalTimer: 0,
-                matchTime: 90, finished: false
-            };
+            gameState = { running: false, scoreBlue: 0, scoreRed: 0, time: 0, lastTime: 0, goalScored: null, goalTimer: 0, matchTime: 90, finished: false };
             resetPositions();
             updateScoreDisplay();
             updateTimerDisplay();
@@ -1256,13 +971,9 @@
             document.getElementById('startBtn').textContent = '▶️ Boshlash';
         });
 
-        /* =====================================================
-           BOSHLASH
-           ===================================================== */
         updateScoreDisplay();
         updateTimerDisplay();
         requestAnimationFrame(gameLoop);
     </script>
-
 </body>
 </html>
