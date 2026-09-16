@@ -1,979 +1,789 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>⚽ Futbol O'yini</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 8px;
-            background: #0a0e1a;
-            overflow: hidden;
-            touch-action: none;
-        }
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(24px);
-            border-radius: 36px;
-            padding: 14px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
-            position: relative;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .header h1 {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #34d399, #60a5fa, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .score-board {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 5px 16px;
-            border-radius: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .score-board .team {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-weight: 700;
-            font-size: 0.8rem;
-        }
-        .score-board .team.blue { color: #60a5fa; }
-        .score-board .team.red { color: #f87171; }
-        .score-board .score {
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: #f1f5f9;
-            min-width: 55px;
-            text-align: center;
-        }
-        .score-board .timer {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            font-family: monospace;
-            min-width: 45px;
-            text-align: center;
-        }
-        .game-area {
-            position: relative;
-            background: #1B5E20;
-            border-radius: 18px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
-        }
-        canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            touch-action: none;
-            cursor: crosshair;
-        }
-        .joystick-container {
-            display: none;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            width: 130px;
-            height: 130px;
-            z-index: 10;
-            touch-action: none;
-        }
-        .joystick-container.active {
-            display: block;
-        }
-        .joystick-base {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        .joystick-stick {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.5);
-        }
-        .joystick-arrow {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .joystick-arrow.up { top: 4px; left: 50%; transform: translateX(-50%); }
-        .joystick-arrow.down { bottom: 4px; left: 50%; transform: translateX(-50%); }
-        .joystick-arrow.left { left: 6px; top: 50%; transform: translateY(-50%); }
-        .joystick-arrow.right { right: 6px; top: 50%; transform: translateY(-50%); }
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .controls button {
-            padding: 9px 24px;
-            border-radius: 60px;
-            border: none;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-start {
-            background: linear-gradient(135deg, #34d399, #10b981);
-            color: #fff;
-        }
-        .btn-reset {
-            background: rgba(255, 255, 255, 0.06);
-            color: #e2e8f0;
-        }
-        .controls button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .info-bar {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            margin-top: 8px;
-            color: #64748b;
-            font-size: 0.7rem;
-            flex-wrap: wrap;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 10px 8px; border-radius: 24px; }
-            .header h1 { font-size: 1.1rem; }
-            .score-board { padding: 4px 10px; gap: 6px; }
-            .score-board .score { font-size: 1.1rem; min-width: 40px; }
-            .score-board .team { font-size: 0.65rem; }
-            .score-board .timer { font-size: 0.7rem; }
-            .controls button { padding: 7px 16px; font-size: 0.7rem; }
-            .joystick-container { width: 110px; height: 110px; bottom: 14px; left: 14px; }
-            .joystick-base { width: 110px; height: 110px; }
-            .joystick-stick { width: 46px; height: 46px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#667eea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Store Control">
+<meta name="description" content="Supermarket boshqaruv tizimi">
+<title>Store Control</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+background:#f0f2f5;color:#333;line-height:1.5;overscroll-behavior:none;
+-webkit-font-smoothing:antialiased}
+.app{max-width:500px;margin:0 auto;min-height:100vh;background:#f0f2f5;
+position:relative;padding-bottom:90px}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
+box-shadow:0 4px 20px rgba(102,126,234,.3)}
+.header-top{display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+.status{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;
+font-size:11px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(10px)}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* STATS */
+.stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:white;border-radius:14px;padding:14px;
+box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#667eea}
+.stat.blue::before{background:#3b82f6}
+.stat.green::before{background:#10b981}
+.stat.orange::before{background:#f59e0b}
+.stat.red::before{background:#ef4444}
+.stat.purple::before{background:#8b5cf6}
+.stat .label{font-size:10px;color:#888;font-weight:600;
+letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
+.stat.full{grid-column:1/-1}
+
+/* NAV */
+.nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
+display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
+position:sticky;top:64px;z-index:99}
+.nav-btn{flex:1;padding:8px 4px;border:none;background:transparent;
+border-radius:10px;cursor:pointer;font-size:10px;font-weight:600;
+color:#666;display:flex;flex-direction:column;align-items:center;
+gap:3px;font-family:inherit;transition:all .2s}
+.nav-btn .ico{font-size:18px;line-height:1}
+.nav-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
+
+/* CONTENT */
+.content{padding:0 12px}
+.section{display:none}
+.section.active{display:block}
+.list-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
+box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
+gap:12px;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+.avatar{width:42px;height:42px;border-radius:50%;display:flex;
+align-items:center;justify-content:center;font-weight:800;color:white;
+font-size:14px;flex-shrink:0}
+.avatar.blue{background:#3b82f6}
+.avatar.green{background:#10b981}
+.avatar.purple{background:#8b5cf6}
+.avatar.orange{background:#f59e0b}
+.avatar.red{background:#ef4444}
+.info{flex:1;min-width:0}
+.info .title{font-weight:700;font-size:14px;margin-bottom:2px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info .sub{font-size:12px;color:#888;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;
+white-space:nowrap}
+.badge.blue{background:#dbeafe;color:#1e40af}
+.badge.green{background:#d1fae5;color:#065f46}
+.badge.orange{background:#fef3c7;color:#92400e}
+.badge.red{background:#fee2e2;color:#991b1b}
+.badge.purple{background:#ede9fe;color:#6b21a8}
+.badge.gray{background:#f3f4f6;color:#4b5563}
+.actions{display:flex;gap:6px;margin-top:8px}
+.btn{padding:6px 12px;border:none;border-radius:8px;font-size:11px;
+font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:active{transform:scale(.95)}
+.btn-sm{padding:6px 10px;font-size:11px}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+.btn-success{background:#10b981;color:white}
+.btn-danger{background:#ef4444;color:white}
+.btn-del{background:#fee2e2;color:#dc2626;padding:6px 8px;font-size:14px;
+border-radius:8px;border:none;cursor:pointer}
+.empty{text-align:center;padding:50px 20px;color:#999}
+.empty .ico{font-size:56px;margin-bottom:12px;opacity:.4}
+.empty p{font-size:13px}
+
+/* FAB */
+.fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;
+border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;border:none;font-size:24px;cursor:pointer;
+box-shadow:0 6px 20px rgba(102,126,234,.4);z-index:50;
+display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.fab:active{transform:scale(.9)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
+backdrop-filter:blur(4px);z-index:1000;display:none;
+align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:white;border-radius:24px 24px 0 0;padding:24px;
+width:100%;max-width:500px;max-height:90vh;overflow-y:auto;
+animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h3{margin-bottom:18px;font-size:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:700;color:#555;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;
+border:2px solid #e5e7eb;border-radius:12px;font-size:15px;
+font-family:inherit;background:#fafbfc;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{
+outline:none;border-color:#667eea;background:white}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
+.btn-cancel{background:#f3f4f6;color:#666}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
+background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
+font-size:13px;font-weight:600;z-index:2000;transition:transform .3s;
+max-width:90%;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.toast.success{background:#059669}
+.toast.error{background:#dc2626}
+
+/* SETTINGS MENU */
+.menu-btn{background:rgba(255,255,255,.2);border:none;color:white;
+width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;
+display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.menu-btn:active{background:rgba(255,255,255,.3)}
+
+/* DATA ACTIONS */
+.data-actions{display:flex;gap:8px;margin-top:12px}
+.data-actions button{flex:1;padding:10px;border:none;border-radius:10px;
+font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.data-actions .export{background:#dbeafe;color:#1e40af}
+.data-actions .import{background:#d1fae5;color:#065f46}
+.data-actions .clear{background:#fee2e2;color:#991b1b}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚽ FUTBOL</h1>
-            <div class="score-board">
-                <div class="team blue">🔵 SIZ</div>
-                <div class="score" id="scoreDisplay">0 : 0</div>
-                <div class="team red">🔴 AI</div>
-                <div class="timer" id="timerDisplay">00:00</div>
-            </div>
-        </div>
-        <div class="game-area">
-            <canvas id="gameCanvas" width="880" height="520"></canvas>
-            <div class="joystick-container" id="joystickContainer">
-                <div class="joystick-base" id="joystickBase">
-                    <div class="joystick-arrow up">▲</div>
-                    <div class="joystick-arrow down">▼</div>
-                    <div class="joystick-arrow left">◀</div>
-                    <div class="joystick-arrow right">▶</div>
-                    <div class="joystick-stick" id="joystickStick"></div>
+<div class="app">
+    <div class="header">
+        <div class="header-top">
+            <h1>🏪 Store Control</h1>
+            <div style="display:flex;gap:8px;align-items:center">
+                <div class="status">
+                    <span class="dot"></span>
+                    <span>Faol</span>
                 </div>
+                <button class="menu-btn" onclick="openSettings()">⚙️</button>
             </div>
-        </div>
-        <div class="controls">
-            <button class="btn-start" id="startBtn">▶️ Boshlash</button>
-            <button class="btn-reset" id="resetBtn">🔄 Qayta</button>
-        </div>
-        <div class="info-bar">
-            <span>🕹️ Dumaloq bilan boshqaring</span>
-            <span>⚽ To'p oyoqqa yopishadi</span>
-            <span>🔄 Aylantirib qo'yib yuborsangiz — tepadi</span>
         </div>
     </div>
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const W = 880, H = 520;
-        const FIELD = { x: 40, y: 40, w: W - 80, h: H - 80, goalH: 140, goalDepth: 20 };
-        const GOAL_TOP = H / 2 - FIELD.goalH / 2;
-        const GOAL_BOTTOM = H / 2 + FIELD.goalH / 2;
 
-        let gameState = {
-            running: false, scoreBlue: 0, scoreRed: 0, time: 0, lastTime: 0,
-            goalScored: null, goalTimer: 0, matchTime: 90, finished: false
+    <div class="stats">
+        <div class="stat blue">
+            <div class="label">Xodimlar</div>
+            <div class="value" id="sEmp">0</div>
+        </div>
+        <div class="stat green">
+            <div class="label">Smenalar</div>
+            <div class="value" id="sShift">0</div>
+        </div>
+        <div class="stat orange">
+            <div class="label">Topshiriq</div>
+            <div class="value" id="sTask">0</div>
+        </div>
+        <div class="stat red">
+            <div class="label">Muammo</div>
+            <div class="value" id="sIssue">0</div>
+        </div>
+        <div class="stat purple full">
+            <div class="label">Tovarlar</div>
+            <div class="value" id="sProduct">0</div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button class="nav-btn active" data-tab="employees">
+            <span class="ico">👥</span>Xodimlar
+        </button>
+        <button class="nav-btn" data-tab="shifts">
+            <span class="ico">🕐</span>Smenalar
+        </button>
+        <button class="nav-btn" data-tab="tasks">
+            <span class="ico">📋</span>Topshiriq
+        </button>
+        <button class="nav-btn" data-tab="products">
+            <span class="ico">📦</span>Tovarlar
+        </button>
+        <button class="nav-btn" data-tab="issues">
+            <span class="ico">⚠️</span>Muammo
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="section active" id="sec-employees"></div>
+        <div class="section" id="sec-shifts"></div>
+        <div class="section" id="sec-tasks"></div>
+        <div class="section" id="sec-products"></div>
+        <div class="section" id="sec-issues"></div>
+    </div>
+</div>
+
+<button class="fab" onclick="openModal()">➕</button>
+
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+    <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =========================================================
+// MA'LUMOTLAR BAZASI (localStorage)
+// =========================================================
+const DB = {
+    stores: [],
+    employees: [],
+    shifts: [],
+    shift_instances: [],
+    tasks: [],
+    products: [],
+    issues: [],
+
+    load(){
+        const data = localStorage.getItem('store_control_db');
+        if(data){
+            try {
+                const parsed = JSON.parse(data);
+                Object.assign(this, parsed);
+            } catch(e){ this.seed(); }
+        } else {
+            this.seed();
+        }
+    },
+
+    seed(){
+        this.stores = [{id:1, name:"Asosiy Do'kon", address:"Toshkent"}];
+        this.shifts = [
+            {id:1, store_id:1, name:"1-smena", start_time:"08:00", end_time:"16:00"},
+            {id:2, store_id:1, name:"2-smena", start_time:"16:00", end_time:"00:00"}
+        ];
+        this.save();
+    },
+
+    save(){
+        const data = {
+            stores: this.stores,
+            employees: this.employees,
+            shifts: this.shifts,
+            shift_instances: this.shift_instances,
+            tasks: this.tasks,
+            products: this.products,
+            issues: this.issues
         };
+        localStorage.setItem('store_control_db', JSON.stringify(data));
+    },
 
-        let player = {
-            x: 200, y: H / 2, r: 18, vx: 0, vy: 0, speed: 1.1, maxSpeed: 9,
-            color: '#3b82f6', accent: '#60a5fa', hasBall: false, kickPower: 15,
-            direction: 0, kickAnim: 0
+    nextId(table){
+        const items = this[table];
+        if(!items.length) return 1;
+        return Math.max(...items.map(i=>i.id)) + 1;
+    },
+
+    export(){
+        const data = {
+            stores: this.stores,
+            employees: this.employees,
+            shifts: this.shifts,
+            shift_instances: this.shift_instances,
+            tasks: this.tasks,
+            products: this.products,
+            issues: this.issues,
+            exported_at: new Date().toISOString()
         };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'store-control-' + new Date().toISOString().slice(0,10) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    },
 
-        let aiPlayer = {
-            x: W - 200, y: H / 2, r: 18, vx: 0, vy: 0, speed: 0.9, maxSpeed: 7,
-            color: '#ef4444', accent: '#f87171', hasBall: false, kickPower: 13,
-            direction: Math.PI, kickAnim: 0, kickTimer: 0
+    import(data){
+        if(!data || typeof data !== 'object') throw new Error('Noto\'g\'ri format');
+        ['stores','employees','shifts','shift_instances','tasks','products','issues'].forEach(k=>{
+            if(Array.isArray(data[k])) this[k] = data[k];
+        });
+        this.save();
+    }
+};
+
+// =========================================================
+// HOLAT
+// =========================================================
+let currentTab = 'employees';
+
+// =========================================================
+// TOAST
+// =========================================================
+function toast(msg, type){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + (type||'');
+    setTimeout(()=>t.classList.add('show'),10);
+    setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// =========================================================
+// STATS
+// =========================================================
+function loadStats(){
+    const activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
+    const openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
+    const openIssues = DB.issues.filter(i=>i.status==='open').length;
+
+    document.getElementById('sEmp').textContent = DB.employees.length;
+    document.getElementById('sShift').textContent = activeShifts;
+    document.getElementById('sTask').textContent = openTasks;
+    document.getElementById('sIssue').textContent = openIssues;
+    document.getElementById('sProduct').textContent = DB.products.length;
+}
+
+// =========================================================
+// HELPERS
+// =========================================================
+function empty(ico, txt){
+    return '<div class="empty"><div class="ico">'+ico+'</div><p>'+txt+'</p></div>';
+}
+function badge(txt, cls){
+    return '<span class="badge '+(cls||'gray')+'">'+txt+'</span>';
+}
+function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, c=>({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+}
+
+// =========================================================
+// RENDER
+// =========================================================
+function renderEmployees(){
+    const sec = document.getElementById('sec-employees');
+    if(!DB.employees.length){
+        sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!');
+        return;
+    }
+    sec.innerHTML = DB.employees.map(e=>`
+        <div class="list-item">
+            <div class="avatar blue">${e.id}</div>
+            <div class="info">
+                <div class="title">${esc(e.name)}</div>
+                <div class="sub">${esc(e.phone)||'—'}</div>
+            </div>
+            ${badge(e.role,'blue')}
+            <button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>
+        </div>
+    `).join('');
+}
+
+function renderShifts(){
+    const sec = document.getElementById('sec-shifts');
+    const active = DB.shift_instances.filter(s=>s.status==='active');
+    if(!active.length){
+        sec.innerHTML = empty('🕐','Faol smenalar yo\'q.\n➕ tugmasini bosing!');
+        return;
+    }
+    sec.innerHTML = active.map(si=>{
+        const emp = DB.employees.find(e=>e.id===si.employee_id);
+        const shift = DB.shifts.find(s=>s.id===si.shift_id);
+        if(!emp || !shift) return '';
+        const started = new Date(si.started_at).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'});
+        return `
+        <div class="list-item">
+            <div class="avatar green">🕐</div>
+            <div class="info">
+                <div class="title">${esc(emp.name)}</div>
+                <div class="sub">${esc(shift.start_time)} - ${esc(shift.end_time)} • ${started}</div>
+            </div>
+            ${badge(shift.name,'green')}
+            <button class="btn-del" onclick="endShift(${si.id})">⏹️</button>
+        </div>`;
+    }).join('');
+}
+
+function renderTasks(){
+    const sec = document.getElementById('sec-tasks');
+    if(!DB.tasks.length){
+        sec.innerHTML = empty('📋','Topshiriqlar yo\'q.\n➕ tugmasini bosing!');
+        return;
+    }
+    const pCls = {high:'red', normal:'orange', low:'gray'};
+    const sCls = {pending:'orange', in_progress:'blue', completed:'green'};
+    const sLbl = {pending:'Kutilmoqda', in_progress:'Jarayonda', completed:'Bajarilgan'};
+
+    sec.innerHTML = DB.tasks.map(t=>{
+        const emp = DB.employees.find(e=>e.id===t.assigned_employee_id);
+        return `
+        <div class="list-item" style="flex-direction:column;align-items:stretch">
+            <div style="display:flex;align-items:center;gap:10px">
+                <div class="info">
+                    <div class="title">${esc(t.title)}</div>
+                    <div class="sub">${emp?esc(emp.name):'— biriktirilmagan'}</div>
+                </div>
+                ${badge(t.priority, pCls[t.priority]||'gray')}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                ${badge(sLbl[t.status]||t.status, sCls[t.status]||'gray')}
+                <div class="actions" style="margin:0">
+                    ${t.status==='pending' ? `<button class="btn btn-success btn-sm" onclick="startTask(${t.id})">▶️ Boshlash</button>` : ''}
+                    ${t.status==='in_progress' ? `<button class="btn btn-primary btn-sm" onclick="completeTask(${t.id})">✅ Yakunlash</button>` : ''}
+                    <button class="btn-del" onclick="deleteItem('tasks',${t.id})">🗑️</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderProducts(){
+    const sec = document.getElementById('sec-products');
+    if(!DB.products.length){
+        sec.innerHTML = empty('📦','Tovarlar yo\'q.\n➕ tugmasini bosing!');
+        return;
+    }
+    sec.innerHTML = DB.products.map(p=>`
+        <div class="list-item">
+            <div class="avatar purple">📦</div>
+            <div class="info">
+                <div class="title">${esc(p.name)}</div>
+                <div class="sub">#${esc(p.barcode)||'—'}</div>
+            </div>
+            ${badge(p.category||'—','purple')}
+            <button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>
+        </div>
+    `).join('');
+}
+
+function renderIssues(){
+    const sec = document.getElementById('sec-issues');
+    if(!DB.issues.length){
+        sec.innerHTML = empty('⚠️','Muammolar yo\'q. Ajoyib! 🎉');
+        return;
+    }
+    const pCls = {high:'red', normal:'orange', low:'gray'};
+    sec.innerHTML = DB.issues.map(i=>`
+        <div class="list-item">
+            <div class="avatar orange">⚠️</div>
+            <div class="info">
+                <div class="title">${esc(i.title)}</div>
+                <div class="sub">${esc(i.status)}</div>
+            </div>
+            ${badge(i.priority, pCls[i.priority]||'gray')}
+            <button class="btn-del" onclick="deleteItem('issues',${i.id})">🗑️</button>
+        </div>
+    `).join('');
+}
+
+// =========================================================
+// NAVIGATION
+// =========================================================
+function switchTab(name){
+    currentTab = name;
+    document.querySelectorAll('.nav-btn').forEach(b=>{
+        b.classList.toggle('active', b.dataset.tab===name);
+    });
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('sec-'+name).classList.add('active');
+    refresh();
+}
+
+document.querySelectorAll('.nav-btn').forEach(b=>{
+    b.addEventListener('click', ()=>switchTab(b.dataset.tab));
+});
+
+// =========================================================
+// ACTIONS
+// =========================================================
+function startTask(id){
+    const t = DB.tasks.find(x=>x.id===id);
+    if(t){ t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Topshiriq boshlandi','success'); }
+}
+function completeTask(id){
+    const t = DB.tasks.find(x=>x.id===id);
+    if(t){ t.status = 'completed'; t.completed_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Topshiriq yakunlandi','success'); }
+}
+function endShift(id){
+    if(!confirm('Smenani yakunlaysizmi?')) return;
+    const si = DB.shift_instances.find(x=>x.id===id);
+    if(si){ si.status = 'ended'; si.ended_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Smena yakunlandi','success'); }
+}
+function deleteItem(table, id){
+    if(!confirm('O\'chirishni tasdiqlaysizmi?')) return;
+    DB[table] = DB[table].filter(i=>i.id!==id);
+    DB.save();
+    refresh();
+    toast('🗑️ O\'chirildi','success');
+}
+
+// =========================================================
+// MODAL
+// =========================================================
+function openModal(){
+    const forms = {
+        employees: `
+            <h3>➕ Yangi xodim</h3>
+            <div class="field"><label>Ism *</label>
+                <input id="f_name" placeholder="Ali Valiyev" autofocus></div>
+            <div class="field"><label>Telefon</label>
+                <input id="f_phone" placeholder="+998901234567" inputmode="tel"></div>
+            <div class="field"><label>Rol</label>
+                <select id="f_role">
+                    <option value="employee">Xodim</option>
+                    <option value="manager">Menejer</option>
+                    <option value="admin">Admin</option>
+                </select></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+                <button class="btn btn-primary btn-lg" onclick="save('employees')">Saqlash</button>
+            </div>`,
+        shifts: `
+            <h3>🕐 Smena boshlash</h3>
+            <div class="field"><label>Xodim</label>
+                <select id="f_emp">${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+            <div class="field"><label>Smena</label>
+                <select id="f_shift">${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}</select></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+                <button class="btn btn-success btn-lg" onclick="save('shifts')">Boshlash</button>
+            </div>`,
+        tasks: `
+            <h3>➕ Yangi topshiriq</h3>
+            <div class="field"><label>Sarlavha *</label>
+                <input id="f_title" placeholder="Non bo'limini tekshirish" autofocus></div>
+            <div class="field"><label>Tavsif</label>
+                <textarea id="f_desc" rows="2"></textarea></div>
+            <div class="field"><label>Xodim</label>
+                <select id="f_emp">
+                    <option value="">— Hech kim —</option>
+                    ${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}
+                </select></div>
+            <div class="field"><label>Prioritet</label>
+                <select id="f_priority">
+                    <option value="low">Past</option>
+                    <option value="normal" selected>O'rta</option>
+                    <option value="high">Yuqori</option>
+                </select></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+                <button class="btn btn-primary btn-lg" onclick="save('tasks')">Saqlash</button>
+            </div>`,
+        products: `
+            <h3>➕ Yangi tovar</h3>
+            <div class="field"><label>Nomi *</label>
+                <input id="f_name" placeholder="Oq non" autofocus></div>
+            <div class="field"><label>Shtrix kod</label>
+                <input id="f_barcode" inputmode="numeric"></div>
+            <div class="field"><label>Kategoriya</label>
+                <input id="f_category" placeholder="non"></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+                <button class="btn btn-primary btn-lg" onclick="save('products')">Saqlash</button>
+            </div>`,
+        issues: `
+            <h3>➕ Yangi muammo</h3>
+            <div class="field"><label>Sarlavha *</label>
+                <input id="f_title" placeholder="Kassa ishlamayapti" autofocus></div>
+            <div class="field"><label>Tavsif</label>
+                <textarea id="f_desc" rows="2"></textarea></div>
+            <div class="field"><label>Prioritet</label>
+                <select id="f_priority">
+                    <option value="low">Past</option>
+                    <option value="normal" selected>O'rta</option>
+                    <option value="high">Yuqori</option>
+                </select></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+                <button class="btn btn-primary btn-lg" onclick="save('issues')">Saqlash</button>
+            </div>`
+    };
+    document.getElementById('modalContent').innerHTML = forms[currentTab] || forms.employees;
+    document.getElementById('modalBg').classList.add('show');
+}
+
+function closeModal(e){
+    if(e && e.target.id !== 'modalBg') return;
+    document.getElementById('modalBg').classList.remove('show');
+}
+
+// =========================================================
+// SETTINGS
+// =========================================================
+function openSettings(){
+    const stats = `
+        <div style="background:#f9fafb;border-radius:12px;padding:14px;margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+                <span style="font-size:13px;color:#666">Xodimlar</span>
+                <strong style="font-size:13px">${DB.employees.length}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+                <span style="font-size:13px;color:#666">Faol smenalar</span>
+                <strong style="font-size:13px">${DB.shift_instances.filter(s=>s.status==='active').length}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+                <span style="font-size:13px;color:#666">Topshiriqlar</span>
+                <strong style="font-size:13px">${DB.tasks.length}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+                <span style="font-size:13px;color:#666">Tovarlar</span>
+                <strong style="font-size:13px">${DB.products.length}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0">
+                <span style="font-size:13px;color:#666">Muammolar</span>
+                <strong style="font-size:13px">${DB.issues.length}</strong>
+            </div>
+        </div>
+
+        <div class="data-actions">
+            <button class="export" onclick="exportData()">💾 Eksport</button>
+            <button class="import" onclick="importData()">📂 Import</button>
+            <button class="clear" onclick="clearData()">🗑️ Tozalash</button>
+        </div>
+
+        <p style="font-size:11px;color:#999;text-align:center;margin-top:16px">
+            Ma'lumotlar faqat shu telefonda saqlanadi
+        </p>
+
+        <div class="modal-actions">
+            <button class="btn btn-cancel btn-lg" onclick="closeModal()">Yopish</button>
+        </div>
+    `;
+    document.getElementById('modalContent').innerHTML = stats;
+    document.getElementById('modalBg').classList.add('show');
+}
+
+function exportData(){
+    DB.export();
+    toast('✅ Fayl yuklandi','success');
+}
+
+function importData(){
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e)=>{
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev)=>{
+            try {
+                const data = JSON.parse(ev.target.result);
+                DB.import(data);
+                toast('✅ Import muvaffaqiyatli','success');
+                closeModal();
+                refresh();
+            } catch(err){
+                toast('❌ Xato: ' + err.message, 'error');
+            }
         };
+        reader.readAsText(file);
+    };
+    input.click();
+}
 
-        let ball = {
-            x: W / 2, y: H / 2, r: 10, vx: 0, vy: 0,
-            friction: 0.985, maxSpeed: 18, lastTouch: null
-        };
+function clearData(){
+    if(!confirm('BARCHA ma\'lumotlarni o\'chirasizmi? Bu amalni qaytarib bo\'lmaydi!')) return;
+    if(!confirm('Ishonchingiz komilmi?')) return;
+    localStorage.removeItem('store_control_db');
+    DB.load();
+    closeModal();
+    refresh();
+    toast('🗑️ Hammasi tozalandi','success');
+}
 
-        let crowd = [], flags = [], confetti = [];
+// =========================================================
+// SAVE
+// =========================================================
+function save(type){
+    const v = id => (document.getElementById(id)?.value || '').trim();
+    const n = id => parseInt(document.getElementById(id)?.value) || null;
 
-        function initCrowd() {
-            crowd = [];
-            for (let i = 0; i < 120; i++) {
-                let x, y;
-                if (i < 40) { x = 20 + Math.random() * (W - 40); y = 5 + Math.random() * 20; }
-                else if (i < 80) { x = 20 + Math.random() * (W - 40); y = H - 25 + Math.random() * 20; }
-                else if (i < 100) { x = 5 + Math.random() * 15; y = 40 + Math.random() * (H - 80); }
-                else { x = W - 20 + Math.random() * 15; y = 40 + Math.random() * (H - 80); }
-                crowd.push({
-                    x, y,
-                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6'][Math.floor(Math.random() * 6)],
-                    phase: Math.random() * Math.PI * 2,
-                    speed: 0.05 + Math.random() * 0.1,
-                    size: 3 + Math.random() * 3
-                });
-            }
-        }
-
-        function initFlags() {
-            flags = [];
-            for (let i = 0; i < 20; i++) {
-                let x, y;
-                if (i < 12) { x = 30 + Math.random() * (W - 60); y = 8 + Math.random() * 15; }
-                else { x = 30 + Math.random() * (W - 60); y = H - 18 + Math.random() * 12; }
-                flags.push({
-                    x, y,
-                    color: ['#1EB53A', '#0099B5', '#B22234', '#0039A6', '#DE2910', '#BC002D'][Math.floor(Math.random() * 6)],
-                    phase: Math.random() * Math.PI * 2,
-                    speed: 0.03 + Math.random() * 0.05,
-                    size: 8 + Math.random() * 6,
-                    side: Math.random() > 0.5 ? 1 : -1
-                });
-            }
-        }
-
-        function initConfetti() {
-            confetti = [];
-            for (let i = 0; i < 60; i++) {
-                confetti.push({
-                    x: Math.random() * W, y: Math.random() * H,
-                    vx: (Math.random() - 0.5) * 2, vy: Math.random() * 2 + 0.5,
-                    size: 2 + Math.random() * 4,
-                    color: ['#60a5fa', '#f87171', '#fbbf24', '#34d399', '#a78bfa', '#f472b6', '#fff'][Math.floor(Math.random() * 7)],
-                    rotation: Math.random() * Math.PI * 2,
-                    rotSpeed: (Math.random() - 0.5) * 0.2,
-                    life: 100 + Math.random() * 200
-                });
-            }
-        }
-
-        initCrowd();
-        initFlags();
-        initConfetti();
-
-        /* ===== AUDIO ===== */
-        let audioCtx = null, crowdGain = null, ambientNoise = null;
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                createAmbientCrowd();
-            }
-        }
-
-        function createAmbientCrowd() {
-            if (!audioCtx) return;
-            const bufferSize = 2 * audioCtx.sampleRate;
-            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
-            ambientNoise = audioCtx.createBufferSource();
-            ambientNoise.buffer = buffer;
-            ambientNoise.loop = true;
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = 800;
-            filter.Q.value = 0.5;
-            crowdGain = audioCtx.createGain();
-            crowdGain.gain.value = 0.02;
-            ambientNoise.connect(filter);
-            filter.connect(crowdGain);
-            crowdGain.connect(audioCtx.destination);
-            ambientNoise.start();
-        }
-
-        function setCrowdVolume(volume) {
-            if (crowdGain && audioCtx) crowdGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.5);
-        }
-
-        function playCrowdCheer() {
-            if (!audioCtx) return;
-            const duration = 3;
-            const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * duration, audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < data.length; i++) {
-                const t = i / audioCtx.sampleRate;
-                const envelope = Math.exp(-t * 1.5) * (1 - Math.exp(-t * 30));
-                const voice1 = Math.sin(t * 200 + Math.random() * 100) * 0.3;
-                const voice2 = Math.sin(t * 400 + Math.random() * 200) * 0.2;
-                const noise = (Math.random() * 2 - 1) * 0.5;
-                data[i] = (voice1 + voice2 + noise) * envelope * 0.4;
-            }
-            const source = audioCtx.createBufferSource();
-            source.buffer = buffer;
-            const gain = audioCtx.createGain();
-            gain.gain.value = 0.6;
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = 600;
-            filter.Q.value = 0.3;
-            source.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioCtx.destination);
-            source.start();
-            setCrowdVolume(0.15);
-            setTimeout(() => setCrowdVolume(0.03), 2000);
-        }
-
-        function playKickSound() {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.15);
-        }
-
-        function playWhistleSound() {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-            osc.frequency.setValueAtTime(1500, audioCtx.currentTime + 0.05);
-            osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
-        }
-
-        /* ===== JOYSTICK ===== */
-        const joystickContainer = document.getElementById('joystickContainer');
-        const joystickBase = document.getElementById('joystickBase');
-        const joystickStick = document.getElementById('joystickStick');
-        let joystickActive = false;
-        let joystickVector = { x: 0, y: 0 };
-        let joystickMaxDist = 42;
-
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            joystickContainer.classList.add('active');
-        }
-
-        function getJoystickCenter() {
-            const rect = joystickBase.getBoundingClientRect();
-            return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-        }
-
-        function updateJoystick(clientX, clientY) {
-            const center = getJoystickCenter();
-            let dx = clientX - center.x;
-            let dy = clientY - center.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist > joystickMaxDist) {
-                dx = (dx / dist) * joystickMaxDist;
-                dy = (dy / dist) * joystickMaxDist;
-            }
-            joystickStick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-            const ndx = dx / joystickMaxDist;
-            const ndy = dy / joystickMaxDist;
-            joystickVector.x = ndx;
-            joystickVector.y = ndy;
-            if (Math.hypot(ndx, ndy) > 0.1) player.direction = Math.atan2(ndy, ndx);
-        }
-
-        function resetJoystick() {
-            joystickStick.style.transform = 'translate(-50%, -50%)';
-            joystickVector.x = 0;
-            joystickVector.y = 0;
-        }
-
-        joystickBase.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            joystickActive = true;
-            updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: false });
-
-        joystickBase.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (!joystickActive) return;
-            updateJoystick(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: false });
-
-        joystickBase.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            if (player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) kickBall();
-            joystickActive = false;
-            resetJoystick();
-        }, { passive: false });
-
-        joystickBase.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            joystickActive = true;
-            updateJoystick(e.clientX, e.clientY);
+    if(type==='employees'){
+        if(!v('f_name')) return toast('Ism kiritilishi shart','error');
+        DB.employees.push({
+            id: DB.nextId('employees'),
+            store_id: 1,
+            name: v('f_name'),
+            phone: v('f_phone')||null,
+            role: v('f_role'),
+            status: 'active',
+            created_at: new Date().toISOString()
         });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!joystickActive) return;
-            updateJoystick(e.clientX, e.clientY);
+    }
+    else if(type==='shifts'){
+        const empId = n('f_emp');
+        const shiftId = n('f_shift');
+        if(!empId){ toast('Xodim tanlanishi shart','error'); return; }
+        const exists = DB.shift_instances.find(s=>s.employee_id===empId && s.status==='active');
+        if(exists){ toast('Xodimda allaqachon faol smena bor','error'); return; }
+        DB.shift_instances.push({
+            id: DB.nextId('shift_instances'),
+            shift_id: shiftId,
+            employee_id: empId,
+            status: 'active',
+            started_at: new Date().toISOString()
         });
-
-        window.addEventListener('mouseup', () => {
-            if (joystickActive && player.hasBall && Math.hypot(joystickVector.x, joystickVector.y) > 0.2) kickBall();
-            joystickActive = false;
-            resetJoystick();
+    }
+    else if(type==='tasks'){
+        if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
+        DB.tasks.push({
+            id: DB.nextId('tasks'),
+            store_id: 1,
+            title: v('f_title'),
+            description: v('f_desc')||null,
+            assigned_employee_id: n('f_emp'),
+            priority: v('f_priority'),
+            status: 'pending',
+            is_photo_required: false,
+            created_at: new Date().toISOString()
         });
-
-        /* ===== TEPISH ===== */
-        function kickBall() {
-            if (!player.hasBall) return;
-            let dx, dy;
-            if (joystickActive || Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
-                dx = joystickVector.x; dy = joystickVector.y;
-            } else {
-                dx = Math.cos(player.direction); dy = Math.sin(player.direction);
-            }
-            const dist = Math.hypot(dx, dy);
-            if (dist < 0.1) return;
-            ball.vx = (dx / dist) * player.kickPower;
-            ball.vy = (dy / dist) * player.kickPower;
-            player.hasBall = false;
-            player.kickAnim = 15;
-            ball.lastTouch = 'blue';
-            playKickSound();
-        }
-
-        function kickBallAI() {
-            if (!aiPlayer.hasBall) return;
-            const dx = FIELD.x - aiPlayer.x;
-            const dy = H / 2 - aiPlayer.y;
-            const dist = Math.hypot(dx, dy);
-            ball.vx = (dx / dist) * aiPlayer.kickPower;
-            ball.vy = (dy / dist) * aiPlayer.kickPower;
-            aiPlayer.hasBall = false;
-            aiPlayer.kickAnim = 15;
-            ball.lastTouch = 'red';
-            playKickSound();
-        }
-
-        /* ===== HARAKAT ===== */
-        let mouse = { x: W / 2, y: H / 2, active: false };
-
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = (e.clientX - rect.left) * (W / rect.width);
-            mouse.y = (e.clientY - rect.top) * (H / rect.height);
-            mouse.active = true;
+    }
+    else if(type==='products'){
+        if(!v('f_name')) return toast('Nomi kiritilishi shart','error');
+        DB.products.push({
+            id: DB.nextId('products'),
+            store_id: 1,
+            name: v('f_name'),
+            barcode: v('f_barcode')||null,
+            category: v('f_category')||null,
+            created_at: new Date().toISOString()
         });
-
-        canvas.addEventListener('mouseleave', () => { mouse.active = false; });
-        canvas.addEventListener('mouseup', () => { if (player.hasBall) kickBall(); });
-
-        function updatePlayer() {
-            if (!gameState.running) return;
-            if (Math.hypot(joystickVector.x, joystickVector.y) > 0.1) {
-                const speed = player.speed * (1 + Math.hypot(joystickVector.x, joystickVector.y) * 2);
-                player.vx = joystickVector.x * speed * 3;
-                player.vy = joystickVector.y * speed * 3;
-                player.direction = Math.atan2(joystickVector.y, joystickVector.x);
-            } else if (mouse.active) {
-                const dx = mouse.x - player.x, dy = mouse.y - player.y;
-                const dist = Math.hypot(dx, dy);
-                if (dist > 5) {
-                    const speed = Math.min(player.speed * (1 + dist / 150), player.maxSpeed);
-                    player.vx = (dx / dist) * speed;
-                    player.vy = (dy / dist) * speed;
-                    player.direction = Math.atan2(dy, dx);
-                } else { player.vx *= 0.7; player.vy *= 0.7; }
-            } else { player.vx *= 0.9; player.vy *= 0.9; }
-            player.x += player.vx;
-            player.y += player.vy;
-            player.x = clamp(player.x, FIELD.x + player.r, FIELD.x + FIELD.w - player.r);
-            player.y = clamp(player.y, FIELD.y + player.r, FIELD.y + FIELD.h - player.r);
-            if (player.kickAnim > 0) player.kickAnim--;
-        }
-
-        function updateAI() {
-            if (!gameState.running) return;
-            let targetX, targetY;
-            if (ball.x > W / 2) { targetX = ball.x + 10; targetY = ball.y; }
-            else { targetX = ball.x + (FIELD.x - ball.x) * 0.3; targetY = ball.y + (H / 2 - ball.y) * 0.3; }
-            const dx = targetX - aiPlayer.x, dy = targetY - aiPlayer.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist > 5) {
-                const speed = Math.min(aiPlayer.speed * (1 + dist / 200), aiPlayer.maxSpeed);
-                aiPlayer.vx = (dx / dist) * speed;
-                aiPlayer.vy = (dy / dist) * speed;
-                aiPlayer.direction = Math.atan2(dy, dx);
-            } else { aiPlayer.vx *= 0.8; aiPlayer.vy *= 0.8; }
-            aiPlayer.x += aiPlayer.vx;
-            aiPlayer.y += aiPlayer.vy;
-            aiPlayer.x = clamp(aiPlayer.x, FIELD.x + aiPlayer.r, FIELD.x + FIELD.w - aiPlayer.r);
-            aiPlayer.y = clamp(aiPlayer.y, FIELD.y + aiPlayer.r, FIELD.y + FIELD.h - aiPlayer.r);
-            if (aiPlayer.hasBall) {
-                aiPlayer.kickTimer++;
-                if (aiPlayer.kickTimer > 48) { kickBallAI(); aiPlayer.kickTimer = 0; }
-            } else aiPlayer.kickTimer = 0;
-            if (aiPlayer.kickAnim > 0) aiPlayer.kickAnim--;
-        }
-
-        function updateBall() {
-            if (player.hasBall) {
-                const angle = player.direction;
-                ball.x = player.x + Math.cos(angle) * (player.r + ball.r - 2);
-                ball.y = player.y + Math.sin(angle) * (player.r + ball.r - 2);
-                ball.vx = 0; ball.vy = 0;
-                return;
-            }
-            if (aiPlayer.hasBall) {
-                const angle = aiPlayer.direction;
-                ball.x = aiPlayer.x + Math.cos(angle) * (aiPlayer.r + ball.r - 2);
-                ball.y = aiPlayer.y + Math.sin(angle) * (aiPlayer.r + ball.r - 2);
-                ball.vx = 0; ball.vy = 0;
-                return;
-            }
-            ball.x += ball.vx;
-            ball.y += ball.vy;
-            ball.vx *= ball.friction;
-            ball.vy *= ball.friction;
-            const speed = Math.hypot(ball.vx, ball.vy);
-            if (speed > ball.maxSpeed) {
-                ball.vx = (ball.vx / speed) * ball.maxSpeed;
-                ball.vy = (ball.vy / speed) * ball.maxSpeed;
-            }
-            if (speed < 0.05) { ball.vx = 0; ball.vy = 0; }
-            if (ball.y - ball.r < FIELD.y) { ball.y = FIELD.y + ball.r; ball.vy = -ball.vy * 0.8; }
-            if (ball.y + ball.r > FIELD.y + FIELD.h) { ball.y = FIELD.y + FIELD.h - ball.r; ball.vy = -ball.vy * 0.8; }
-            if (ball.x - ball.r < FIELD.x) {
-                if (ball.y > GOAL_TOP && ball.y < GOAL_BOTTOM) {
-                    if (gameState.goalScored === null) {
-                        gameState.goalScored = 'red';
-                        gameState.goalTimer = 60;
-                        gameState.scoreRed++;
-                        updateScoreDisplay();
-                        playCrowdCheer();
-                        initConfetti();
-                    }
-                } else { ball.x = FIELD.x + ball.r; ball.vx = -ball.vx * 0.8; }
-            }
-            if (ball.x + ball.r > FIELD.x + FIELD.w) {
-                if (ball.y > GOAL_TOP && ball.y < GOAL_BOTTOM) {
-                    if (gameState.goalScored === null) {
-                        gameState.goalScored = 'blue';
-                        gameState.goalTimer = 60;
-                        gameState.scoreBlue++;
-                        updateScoreDisplay();
-                        playCrowdCheer();
-                        initConfetti();
-                    }
-                } else { ball.x = FIELD.x + FIELD.w - ball.r; ball.vx = -ball.vx * 0.8; }
-            }
-        }
-
-        function checkPlayerBallCollision() {
-            if (!player.hasBall) {
-                const dist = distance(player, ball);
-                if (dist < player.r + ball.r + 4) {
-                    player.hasBall = true;
-                    ball.lastTouch = 'blue';
-                    player.direction = Math.atan2(ball.y - player.y, ball.x - player.x);
-                }
-            }
-            if (!aiPlayer.hasBall) {
-                const distAI = distance(aiPlayer, ball);
-                if (distAI < aiPlayer.r + ball.r + 4) {
-                    aiPlayer.hasBall = true;
-                    ball.lastTouch = 'red';
-                    aiPlayer.direction = Math.atan2(ball.y - aiPlayer.y, ball.x - aiPlayer.x);
-                }
-            }
-        }
-
-        function checkPlayerCollision() {
-            const dist = distance(player, aiPlayer);
-            const minDist = player.r + aiPlayer.r;
-            if (dist < minDist) {
-                const angle = Math.atan2(aiPlayer.y - player.y, aiPlayer.x - player.x);
-                const overlap = minDist - dist;
-                player.x -= Math.cos(angle) * overlap * 0.5;
-                player.y -= Math.sin(angle) * overlap * 0.5;
-                aiPlayer.x += Math.cos(angle) * overlap * 0.5;
-                aiPlayer.y += Math.sin(angle) * overlap * 0.5;
-                if (player.hasBall && Math.random() < 0.02) {
-                    player.hasBall = false;
-                    aiPlayer.hasBall = true;
-                }
-            }
-        }
-
-        function handleGoal() {
-            if (gameState.goalScored) {
-                gameState.goalTimer--;
-                if (gameState.goalTimer <= 0) {
-                    gameState.goalScored = null;
-                    resetPositions();
-                }
-            }
-        }
-
-        function resetPositions() {
-            player.x = 200; player.y = H / 2;
-            player.vx = 0; player.vy = 0; player.hasBall = false;
-            aiPlayer.x = W - 200; aiPlayer.y = H / 2;
-            aiPlayer.vx = 0; aiPlayer.vy = 0; aiPlayer.hasBall = false;
-            ball.x = W / 2; ball.y = H / 2; ball.vx = 0; ball.vy = 0;
-        }
-
-        function distance(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
-        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-
-        /* ===== CHIZISH ===== */
-        function drawStadium() {
-            const grad = ctx.createRadialGradient(W / 2, H / 2, 100, W / 2, H / 2, 500);
-            grad.addColorStop(0, '#0a0e1a');
-            grad.addColorStop(1, '#05050f');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, W, H);
-        }
-
-        function drawCrowd() {
-            crowd.forEach(c => {
-                const bounce = Math.sin(Date.now() * c.speed + c.phase) * 3;
-                ctx.fillStyle = c.color;
-                ctx.globalAlpha = 0.6 + Math.sin(Date.now() * c.speed + c.phase) * 0.3;
-                ctx.beginPath();
-                ctx.arc(c.x, c.y + bounce, c.size, 0, Math.PI * 2);
-                ctx.fill();
-            });
-            ctx.globalAlpha = 1;
-        }
-
-        function drawFlags() {
-            flags.forEach(f => {
-                const wave = Math.sin(Date.now() * f.speed + f.phase) * 3;
-                ctx.save();
-                ctx.translate(f.x, f.y);
-                ctx.rotate(wave * 0.05 * f.side);
-                ctx.fillStyle = f.color;
-                ctx.fillRect(0, 0, f.size, f.size * 0.6);
-                ctx.strokeStyle = '#888';
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(0, f.size * 0.8);
-                ctx.stroke();
-                ctx.restore();
-            });
-        }
-
-        function drawField() {
-            const grad = ctx.createLinearGradient(0, 0, 0, H);
-            grad.addColorStop(0, '#1B5E20');
-            grad.addColorStop(1, '#0D3B0F');
-            ctx.fillStyle = grad;
-            ctx.fillRect(FIELD.x, FIELD.y, FIELD.w, FIELD.h);
-            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(FIELD.x, FIELD.y, FIELD.w, FIELD.h);
-            ctx.beginPath(); ctx.moveTo(W / 2, FIELD.y); ctx.lineTo(W / 2, FIELD.y + FIELD.h); ctx.stroke();
-            ctx.beginPath(); ctx.arc(W / 2, H / 2, 60, 0, Math.PI * 2); ctx.stroke();
-            ctx.fillStyle = 'rgba(255,255,255,0.5)';
-            ctx.beginPath(); ctx.arc(W / 2, H / 2, 4, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeRect(FIELD.x, H / 2 - 90, 110, 180);
-            ctx.strokeRect(FIELD.x, H / 2 - 50, 50, 100);
-            ctx.strokeRect(FIELD.x + FIELD.w - 110, H / 2 - 90, 110, 180);
-            ctx.strokeRect(FIELD.x + FIELD.w - 50, H / 2 - 50, 50, 100);
-            ctx.beginPath(); ctx.arc(FIELD.x, FIELD.y, 15, 0, Math.PI / 2); ctx.stroke();
-            ctx.beginPath(); ctx.arc(FIELD.x + FIELD.w, FIELD.y, 15, Math.PI / 2, Math.PI); ctx.stroke();
-            ctx.beginPath(); ctx.arc(FIELD.x, FIELD.y + FIELD.h, 15, -Math.PI / 2, 0); ctx.stroke();
-            ctx.beginPath(); ctx.arc(FIELD.x + FIELD.w, FIELD.y + FIELD.h, 15, Math.PI, Math.PI * 1.5); ctx.stroke();
-            ctx.fillStyle = 'rgba(255,255,255,0.1)';
-            ctx.fillRect(FIELD.x - FIELD.goalDepth, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
-            ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(FIELD.x - FIELD.goalDepth, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
-            ctx.fillStyle = 'rgba(255,255,255,0.1)';
-            ctx.fillRect(FIELD.x + FIELD.w, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
-            ctx.strokeRect(FIELD.x + FIELD.w, GOAL_TOP, FIELD.goalDepth, FIELD.goalH);
-            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 6; i++) {
-                const y = GOAL_TOP + (FIELD.goalH / 6) * i;
-                ctx.beginPath(); ctx.moveTo(FIELD.x - FIELD.goalDepth, y); ctx.lineTo(FIELD.x, y); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(FIELD.x + FIELD.w, y); ctx.lineTo(FIELD.x + FIELD.w + FIELD.goalDepth, y); ctx.stroke();
-            }
-        }
-
-        function drawHumanPlayer(p, isAI) {
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(0, p.r * 0.9, p.r * 1.1, p.r * 0.4, 0, 0, Math.PI * 2);
-            ctx.fill();
-            const angle = p.direction;
-            ctx.rotate(angle + Math.PI / 2);
-            const kickOffset = p.kickAnim > 0 ? Math.sin(p.kickAnim / 15 * Math.PI) * 8 : 0;
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(-7, 8 + kickOffset, 5, 14);
-            ctx.fillRect(2, 8, 5, 14);
-            const bodyGrad = ctx.createLinearGradient(-p.r, 0, p.r, 0);
-            bodyGrad.addColorStop(0, p.color);
-            bodyGrad.addColorStop(1, p.accent);
-            ctx.fillStyle = bodyGrad;
-            ctx.beginPath();
-            ctx.ellipse(0, 0, p.r * 0.9, p.r * 0.75, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = p.accent;
-            ctx.beginPath();
-            ctx.ellipse(-p.r * 0.9, -2, 5, 9, -0.3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(p.r * 0.9, -2, 5, 9, 0.3, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#F5D0A9';
-            ctx.beginPath();
-            ctx.arc(0, -p.r * 0.9, p.r * 0.55, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#3E2723';
-            ctx.beginPath();
-            ctx.arc(0, -p.r * 0.95, p.r * 0.55, Math.PI, 0);
-            ctx.fill();
-            ctx.fillStyle = '#000';
-            ctx.beginPath(); ctx.arc(-3, -p.r * 0.9, 1.5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(3, -p.r * 0.9, 1.5, 0, Math.PI * 2); ctx.fill();
-            ctx.rotate(-(angle + Math.PI / 2));
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 11px Segoe UI';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(isAI ? 'AI' : '10', 0, 2);
-            ctx.restore();
-            if (p.hasBall) {
-                ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r + 6, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-        }
-
-        function drawBall() {
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(ball.x, ball.y + ball.r * 0.8, ball.r * 0.9, ball.r * 0.3, 0, 0, Math.PI * 2);
-            ctx.fill();
-            const grad = ctx.createRadialGradient(ball.x - 3, ball.y - 3, 1, ball.x, ball.y, ball.r);
-            grad.addColorStop(0, '#ffffff');
-            grad.addColorStop(1, '#cccccc');
-            ctx.fillStyle = grad;
-            ctx.shadowColor = '#fff';
-            ctx.shadowBlur = 10;
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#222';
-            ctx.beginPath(); ctx.arc(ball.x - 3, ball.y - 3, 2.5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(ball.x + 3, ball.y + 2, 2, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(ball.x - 2, ball.y + 4, 1.8, 0, Math.PI * 2); ctx.fill();
-        }
-
-        function drawConfetti() {
-            confetti.forEach(c => {
-                ctx.save();
-                ctx.translate(c.x, c.y);
-                ctx.rotate(c.rotation);
-                ctx.fillStyle = c.color;
-                ctx.globalAlpha = Math.min(1, c.life / 60);
-                ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
-                ctx.restore();
-                c.x += c.vx;
-                c.y += c.vy;
-                c.vy += 0.05;
-                c.rotation += c.rotSpeed;
-                c.life--;
-                if (c.y > H + 10 || c.life <= 0) {
-                    c.x = Math.random() * W;
-                    c.y = -10;
-                    c.vy = Math.random() * 2 + 0.5;
-                    c.life = 100 + Math.random() * 200;
-                }
-            });
-            ctx.globalAlpha = 1;
-        }
-
-        function drawGoalMessage() {
-            if (gameState.goalScored) {
-                ctx.fillStyle = 'rgba(0,0,0,0.6)';
-                ctx.fillRect(0, H / 2 - 50, W, 100);
-                const text = gameState.goalScored === 'blue' ? '⚽ GOL! SIZ URDINGIZ!' : '⚽ GOL! AI URDII!';
-                const color = gameState.goalScored === 'blue' ? '#60a5fa' : '#f87171';
-                ctx.fillStyle = color;
-                ctx.font = 'bold 42px Segoe UI';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = color;
-                ctx.shadowBlur = 30;
-                ctx.fillText(text, W / 2, H / 2);
-                ctx.shadowBlur = 0;
-            }
-        }
-
-        function drawFinishMessage() {
-            if (gameState.finished) {
-                ctx.fillStyle = 'rgba(0,0,0,0.75)';
-                ctx.fillRect(0, 0, W, H);
-                let resultText = '', resultColor = '';
-                if (gameState.scoreBlue > gameState.scoreRed) {
-                    resultText = '🏆 SIZ G\'OLIB BO\'LDINGIZ!'; resultColor = '#34d399';
-                } else if (gameState.scoreBlue < gameState.scoreRed) {
-                    resultText = '😢 SIZ YUTQAZDINGIZ!'; resultColor = '#f87171';
-                } else {
-                    resultText = '🤝 DURRANG!'; resultColor = '#fbbf24';
-                }
-                ctx.fillStyle = resultColor;
-                ctx.font = 'bold 48px Segoe UI';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = resultColor;
-                ctx.shadowBlur = 30;
-                ctx.fillText(resultText, W / 2, H / 2 - 40);
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#f1f5f9';
-                ctx.font = 'bold 32px Segoe UI';
-                ctx.fillText(`${gameState.scoreBlue} : ${gameState.scoreRed}`, W / 2, H / 2 + 30);
-                ctx.fillStyle = '#94a3b8';
-                ctx.font = '18px Segoe UI';
-                ctx.fillText('Qayta o\'ynash uchun "Qayta" tugmasini bosing', W / 2, H / 2 + 80);
-            }
-        }
-
-        function draw() {
-            drawStadium();
-            drawField();
-            drawCrowd();
-            drawFlags();
-            drawHumanPlayer(player, false);
-            drawHumanPlayer(aiPlayer, true);
-            drawBall();
-            drawConfetti();
-            drawGoalMessage();
-            drawFinishMessage();
-        }
-
-        function gameLoop(timestamp) {
-            if (!gameState.lastTime) gameState.lastTime = timestamp;
-            const dt = Math.min((timestamp - gameState.lastTime) / 1000, 0.05);
-            gameState.lastTime = timestamp;
-            if (gameState.running && !gameState.finished && !gameState.goalScored) {
-                gameState.time += dt;
-                updateTimerDisplay();
-                if (gameState.time >= gameState.matchTime) {
-                    gameState.finished = true;
-                    gameState.running = false;
-                    document.getElementById('startBtn').disabled = true;
-                    playWhistleSound();
-                }
-            }
-            if (!gameState.goalScored && !gameState.finished) {
-                updatePlayer();
-                updateAI();
-                updateBall();
-                checkPlayerBallCollision();
-                checkPlayerCollision();
-            }
-            handleGoal();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
-
-        function updateScoreDisplay() {
-            document.getElementById('scoreDisplay').textContent = `${gameState.scoreBlue} : ${gameState.scoreRed}`;
-        }
-
-        function updateTimerDisplay() {
-            const min = Math.floor(gameState.time / 60);
-            const sec = Math.floor(gameState.time % 60);
-            document.getElementById('timerDisplay').textContent = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-        }
-
-        document.getElementById('startBtn').addEventListener('click', () => {
-            if (gameState.finished) return;
-            initAudio();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            gameState.running = !gameState.running;
-            document.getElementById('startBtn').textContent = gameState.running ? '⏸️ Pauza' : '▶️ Davom etish';
+    }
+    else if(type==='issues'){
+        if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
+        DB.issues.push({
+            id: DB.nextId('issues'),
+            store_id: 1,
+            title: v('f_title'),
+            description: v('f_desc')||null,
+            priority: v('f_priority'),
+            status: 'open',
+            created_at: new Date().toISOString()
         });
+    }
 
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            gameState = { running: false, scoreBlue: 0, scoreRed: 0, time: 0, lastTime: 0, goalScored: null, goalTimer: 0, matchTime: 90, finished: false };
-            resetPositions();
-            updateScoreDisplay();
-            updateTimerDisplay();
-            document.getElementById('startBtn').disabled = false;
-            document.getElementById('startBtn').textContent = '▶️ Boshlash';
-        });
+    DB.save();
+    closeModal();
+    toast('✅ Saqlandi','success');
+    refresh();
+}
 
-        updateScoreDisplay();
-        updateTimerDisplay();
-        requestAnimationFrame(gameLoop);
-    </script>
+// =========================================================
+// REFRESH
+// =========================================================
+function refresh(){
+    loadStats();
+    const renderers = {
+        employees: renderEmployees,
+        shifts: renderShifts,
+        tasks: renderTasks,
+        products: renderProducts,
+        issues: renderIssues
+    };
+    renderers[currentTab]();
+}
+
+// =========================================================
+// INIT
+// =========================================================
+DB.load();
+refresh();
+</script>
 </body>
 </html>
