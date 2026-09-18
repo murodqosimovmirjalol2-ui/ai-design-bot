@@ -1,305 +1,1076 @@
-# =========================================================
-# STORE CONTROL — TELEGRAM BOT
-# =========================================================
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#667eea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Store Control">
+<meta name="description" content="Supermarket boshqaruv tizimi">
+<title>Store Control</title>
 
-import logging
-from telegram import (
-    Update,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    WebAppInfo,
-    MenuButtonWebApp,
-)
-from telegram.ext import (
-    Application,
-    CommandHandler,
-    CallbackQueryHandler,
-    ContextTypes,
-)
+<!-- LOGO -->
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 
-# =========================================================
-# ⚠️ SOZLAMALAR — BU YERGA O'Z MA'LUMOTLARINGIZNI YOZING
-# =========================================================
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+background:#f0f2f5;color:#333;line-height:1.5;overscroll-behavior:none;
+-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+button{font-family:inherit}
+input,select,textarea{font-family:inherit}
+.app{max-width:500px;margin:0 auto;min-height:100vh;background:#f0f2f5;
+position:relative;padding-bottom:90px;transition:background .3s}
+.sidebar{display:none}
+.desktop-wrapper{display:contents}
 
-# 1. BotFather'dan olgan TOKEN:
-BOT_TOKEN = "BU_YERGA_TOKENNI_YOZING"
+/* SPLASH SCREEN */
+#splash{position:fixed;inset:0;z-index:99999;
+background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+transition:opacity .5s ease,visibility .5s ease}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo{width:120px;height:120px;border-radius:28px;
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+animation:splashScale .8s ease-out}
+@keyframes splashScale{0%{transform:scale(0) rotate(-180deg);opacity:0}
+60%{transform:scale(1.15) rotate(10deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.splash-title{margin-top:24px;font-size:28px;font-weight:800;color:white;
+letter-spacing:.5px;animation:splashFade .8s ease-out .3s both}
+.splash-subtitle{margin-top:6px;font-size:13px;color:rgba(255,255,255,.75);
+letter-spacing:2px;text-transform:uppercase;animation:splashFade .8s ease-out .4s both}
+@keyframes splashFade{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.splash-loader{margin-top:40px;display:flex;gap:8px;
+animation:splashFade .8s ease-out .6s both}
+.splash-loader span{width:10px;height:10px;border-radius:50%;background:white;
+animation:bounce 1.4s ease-in-out infinite both}
+.splash-loader span:nth-child(1){animation-delay:0s}
+.splash-loader span:nth-child(2){animation-delay:.16s}
+.splash-loader span:nth-child(3){animation-delay:.32s}
+@keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-# 2. GitHub Pages manzilingiz:
-WEB_APP_URL = "https://BU_YERGA_USERNAME.github.io/store-control"
+/* HEADER */
+.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
+box-shadow:0 4px 20px rgba(102,126,234,.3)}
+.header-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+.header h1 img{width:32px;height:32px;border-radius:8px}
+.header-right{display:flex;gap:8px;align-items:center}
+.status{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;
+font-size:11px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(10px);
+white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.menu-btn,.refresh-btn{background:rgba(255,255,255,.2);border:none;color:white;
+width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;
+display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+transition:background .2s}
+.menu-btn:hover,.refresh-btn:hover{background:rgba(255,255,255,.3)}
+.refresh-btn{display:none}
 
-# Bot nomi
-BOT_NAME = "Store Control"
+/* STATS */
+.stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:white;border-radius:14px;padding:14px;
+box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
+transition:transform .2s,background .3s}
+.stat:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#667eea}
+.stat.blue::before{background:#3b82f6}
+.stat.green::before{background:#10b981}
+.stat.orange::before{background:#f59e0b}
+.stat.red::before{background:#ef4444}
+.stat.purple::before{background:#8b5cf6}
+.stat.yellow::before{background:#eab308}
+.stat .label{font-size:10px;color:#888;font-weight:600;
+letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
 
-# =========================================================
-# LOGGING
-# =========================================================
+/* NAV */
+.nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
+display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
+position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;
+transition:background .3s}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{min-width:60px;flex:1;padding:8px 4px;border:none;background:transparent;
+border-radius:10px;cursor:pointer;font-size:10px;font-weight:600;
+color:#666;display:flex;flex-direction:column;align-items:center;
+gap:3px;font-family:inherit;transition:all .2s}
+.nav-btn .ico{font-size:18px;line-height:1}
+.nav-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-logger = logging.getLogger(__name__)
+/* CONTENT */
+.content{padding:0 12px}
+.section{display:none}
+.section.active{display:block}
+.list-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
+box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
+gap:12px;animation:fadeIn .3s;transition:box-shadow .2s,background .3s}
+.list-item:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
 
+.avatar{width:42px;height:42px;border-radius:50%;display:flex;
+align-items:center;justify-content:center;font-weight:800;color:white;
+font-size:14px;flex-shrink:0}
+.avatar.blue{background:#3b82f6}
+.avatar.green{background:#10b981}
+.avatar.purple{background:#8b5cf6}
+.avatar.orange{background:#f59e0b}
+.avatar.red{background:#ef4444}
+.avatar.yellow{background:#eab308}
 
-# =========================================================
-# /start — ASOSIY MENYU
-# =========================================================
+.info{flex:1;min-width:0}
+.info .title{font-weight:700;font-size:14px;margin-bottom:2px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info .sub{font-size:12px;color:#888;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Boshlash — asosiy menyu"""
+.badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;
+white-space:nowrap}
+.badge.blue{background:#dbeafe;color:#1e40af}
+.badge.green{background:#d1fae5;color:#065f46}
+.badge.orange{background:#fef3c7;color:#92400e}
+.badge.red{background:#fee2e2;color:#991b1b}
+.badge.purple{background:#ede9fe;color:#6b21a8}
+.badge.yellow{background:#fef9c3;color:#854d0e}
+.badge.gray{background:#f3f4f6;color:#4b5563}
 
-    user = update.effective_user
-    first_name = user.first_name or "Foydalanuvchi"
+.actions{display:flex;gap:6px;margin-top:8px}
+.btn{padding:6px 12px;border:none;border-radius:8px;font-size:11px;
+font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:active{transform:scale(.95)}
+.btn-sm{padding:6px 10px;font-size:11px}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+.btn-success{background:#10b981;color:white}
+.btn-danger{background:#ef4444;color:white}
+.btn-del{background:#fee2e2;color:#dc2626;padding:6px 8px;font-size:14px;
+border-radius:8px;border:none;cursor:pointer}
+.btn-del:hover{background:#fecaca}
 
-    keyboard = [
-        [InlineKeyboardButton(
-            "📱 Ilovani ochish",
-            web_app=WebAppInfo(url=WEB_APP_URL)
-        )],
-        [
-            InlineKeyboardButton("ℹ️ Yordam", callback_data="help"),
-            InlineKeyboardButton("🔗 Havola", callback_data="link"),
-        ],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+/* SROK */
+.srok-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
+box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
+gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:background .3s}
+.srok-item.expired{border-left-color:#ef4444;background:#fef2f2}
+.srok-item.today{border-left-color:#dc2626;background:#fee2e2}
+.srok-item.critical{border-left-color:#f59e0b;background:#fffbeb}
+.srok-item.warning{border-left-color:#eab308;background:#fefce8}
+.srok-item.normal{border-left-color:#10b981}
+.srok-days{font-size:20px;font-weight:800;color:#666;text-align:center;min-width:50px}
+.srok-days.expired{color:#ef4444}
+.srok-days.today{color:#dc2626}
+.srok-days.critical{color:#f59e0b}
+.srok-days.warning{color:#eab308}
+.srok-days.normal{color:#10b981}
+.srok-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+padding:12px;margin-bottom:8px}
+.srok-stat{background:white;border-radius:12px;padding:12px;
+text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04);
+border-top:3px solid #e5e7eb;transition:background .3s}
+.srok-stat.expired{border-top-color:#ef4444}
+.srok-stat.today{border-top-color:#dc2626}
+.srok-stat.critical{border-top-color:#f59e0b}
+.srok-stat.warning{border-top-color:#eab308}
+.srok-stat.normal{border-top-color:#10b981}
+.srok-stat .num{font-size:22px;font-weight:800;margin-bottom:2px}
+.srok-stat .lbl{font-size:10px;color:#888;font-weight:600;text-transform:uppercase}
 
-    text = (
-        f"👋 Salom, <b>{first_name}</b>!\n\n"
-        f"🏪 <b>{BOT_NAME}</b> botiga xush kelibsiz!\n\n"
-        f"Bu bot supermarket boshqaruv tizimiga tez kirish uchun.\n\n"
-        f"📱 <b>Ilovani ochish</b> tugmasini bosing:\n"
-        f"• 👥 Xodimlar\n"
-        f"• 🕐 Smenalar\n"
-        f"• 📋 Topshiriqlar\n"
-        f"• 📦 Tovarlar\n"
-        f"• ⏰ Srok\n"
-        f"• ⚠️ Muammolar"
-    )
+.empty{text-align:center;padding:50px 20px;color:#999}
+.empty .ico{font-size:56px;margin-bottom:12px;opacity:.4}
+.empty p{font-size:13px}
 
-    await update.message.reply_text(
-        text,
-        reply_markup=reply_markup,
-        parse_mode="HTML"
-    )
+/* FAB */
+.fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;
+border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;border:none;font-size:24px;cursor:pointer;
+box-shadow:0 6px 20px rgba(102,126,234,.4);z-index:50;
+display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.fab:active{transform:scale(.9)}
+.fab:hover{transform:scale(1.05)}
 
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
+backdrop-filter:blur(4px);z-index:1000;display:none;
+align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:white;border-radius:24px 24px 0 0;padding:24px;
+width:100%;max-width:500px;max-height:90vh;overflow-y:auto;
+animation:slideUp .3s ease;transition:background .3s}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h3{margin-bottom:18px;font-size:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:700;color:#555;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;
+border:2px solid #e5e7eb;border-radius:12px;font-size:15px;
+font-family:inherit;background:#fafbfc;transition:border-color .2s,background .3s}
+.field input:focus,.field select:focus,.field textarea:focus{
+outline:none;border-color:#667eea;background:white}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
+.btn-cancel{background:#f3f4f6;color:#666}
 
-# =========================================================
-# /app — ILOVANI OCHISH
-# =========================================================
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
+background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
+font-size:13px;font-weight:600;z-index:2000;transition:transform .3s;
+max-width:90%;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.toast.success{background:#059669}
+.toast.error{background:#dc2626}
+.toast.warning{background:#d97706}
 
-async def app_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Ilovani ochish"""
+.data-actions{display:flex;gap:8px;margin-top:12px}
+.data-actions button{flex:1;padding:10px;border:none;border-radius:10px;
+font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.data-actions .export{background:#dbeafe;color:#1e40af}
+.data-actions .import{background:#d1fae5;color:#065f46}
+.data-actions .clear{background:#fee2e2;color:#991b1b}
 
-    keyboard = [[
-        InlineKeyboardButton(
-            "📱 Ilovani ochish",
-            web_app=WebAppInfo(url=WEB_APP_URL)
-        )
-    ]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+/* DESKTOP */
+@media (min-width:768px){
+  body{background:#e5e7eb}
+  .desktop-wrapper{display:grid;grid-template-columns:260px 1fr;
+    min-height:100vh;max-width:1400px;margin:0 auto;background:#f0f2f5;
+    box-shadow:0 0 60px rgba(0,0,0,.1);transition:background .3s}
+  .sidebar{display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#667eea 0%,#764ba2 100%);
+    color:white;padding:24px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .sidebar-logo{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,.15);
+    margin-bottom:20px;display:flex;align-items:center;gap:10px;
+    font-size:18px;font-weight:700}
+  .sidebar-logo img{width:36px;height:36px;border-radius:10px}
+  .sidebar-nav{display:flex;flex-direction:column;gap:4px;padding:0 12px;flex:1}
+  .sidebar-btn{padding:12px 16px;border:none;background:transparent;
+    color:rgba(255,255,255,.8);border-radius:10px;cursor:pointer;font-size:14px;
+    font-weight:600;font-family:inherit;display:flex;align-items:center;
+    gap:12px;transition:all .2s;text-align:left}
+  .sidebar-btn .ico{font-size:20px}
+  .sidebar-btn:hover{background:rgba(255,255,255,.1);color:white}
+  .sidebar-btn.active{background:rgba(255,255,255,.2);color:white;
+    box-shadow:0 4px 12px rgba(0,0,0,.15)}
+  .sidebar-btn .badge-count{margin-left:auto;background:rgba(255,255,255,.25);
+    padding:2px 8px;border-radius:10px;font-size:11px}
+  .sidebar-status{padding:16px 20px;border-top:1px solid rgba(255,255,255,.15);
+    font-size:11px;color:rgba(255,255,255,.7)}
+  .main{display:flex;flex-direction:column;min-height:100vh;background:#f0f2f5;
+    transition:background .3s}
+  .header{padding:20px 32px;position:sticky;top:0;z-index:100}
+  .header h1{font-size:22px}
+  .header h1 img{width:38px;height:38px}
+  .refresh-btn{display:flex}
+  .menu-btn{display:none}
+  .stats{padding:24px 32px 12px;grid-template-columns:repeat(6,1fr);gap:16px}
+  .stat{padding:18px 20px;border-radius:16px}
+  .stat .label{font-size:11px}
+  .stat .value{font-size:32px}
+  .nav{display:none}
+  .content{padding:12px 32px 32px}
+  .list-item,.srok-item{padding:18px 20px;border-radius:16px;margin-bottom:12px}
+  .avatar{width:48px;height:48px;font-size:16px}
+  .info .title{font-size:15px}
+  .info .sub{font-size:13px}
+  .badge{font-size:11px;padding:5px 12px}
+  .empty{padding:80px 20px}
+  .empty .ico{font-size:80px}
+  .empty p{font-size:15px}
+  .fab{width:64px;height:64px;font-size:28px;bottom:32px;right:32px}
+  .modal-bg{align-items:center;padding:20px}
+  .modal{border-radius:20px;max-width:520px;animation:fadeInScale .25s ease}
+  @keyframes fadeInScale{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+  .toast{bottom:32px;left:auto;right:32px;transform:translate(0,200px)}
+  .toast.show{transform:translate(0,0)}
+  .srok-stats{grid-template-columns:repeat(5,1fr);padding:24px 32px 12px;gap:16px}
+  .srok-stat .num{font-size:28px}
+}
 
-    await update.message.reply_text(
-        "🏪 <b>Store Control</b>\n\n"
-        "📱 Quyidagi tugmani bosing:",
-        reply_markup=reply_markup,
-        parse_mode="HTML"
-    )
+@media (min-width:1200px){
+  .desktop-wrapper{grid-template-columns:280px 1fr}
+  .stats{grid-template-columns:repeat(6,1fr);gap:20px}
+  .stat .value{font-size:36px}
+  .content{padding:12px 40px 40px}
+}
 
+/* DARK MODE (toggle orqali) */
+body.dark{background:#0f172a !important;color:#f1f5f9 !important}
+body.dark .app,
+body.dark .desktop-wrapper,
+body.dark .main{background:#0f172a !important}
+body.dark .header{background:linear-gradient(135deg,#4c1d95 0%,#1e1b4b 100%) !important}
+body.dark .stat,
+body.dark .list-item,
+body.dark .srok-item,
+body.dark .nav,
+body.dark .srok-stat{background:#1e293b !important;color:#f1f5f9 !important}
+body.dark .stat .label,
+body.dark .info .sub,
+body.dark .srok-stat .lbl{color:#94a3b8 !important}
+body.dark .stat .value,
+body.dark .info .title,
+body.dark .srok-stat .num{color:#f1f5f9 !important}
+body.dark .nav-btn{color:#94a3b8 !important}
+body.dark .nav-btn.active{color:white !important}
+body.dark .modal{background:#1e293b !important;color:#f1f5f9 !important}
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea{
+  background:#0f172a !important;color:#f1f5f9 !important;
+  border-color:#334155 !important
+}
+body.dark .field label{color:#cbd5e1 !important}
+body.dark .btn-cancel{background:#334155 !important;color:#cbd5e1 !important}
+body.dark .sidebar{background:linear-gradient(180deg,#4c1d95 0%,#1e1b4b 100%) !important}
+body.dark .empty{color:#64748b !important}
+body.dark .srok-item.expired{background:#7f1d1d !important}
+body.dark .srok-item.today{background:#7f1d1d !important}
+body.dark .srok-item.critical{background:#78350f !important}
+body.dark .srok-item.warning{background:#713f12 !important}
+body.dark .srok-item.normal{background:#1e293b !important}
+</style>
+</head>
+<body>
 
-# =========================================================
-# /help — YORDAM
-# =========================================================
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <img src="logo.png" class="splash-logo" alt="Store Control" onerror="this.style.display='none'">
+  <div class="splash-title">Store Control</div>
+  <div class="splash-subtitle">Supermarket tizimi</div>
+  <div class="splash-loader">
+    <span></span><span></span><span></span>
+  </div>
+</div>
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Yordam"""
-    text = (
-        "📖 <b>Yordam</b>\n\n"
-        "<b>Mavjud komandalar:</b>\n"
-        "• /start — Asosiy menyu\n"
-        "• /app — Ilovani ochish\n"
-        "• /link — Havolani olish\n"
-        "• /help — Yordam\n\n"
-        "<b>📱 Ilova bo'limlari:</b>\n"
-        "• 👥 Xodimlar boshqaruvi\n"
-        "• 🕐 Smenalar\n"
-        "• 📋 Topshiriqlar\n"
-        "• 📦 Tovarlar\n"
-        "• ⏰ Srok nazorati\n"
-        "• ⚠️ Muammolar\n\n"
-        "<b>💾 Ma'lumotlar:</b>\n"
-        "Ma'lumotlar telefonda saqlanadi.\n"
-        "Eksport/Import orqali zaxira oling.\n\n"
-        "❓ Savollar bo'lsa — adminga murojaat qiling."
-    )
-    await update.message.reply_text(text, parse_mode="HTML")
+<div class="desktop-wrapper">
 
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+      <span>Store Control</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-btn active" data-tab="employees">
+        <span class="ico">👥</span><span>Xodimlar</span>
+        <span class="badge-count" id="cnt-emp">0</span>
+      </button>
+      <button class="sidebar-btn" data-tab="shifts">
+        <span class="ico">🕐</span><span>Smenalar</span>
+        <span class="badge-count" id="cnt-shift">0</span>
+      </button>
+      <button class="sidebar-btn" data-tab="tasks">
+        <span class="ico">📋</span><span>Topshiriqlar</span>
+        <span class="badge-count" id="cnt-task">0</span>
+      </button>
+      <button class="sidebar-btn" data-tab="products">
+        <span class="ico">📦</span><span>Tovarlar</span>
+        <span class="badge-count" id="cnt-prod">0</span>
+      </button>
+      <button class="sidebar-btn" data-tab="expiry">
+        <span class="ico">⏰</span><span>Srok</span>
+        <span class="badge-count" id="cnt-srok">0</span>
+      </button>
+      <button class="sidebar-btn" data-tab="issues">
+        <span class="ico">⚠️</span><span>Muammolar</span>
+        <span class="badge-count" id="cnt-issue">0</span>
+      </button>
+    </nav>
+    <div class="sidebar-status">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="dot"></span>
+        <span>Tizim faol</span>
+      </div>
+    </div>
+  </aside>
 
-# =========================================================
-# /link — HAVOLA
-# =========================================================
+  <main class="main">
+    <div class="app">
+      <div class="header">
+        <div class="header-top">
+          <h1>
+            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+            Store Control
+          </h1>
+          <div class="header-right">
+            <div class="status">
+              <span class="dot"></span>
+              <span>Faol</span>
+            </div>
+            <button class="refresh-btn" onclick="refresh()" title="Yangilash">🔄</button>
+            <button class="menu-btn" onclick="toggleTheme()" id="themeBtn" title="Rejim">🌙</button>
+            <button class="menu-btn" onclick="openSettings()" title="Sozlamalar">⚙️</button>
+          </div>
+        </div>
+      </div>
 
-async def link_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Havolani ko'rsatish"""
+      <div class="stats">
+        <div class="stat blue"><div class="label">Xodimlar</div><div class="value" id="sEmp">0</div></div>
+        <div class="stat green"><div class="label">Smenalar</div><div class="value" id="sShift">0</div></div>
+        <div class="stat orange"><div class="label">Topshiriq</div><div class="value" id="sTask">0</div></div>
+        <div class="stat red"><div class="label">Muammo</div><div class="value" id="sIssue">0</div></div>
+        <div class="stat purple"><div class="label">Tovarlar</div><div class="value" id="sProduct">0</div></div>
+        <div class="stat yellow"><div class="label">⚠️ Srok</div><div class="value" id="sSrok">0</div></div>
+      </div>
 
-    await update.message.reply_text(
-        f"🔗 <b>Ilova havolasi:</b>\n\n"
-        f"<code>{WEB_APP_URL}</code>\n\n"
-        f"Bu havolani brauzerda ham ochish mumkin.",
-        parse_mode="HTML"
-    )
+      <div class="nav">
+        <button class="nav-btn active" data-tab="employees"><span class="ico">👥</span>Xodimlar</button>
+        <button class="nav-btn" data-tab="shifts"><span class="ico">🕐</span>Smenalar</button>
+        <button class="nav-btn" data-tab="tasks"><span class="ico">📋</span>Topshiriq</button>
+        <button class="nav-btn" data-tab="products"><span class="ico">📦</span>Tovarlar</button>
+        <button class="nav-btn" data-tab="expiry"><span class="ico">⏰</span>Srok</button>
+        <button class="nav-btn" data-tab="issues"><span class="ico">⚠️</span>Muammo</button>
+      </div>
 
+      <div class="content">
+        <div class="section active" id="sec-employees"></div>
+        <div class="section" id="sec-shifts"></div>
+        <div class="section" id="sec-tasks"></div>
+        <div class="section" id="sec-products"></div>
+        <div class="section" id="sec-expiry"></div>
+        <div class="section" id="sec-issues"></div>
+      </div>
+    </div>
+  </main>
 
-# =========================================================
-# CALLBACK — INLINE TUGMALAR
-# =========================================================
+</div>
 
-async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Inline tugmalarni boshqarish"""
-    query = update.callback_query
-    await query.answer()
+<button class="fab" onclick="openModal()">➕</button>
 
-    data = query.data
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
+</div>
 
-    if data == "help":
-        text = (
-            "📖 <b>Yordam</b>\n\n"
-            "<b>Mavjud komandalar:</b>\n"
-            "• /start — Asosiy menyu\n"
-            "• /app — Ilovani ochish\n"
-            "• /link — Havolani olish\n"
-            "• /help — Yordam\n\n"
-            "<b>📱 Ilovada:</b>\n"
-            "• 👥 Xodimlar\n"
-            "• 🕐 Smenalar\n"
-            "• 📋 Topshiriqlar\n"
-            "• 📦 Tovarlar\n"
-            "• ⏰ Srok\n"
-            "• ⚠️ Muammolar"
-        )
-        keyboard = [
-            [InlineKeyboardButton(
-                "📱 Ilovani ochish",
-                web_app=WebAppInfo(url=WEB_APP_URL)
-            )],
-            [InlineKeyboardButton("⬅️ Orqaga", callback_data="back")]
-        ]
-        await query.edit_message_text(
-            text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode="HTML"
-        )
+<div class="toast" id="toast"></div>
 
-    elif data == "link":
-        text = (
-            f"🔗 <b>Ilova havolasi:</b>\n\n"
-            f"<code>{WEB_APP_URL}</code>\n\n"
-            f"Bu havolani istalgan brauzerda ochish mumkin."
-        )
-        keyboard = [[InlineKeyboardButton("⬅️ Orqaga", callback_data="back")]]
-        await query.edit_message_text(
-            text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode="HTML"
-        )
+<script>
+// =========================================================
+// MA'LUMOTLAR BAZASI
+// =========================================================
+const DB = {
+  stores: [], employees: [], shifts: [], shift_instances: [],
+  tasks: [], products: [], product_batches: [], issues: [],
 
-    elif data == "back":
-        user = query.from_user
-        first_name = user.first_name or "Foydalanuvchi"
-        keyboard = [
-            [InlineKeyboardButton(
-                "📱 Ilovani ochish",
-                web_app=WebAppInfo(url=WEB_APP_URL)
-            )],
-            [
-                InlineKeyboardButton("ℹ️ Yordam", callback_data="help"),
-                InlineKeyboardButton("🔗 Havola", callback_data="link"),
-            ],
-        ]
-        text = (
-            f"👋 Salom, <b>{first_name}</b>!\n\n"
-            f"🏪 <b>{BOT_NAME}</b>\n\n"
-            f"📱 Ilovani ochish tugmasini bosing:"
-        )
-        await query.edit_message_text(
-            text,
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode="HTML"
-        )
+  load(){
+    const data = localStorage.getItem('store_control_db');
+    if(data){
+      try {
+        const parsed = JSON.parse(data);
+        Object.assign(this, parsed);
+        if(!Array.isArray(this.product_batches)) this.product_batches = [];
+      } catch(e){ this.seed(); }
+    } else { this.seed(); }
+  },
 
+  seed(){
+    this.stores = [{id:1, name:"Asosiy Do'kon", address:"Toshkent"}];
+    this.shifts = [
+      {id:1, store_id:1, name:"1-smena", start_time:"08:00", end_time:"16:00"},
+      {id:2, store_id:1, name:"2-smena", start_time:"16:00", end_time:"00:00"}
+    ];
+    this.product_batches = [];
+    this.save();
+  },
 
-# =========================================================
-# XATOLIKLARNI BOSHQARISH
-# =========================================================
+  save(){
+    localStorage.setItem('store_control_db', JSON.stringify({
+      stores: this.stores, employees: this.employees, shifts: this.shifts,
+      shift_instances: this.shift_instances, tasks: this.tasks,
+      products: this.products, product_batches: this.product_batches,
+      issues: this.issues
+    }));
+  },
 
-async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.warning(f"Xatolik: {context.error}")
+  nextId(table){
+    const items = this[table];
+    if(!items.length) return 1;
+    return Math.max(...items.map(i=>i.id)) + 1;
+  },
 
+  export(){
+    const data = {
+      stores: this.stores, employees: this.employees, shifts: this.shifts,
+      shift_instances: this.shift_instances, tasks: this.tasks,
+      products: this.products, product_batches: this.product_batches,
+      issues: this.issues, exported_at: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'store-control-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  },
 
-# =========================================================
-# POST INIT — Menyu tugmasi
-# =========================================================
+  import(data){
+    if(!data || typeof data !== 'object') throw new Error('Noto\'g\'ri format');
+    ['stores','employees','shifts','shift_instances','tasks','products','product_batches','issues'].forEach(k=>{
+      if(Array.isArray(data[k])) this[k] = data[k];
+    });
+    this.save();
+  }
+};
 
-async def post_init(application: Application):
-    """Bot ishga tushganda menyu tugmasini o'rnatish"""
-    try:
-        await application.bot.set_chat_menu_button(
-            menu_button=MenuButtonWebApp(
-                text="🏪 Ilovani ochish",
-                web_app=WebAppInfo(url=WEB_APP_URL)
-            )
-        )
-        logger.info("✅ Menyu tugmasi o'rnatildi")
-    except Exception as e:
-        logger.warning(f"Menyu tugmasi xatosi: {e}")
+let currentTab = 'employees';
 
+// =========================================================
+// SROK HISOBLASH
+// =========================================================
+function getSrokStatus(expiryDate){
+  if(!expiryDate) return {cls:'normal', label:'—', days:null};
+  const today = new Date(); today.setHours(0,0,0,0);
+  const exp = new Date(expiryDate); exp.setHours(0,0,0,0);
+  const days = Math.floor((exp - today) / (1000*60*60*24));
+  if(days < 0) return {cls:'expired', label:'Muddati o\'tgan', days, ico:'🔴'};
+  if(days === 0) return {cls:'today', label:'Bugun tugaydi', days, ico:'🟡'};
+  if(days <= 3) return {cls:'critical', label:'Tez tugaydi', days, ico:'🟠'};
+  if(days <= 7) return {cls:'warning', label:'Ogohlantirish', days, ico:'🟢'};
+  return {cls:'normal', label:'Normada', days, ico:'⚪'};
+}
 
-# =========================================================
-# MAIN
-# =========================================================
+function srokStats(){
+  const stats = {expired:0, today:0, critical:0, warning:0, normal:0};
+  DB.product_batches.forEach(b=>{
+    if(b.quantity <= 0) return;
+    const s = getSrokStatus(b.expiry_date);
+    stats[s.cls] = (stats[s.cls]||0) + 1;
+  });
+  return stats;
+}
 
-def main():
-    """Botni ishga tushirish"""
+// =========================================================
+// TOAST
+// =========================================================
+function toast(msg, type){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type||'');
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
 
-    print("=" * 60)
-    print("🤖 STORE CONTROL — TELEGRAM BOT")
-    print("=" * 60)
-    print(f"📱 Web App URL: {WEB_APP_URL}")
-    print(f"🤖 Bot token: {BOT_TOKEN[:20]}...")
-    print("=" * 60)
+// =========================================================
+// THEME
+// =========================================================
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('store_theme', isDark ? 'dark' : 'light');
+}
 
-    if BOT_TOKEN == "BU_YERGA_TOKENNI_YOZING":
-        print("❌ XATOLIK: BOT_TOKEN ni o'zgartiring!")
-        return
+// Sahifa yuklanganda tema
+(function(){
+  const saved = localStorage.getItem('store_theme');
+  if(saved === 'dark'){
+    document.body.classList.add('dark');
+    setTimeout(()=>{
+      const btn = document.getElementById('themeBtn');
+      if(btn) btn.textContent = '☀️';
+    }, 100);
+  }
+})();
 
-    if "BU_YERGA_USERNAME" in WEB_APP_URL:
-        print("❌ XATOLIK: WEB_APP_URL ni o'zgartiring!")
-        return
+// =========================================================
+// STATS
+// =========================================================
+function loadStats(){
+  const activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
+  const openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
+  const openIssues = DB.issues.filter(i=>i.status==='open').length;
+  const srokS = srokStats();
+  const problemSrok = srokS.expired + srokS.today + srokS.critical;
 
-    application = (
-        Application.builder()
-        .token(BOT_TOKEN)
-        .post_init(post_init)
-        .build()
-    )
+  document.getElementById('sEmp').textContent = DB.employees.length;
+  document.getElementById('sShift').textContent = activeShifts;
+  document.getElementById('sTask').textContent = openTasks;
+  document.getElementById('sIssue').textContent = openIssues;
+  document.getElementById('sProduct').textContent = DB.products.length;
+  const srokEl = document.getElementById('sSrok');
+  srokEl.textContent = problemSrok;
+  srokEl.style.color = problemSrok === 0 ? '#10b981' : (problemSrok < 3 ? '#f59e0b' : '#ef4444');
 
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("app", app_command))
-    application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(CommandHandler("link", link_command))
-    application.add_handler(CallbackQueryHandler(button_callback))
-    application.add_error_handler(error_handler)
+  const setC = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  setC('cnt-emp', DB.employees.length);
+  setC('cnt-shift', activeShifts);
+  setC('cnt-task', openTasks);
+  setC('cnt-prod', DB.products.length);
+  setC('cnt-srok', problemSrok);
+  setC('cnt-issue', openIssues);
+}
 
-    print("✅ Bot tayyor!")
-    print("📲 Telegram'da /start yuboring")
-    print("🛑 To'xtatish: Ctrl+C")
-    print("=" * 60)
+// =========================================================
+// HELPERS
+// =========================================================
+function empty(ico, txt){
+  return '<div class="empty"><div class="ico">'+ico+'</div><p>'+txt.replace(/\n/g,'<br>')+'</p></div>';
+}
+function badge(txt, cls){ return '<span class="badge '+(cls||'gray')+'">'+txt+'</span>'; }
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function fmtDate(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('uz-UZ', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
 
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+// =========================================================
+// RENDER — XODIMLAR
+// =========================================================
+function renderEmployees(){
+  const sec = document.getElementById('sec-employees');
+  if(!DB.employees.length){ sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!'); return; }
+  sec.innerHTML = DB.employees.map(e=>`
+    <div class="list-item">
+      <div class="avatar blue">${e.id}</div>
+      <div class="info">
+        <div class="title">${esc(e.name)}</div>
+        <div class="sub">${esc(e.phone)||'—'}</div>
+      </div>
+      ${badge(e.role,'blue')}
+      <button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>
+    </div>
+  `).join('');
+}
 
+// =========================================================
+// RENDER — SMENALAR
+// =========================================================
+function renderShifts(){
+  const sec = document.getElementById('sec-shifts');
+  const active = DB.shift_instances.filter(s=>s.status==='active');
+  if(!active.length){ sec.innerHTML = empty('🕐','Faol smenalar yo\'q.\n➕ tugmasini bosing!'); return; }
+  sec.innerHTML = active.map(si=>{
+    const emp = DB.employees.find(e=>e.id===si.employee_id);
+    const shift = DB.shifts.find(s=>s.id===si.shift_id);
+    if(!emp || !shift) return '';
+    const started = new Date(si.started_at).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'});
+    return `
+    <div class="list-item">
+      <div class="avatar green">🕐</div>
+      <div class="info">
+        <div class="title">${esc(emp.name)}</div>
+        <div class="sub">${esc(shift.start_time)} - ${esc(shift.end_time)} • ${started}</div>
+      </div>
+      ${badge(shift.name,'green')}
+      <button class="btn-del" onclick="endShift(${si.id})">⏹️</button>
+    </div>`;
+  }).join('');
+}
 
-# =========================================================
-# RUN
-# =========================================================
+// =========================================================
+// RENDER — TOPSHIRIQLAR
+// =========================================================
+function renderTasks(){
+  const sec = document.getElementById('sec-tasks');
+  if(!DB.tasks.length){ sec.innerHTML = empty('📋','Topshiriqlar yo\'q.\n➕ tugmasini bosing!'); return; }
+  const pCls = {high:'red', normal:'orange', low:'gray'};
+  const sCls = {pending:'orange', in_progress:'blue', completed:'green'};
+  const sLbl = {pending:'Kutilmoqda', in_progress:'Jarayonda', completed:'Bajarilgan'};
+  sec.innerHTML = DB.tasks.map(t=>{
+    const emp = DB.employees.find(e=>e.id===t.assigned_employee_id);
+    return `
+    <div class="list-item" style="flex-direction:column;align-items:stretch">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="info">
+          <div class="title">${esc(t.title)}</div>
+          <div class="sub">${emp?esc(emp.name):'— biriktirilmagan'}</div>
+        </div>
+        ${badge(t.priority, pCls[t.priority]||'gray')}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px">
+        ${badge(sLbl[t.status]||t.status, sCls[t.status]||'gray')}
+        <div class="actions" style="margin:0">
+          ${t.status==='pending' ? `<button class="btn btn-success btn-sm" onclick="startTask(${t.id})">▶️ Boshlash</button>` : ''}
+          ${t.status==='in_progress' ? `<button class="btn btn-primary btn-sm" onclick="completeTask(${t.id})">✅ Yakunlash</button>` : ''}
+          <button class="btn-del" onclick="deleteItem('tasks',${t.id})">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
-if __name__ == "__main__":
-    main()
+// =========================================================
+// RENDER — TOVARLAR
+// =========================================================
+function renderProducts(){
+  const sec = document.getElementById('sec-products');
+  if(!DB.products.length){ sec.innerHTML = empty('📦','Tovarlar yo\'q.\n➕ tugmasini bosing!'); return; }
+  sec.innerHTML = DB.products.map(p=>{
+    const batches = DB.product_batches.filter(b=>b.product_id===p.id && b.quantity > 0);
+    const totalQty = batches.reduce((sum,b)=>sum+b.quantity,0);
+    const problemBatches = batches.filter(b=>getSrokStatus(b.expiry_date).cls !== 'normal').length;
+    return `
+    <div class="list-item">
+      <div class="avatar purple">📦</div>
+      <div class="info">
+        <div class="title">${esc(p.name)}</div>
+        <div class="sub">${esc(p.category)||'—'} • ${totalQty} dona ${problemBatches ? '• ⚠️ '+problemBatches+' partiya' : ''}</div>
+      </div>
+      ${badge(p.category||'—','purple')}
+      <button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>
+    </div>`;
+  }).join('');
+}
+
+// =========================================================
+// RENDER — SROK
+// =========================================================
+function renderExpiry(){
+  const sec = document.getElementById('sec-expiry');
+  if(!DB.product_batches.length){
+    sec.innerHTML = empty('⏰','Srok yozuvlari yo\'q.\n➕ tugmasini bosing va\nmahsulot partiyasini qo\'shing!');
+    return;
+  }
+  const s = srokStats();
+  const statsHtml = `
+    <div class="srok-stats">
+      <div class="srok-stat expired"><div class="num" style="color:#ef4444">${s.expired}</div><div class="lbl">Muddati o'tgan</div></div>
+      <div class="srok-stat today"><div class="num" style="color:#dc2626">${s.today}</div><div class="lbl">Bugun</div></div>
+      <div class="srok-stat critical"><div class="num" style="color:#f59e0b">${s.critical}</div><div class="lbl">3 kun ichida</div></div>
+      <div class="srok-stat warning"><div class="num" style="color:#eab308">${s.warning}</div><div class="lbl">7 kun ichida</div></div>
+      <div class="srok-stat normal"><div class="num" style="color:#10b981">${s.normal}</div><div class="lbl">Normada</div></div>
+    </div>`;
+
+  const sorted = [...DB.product_batches].sort((a,b)=>{
+    const da = new Date(a.expiry_date).getTime();
+    const db = new Date(b.expiry_date).getTime();
+    return da - db;
+  });
+
+  const itemsHtml = sorted.map(b=>{
+    const product = DB.products.find(p=>p.id===b.product_id);
+    if(!product) return '';
+    const s = getSrokStatus(b.expiry_date);
+    return `
+    <div class="srok-item ${s.cls}">
+      <div class="srok-days ${s.cls}">
+        <div>${s.ico}</div>
+        <div style="font-size:11px;font-weight:600">${s.days !== null ? (s.days < 0 ? '!'+Math.abs(s.days) : s.days) : '—'}</div>
+      </div>
+      <div class="info">
+        <div class="title">${esc(product.name)}</div>
+        <div class="sub">${fmtDate(b.expiry_date)} • ${b.quantity} dona</div>
+        <div style="margin-top:4px">
+          <span class="badge ${s.cls === 'expired' ? 'red' : s.cls === 'today' ? 'red' : s.cls === 'critical' ? 'orange' : s.cls === 'warning' ? 'yellow' : 'green'}">
+            ${s.label}
+          </span>
+        </div>
+      </div>
+      <button class="btn-del" onclick="deleteBatch(${b.id})">🗑️</button>
+    </div>`;
+  }).join('');
+
+  sec.innerHTML = statsHtml + '<div style="padding:0 12px">' + itemsHtml + '</div>';
+}
+
+// =========================================================
+// RENDER — MUAMMOLAR
+// =========================================================
+function renderIssues(){
+  const sec = document.getElementById('sec-issues');
+  if(!DB.issues.length){ sec.innerHTML = empty('⚠️','Muammolar yo\'q. Ajoyib! 🎉'); return; }
+  const pCls = {high:'red', normal:'orange', low:'gray'};
+  sec.innerHTML = DB.issues.map(i=>`
+    <div class="list-item">
+      <div class="avatar orange">⚠️</div>
+      <div class="info">
+        <div class="title">${esc(i.title)}</div>
+        <div class="sub">${esc(i.status)}</div>
+      </div>
+      ${badge(i.priority, pCls[i.priority]||'gray')}
+      <button class="btn-del" onclick="deleteItem('issues',${i.id})">🗑️</button>
+    </div>
+  `).join('');
+}
+
+// =========================================================
+// NAVIGATION
+// =========================================================
+function switchTab(name){
+  currentTab = name;
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('.sidebar-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  refresh();
+}
+
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
+document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
+
+// =========================================================
+// ACTIONS
+// =========================================================
+function startTask(id){
+  const t = DB.tasks.find(x=>x.id===id);
+  if(t){ t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Topshiriq boshlandi','success'); }
+}
+function completeTask(id){
+  const t = DB.tasks.find(x=>x.id===id);
+  if(t){ t.status = 'completed'; t.completed_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Topshiriq yakunlandi','success'); }
+}
+function endShift(id){
+  if(!confirm('Smenani yakunlaysizmi?')) return;
+  const si = DB.shift_instances.find(x=>x.id===id);
+  if(si){ si.status = 'ended'; si.ended_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Smena yakunlandi','success'); }
+}
+function deleteItem(table, id){
+  if(!confirm('O\'chirishni tasdiqlaysizmi?')) return;
+  DB[table] = DB[table].filter(i=>i.id!==id);
+  DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
+}
+function deleteBatch(id){
+  if(!confirm('Bu partiyani o\'chirasizmi?')) return;
+  DB.product_batches = DB.product_batches.filter(b=>b.id!==id);
+  DB.save(); refresh(); toast('🗑️ Partiya o\'chirildi','success');
+}
+
+// =========================================================
+// MODAL
+// =========================================================
+function openModal(){
+  const today = new Date().toISOString().slice(0,10);
+  const forms = {
+    employees: `
+      <h3>➕ Yangi xodim</h3>
+      <div class="field"><label>Ism *</label><input id="f_name" placeholder="Ali Valiyev" autofocus></div>
+      <div class="field"><label>Telefon</label><input id="f_phone" placeholder="+998901234567" inputmode="tel"></div>
+      <div class="field"><label>Rol</label>
+        <select id="f_role"><option value="employee">Xodim</option><option value="manager">Menejer</option><option value="admin">Admin</option></select></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-primary btn-lg" onclick="save('employees')">Saqlash</button>
+      </div>`,
+    shifts: `
+      <h3>🕐 Smena boshlash</h3>
+      <div class="field"><label>Xodim</label>
+        <select id="f_emp">${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Smena</label>
+        <select id="f_shift">${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}</select></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-success btn-lg" onclick="save('shifts')">Boshlash</button>
+      </div>`,
+    tasks: `
+      <h3>➕ Yangi topshiriq</h3>
+      <div class="field"><label>Sarlavha *</label><input id="f_title" placeholder="Non bo'limini tekshirish" autofocus></div>
+      <div class="field"><label>Tavsif</label><textarea id="f_desc" rows="2"></textarea></div>
+      <div class="field"><label>Xodim</label>
+        <select id="f_emp"><option value="">— Hech kim —</option>${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Prioritet</label>
+        <select id="f_priority"><option value="low">Past</option><option value="normal" selected>O'rta</option><option value="high">Yuqori</option></select></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-primary btn-lg" onclick="save('tasks')">Saqlash</button>
+      </div>`,
+    products: `
+      <h3>➕ Yangi tovar</h3>
+      <div class="field"><label>Nomi *</label><input id="f_name" placeholder="Oq non" autofocus></div>
+      <div class="field"><label>Shtrix kod</label><input id="f_barcode" inputmode="numeric"></div>
+      <div class="field"><label>Kategoriya</label><input id="f_category" placeholder="non"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-primary btn-lg" onclick="save('products')">Saqlash</button>
+      </div>`,
+    expiry: `
+      <h3>⏰ Yangi partiya (srok)</h3>
+      <div class="field"><label>Tovar *</label>
+        <select id="f_prod"><option value="">— Tanlang —</option>${DB.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Partiya raqami</label><input id="f_batch" placeholder="P001"></div>
+      <div class="field"><label>Miqdor (dona) *</label><input id="f_qty" type="number" value="1" min="1" inputmode="numeric"></div>
+      <div class="field"><label>Kelgan sana</label><input id="f_received" type="date" value="${today}"></div>
+      <div class="field"><label>Srok tugash sanasi *</label><input id="f_expiry" type="date"></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-primary btn-lg" onclick="save('expiry')">Saqlash</button>
+      </div>`,
+    issues: `
+      <h3>➕ Yangi muammo</h3>
+      <div class="field"><label>Sarlavha *</label><input id="f_title" placeholder="Kassa ishlamayapti" autofocus></div>
+      <div class="field"><label>Tavsif</label><textarea id="f_desc" rows="2"></textarea></div>
+      <div class="field"><label>Prioritet</label>
+        <select id="f_priority"><option value="low">Past</option><option value="normal" selected>O'rta</option><option value="high">Yuqori</option></select></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-primary btn-lg" onclick="save('issues')">Saqlash</button>
+      </div>`
+  };
+  document.getElementById('modalContent').innerHTML = forms[currentTab] || forms.employees;
+  document.getElementById('modalBg').classList.add('show');
+}
+
+function closeModal(e){
+  if(e && e.target.id !== 'modalBg') return;
+  document.getElementById('modalBg').classList.remove('show');
+}
+
+// =========================================================
+// SETTINGS
+// =========================================================
+function openSettings(){
+  const stats = `
+    <h3>⚙️ Sozlamalar</h3>
+    <div style="background:#f9fafb;border-radius:12px;padding:14px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+        <span style="font-size:13px;color:#666">Xodimlar</span><strong style="font-size:13px">${DB.employees.length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+        <span style="font-size:13px;color:#666">Faol smenalar</span><strong style="font-size:13px">${DB.shift_instances.filter(s=>s.status==='active').length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+        <span style="font-size:13px;color:#666">Topshiriqlar</span><strong style="font-size:13px">${DB.tasks.length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+        <span style="font-size:13px;color:#666">Tovarlar</span><strong style="font-size:13px">${DB.products.length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
+        <span style="font-size:13px;color:#666">Srok partiyalari</span><strong style="font-size:13px">${DB.product_batches.length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0">
+        <span style="font-size:13px;color:#666">Muammolar</span><strong style="font-size:13px">${DB.issues.length}</strong></div>
+    </div>
+    <div class="data-actions">
+      <button class="export" onclick="exportData()">💾 Eksport</button>
+      <button class="import" onclick="importData()">📂 Import</button>
+      <button class="clear" onclick="clearData()">🗑️ Tozalash</button>
+    </div>
+    <p style="font-size:11px;color:#999;text-align:center;margin-top:16px">
+      Ma'lumotlar faqat shu qurilmada saqlanadi
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Yopish</button>
+    </div>
+  `;
+  document.getElementById('modalContent').innerHTML = stats;
+  document.getElementById('modalBg').classList.add('show');
+}
+
+function exportData(){ DB.export(); toast('✅ Fayl yuklandi','success'); }
+function importData(){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try {
+        const data = JSON.parse(ev.target.result);
+        DB.import(data);
+        toast('✅ Import muvaffaqiyatli','success');
+        closeModal(); refresh();
+      } catch(err){ toast('❌ Xato: ' + err.message, 'error'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function clearData(){
+  if(!confirm('BARCHA ma\'lumotlarni o\'chirasizmi?')) return;
+  if(!confirm('Ishonchingiz komilmi?')) return;
+  localStorage.removeItem('store_control_db');
+  DB.load(); closeModal(); refresh();
+  toast('🗑️ Hammasi tozalandi','success');
+}
+
+// =========================================================
+// SAVE
+// =========================================================
+function save(type){
+  const v = id => (document.getElementById(id)?.value || '').trim();
+  const n = id => parseInt(document.getElementById(id)?.value) || null;
+
+  if(type==='employees'){
+    if(!v('f_name')) return toast('Ism kiritilishi shart','error');
+    DB.employees.push({id: DB.nextId('employees'), store_id: 1, name: v('f_name'),
+      phone: v('f_phone')||null, role: v('f_role'), status: 'active', created_at: new Date().toISOString()});
+  }
+  else if(type==='shifts'){
+    const empId = n('f_emp'), shiftId = n('f_shift');
+    if(!empId){ toast('Xodim tanlanishi shart','error'); return; }
+    const exists = DB.shift_instances.find(s=>s.employee_id===empId && s.status==='active');
+    if(exists){ toast('Xodimda allaqachon faol smena bor','error'); return; }
+    DB.shift_instances.push({id: DB.nextId('shift_instances'), shift_id: shiftId,
+      employee_id: empId, status: 'active', started_at: new Date().toISOString()});
+  }
+  else if(type==='tasks'){
+    if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
+    DB.tasks.push({id: DB.nextId('tasks'), store_id: 1, title: v('f_title'),
+      description: v('f_desc')||null, assigned_employee_id: n('f_emp'),
+      priority: v('f_priority'), status: 'pending', is_photo_required: false,
+      created_at: new Date().toISOString()});
+  }
+  else if(type==='products'){
+    if(!v('f_name')) return toast('Nomi kiritilishi shart','error');
+    DB.products.push({id: DB.nextId('products'), store_id: 1, name: v('f_name'),
+      barcode: v('f_barcode')||null, category: v('f_category')||null,
+      created_at: new Date().toISOString()});
+  }
+  else if(type==='expiry'){
+    const prodId = n('f_prod'), qty = n('f_qty'), expiry = v('f_expiry');
+    if(!prodId) return toast('Tovar tanlanishi shart','error');
+    if(!qty || qty < 1) return toast('Miqdor kiritilishi shart','error');
+    if(!expiry) return toast('Srok sanasi kiritilishi shart','error');
+    DB.product_batches.push({
+      id: DB.nextId('product_batches'), product_id: prodId,
+      batch_number: v('f_batch')||null, quantity: qty,
+      received_date: v('f_received')||new Date().toISOString().slice(0,10),
+      expiry_date: expiry, created_at: new Date().toISOString()
+    });
+    const s = getSrokStatus(expiry);
+    if(s.cls === 'expired') toast('⚠️ Diqqat! Muddati o\'tgan!','error');
+    else if(s.cls === 'today') toast('⚠️ Bugun tugaydi!','error');
+    else if(s.cls === 'critical') toast('⚠️ ' + s.days + ' kun ichida tugaydi!','warning');
+    else toast('✅ Partiya qo\'shildi','success');
+    DB.save(); closeModal(); refresh();
+    return;
+  }
+  else if(type==='issues'){
+    if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
+    DB.issues.push({id: DB.nextId('issues'), store_id: 1, title: v('f_title'),
+      description: v('f_desc')||null, priority: v('f_priority'), status: 'open',
+      created_at: new Date().toISOString()});
+  }
+
+  DB.save(); closeModal(); toast('✅ Saqlandi','success'); refresh();
+}
+
+// =========================================================
+// REFRESH
+// =========================================================
+function refresh(){
+  loadStats();
+  const renderers = {
+    employees: renderEmployees, shifts: renderShifts, tasks: renderTasks,
+    products: renderProducts, expiry: renderExpiry, issues: renderIssues
+  };
+  (renderers[currentTab] || renderEmployees)();
+}
+
+// =========================================================
+// INIT
+// =========================================================
+DB.load();
+refresh();
+
+// SPLASH SCREEN — 1.5 sekunddan keyin yashirish
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('hide');
+      setTimeout(() => splash.remove(), 600);
+    }
+  }, 1500);
+});
+
+let lastWidth = window.innerWidth;
+window.addEventListener('resize', ()=>{
+  const w = window.innerWidth;
+  const wasMobile = lastWidth < 768;
+  const isMobile = w < 768;
+  if(wasMobile !== isMobile){ refresh(); }
+  lastWidth = w;
+});
+</script>
+</body>
+</html>
