@@ -21,7 +21,6 @@ position:relative;padding-bottom:90px;transition:background .3s}
 .sidebar{display:none}
 .desktop-wrapper{display:contents}
 
-/* SPLASH */
 #splash{position:fixed;inset:0;z-index:99999;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -44,7 +43,6 @@ animation:bounce 1.4s ease-in-out infinite both}
 .splash-loader span:nth-child(3){animation-delay:.32s}
 @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-/* LOGIN */
 #login{position:fixed;inset:0;z-index:9998;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 padding:20px;padding-top:max(20px, env(safe-area-inset-top));
@@ -54,8 +52,7 @@ display:block;transition:opacity .4s ease,visibility .4s ease}
 #login.hide{opacity:0;visibility:hidden;pointer-events:none}
 .login-container{width:100%;max-width:420px;
 background:white;border-radius:24px;padding:28px 22px;
-box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out;
-margin:0 auto}
+box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out;margin:0 auto}
 @keyframes loginIn{from{opacity:0;transform:translateY(30px) scale(.95)}
 to{opacity:1;transform:translateY(0) scale(1)}}
 @media (min-width:500px) and (min-height:700px){
@@ -89,18 +86,15 @@ border-radius:16px;display:flex;align-items:center;justify-content:center}
 .pass-wrap{position:relative;margin-bottom:14px}
 .pass-input{width:100%;padding:14px 44px 14px 44px;border:2px solid #e5e7eb;
 border-radius:12px;font-size:16px;font-family:inherit;
-background:#fafbfc;transition:border-color .2s,background .3s;
-letter-spacing:2px}
+background:#fafbfc;transition:border-color .2s,background .3s;letter-spacing:2px}
 .pass-input:focus{outline:none;border-color:#667eea;background:white}
 .pass-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);
 font-size:18px;opacity:.5;pointer-events:none}
 .pass-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);
-background:none;border:none;font-size:18px;cursor:pointer;
-padding:6px;opacity:.6;transition:opacity .2s}
+background:none;border:none;font-size:18px;cursor:pointer;padding:6px;opacity:.6}
 .pass-toggle:hover{opacity:1}
 .pass-label{display:block;font-size:12px;font-weight:700;color:#555;
 margin-bottom:6px;text-align:left}
-
 .emp-select{width:100%;padding:14px;border:2px solid #e5e7eb;
 border-radius:12px;font-size:16px;font-family:inherit;background:#fafbfc;margin-bottom:14px;
 -webkit-appearance:none;appearance:none;
@@ -108,7 +102,6 @@ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000
 background-repeat:no-repeat;background-position:right 12px center;background-size:20px;
 padding-right:40px}
 .emp-select:focus{outline:none;border-color:#667eea;background-color:white}
-
 .login-btn{width:100%;padding:16px;border:none;border-radius:12px;
 font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
 transition:all .2s;margin-bottom:10px;display:flex;align-items:center;
@@ -119,7 +112,6 @@ justify-content:center;gap:8px;min-height:52px}
 .login-btn.primary.green:hover{box-shadow:0 8px 20px rgba(16,185,129,.4)}
 .login-btn.back{background:#f3f4f6;color:#666}
 .login-btn.back:hover{background:#e5e7eb}
-
 .login-info{background:#f0f4ff;border-radius:12px;padding:14px;
 margin-bottom:18px;font-size:13px;color:#555;text-align:center;
 border-left:3px solid #667eea;line-height:1.5}
@@ -128,8 +120,7 @@ border-left:3px solid #667eea;line-height:1.5}
 border-radius:10px;font-size:13px;margin-bottom:14px;display:none;
 text-align:center;font-weight:600}
 .login-error.show{display:block;animation:shake .3s}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}
-75%{transform:translateX(6px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
@@ -154,7 +145,6 @@ transition:background .2s;flex-shrink:0}
 .stat{background:white;border-radius:14px;padding:14px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
 transition:transform .2s,background .3s}
-.stat:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
 .stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#667eea}
 .stat.blue::before{background:#3b82f6}
 .stat.green::before{background:#10b981}
@@ -186,7 +176,6 @@ box-shadow:0 4px 12px rgba(16,185,129,.3)}
 .list-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
 gap:12px;animation:fadeIn .3s;transition:box-shadow .2s,background .3s}
-.list-item:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
 
 .avatar{width:42px;height:42px;border-radius:50%;display:flex;
@@ -461,7 +450,6 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
     <div class="login-title">Store Control</div>
     <div class="login-subtitle">Supermarket boshqaruv tizimi</div>
 
-    <!-- Step 1: Role tanlash -->
     <div id="loginStep1">
       <div class="login-question">👤 Kim sifatida kirmoqchisiz?</div>
       <button class="role-btn manager" onclick="selectRole('manager')">
@@ -476,59 +464,42 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
       </button>
     </div>
 
-    <!-- Manager: parol kiritish -->
     <div id="loginStepManager" style="display:none">
       <div class="login-question">🔒 Menejer parolini kiriting</div>
       <div class="login-error" id="errManager"></div>
       <label class="pass-label">Parol</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="mgrPass" 
-               placeholder="••••••" autocomplete="off"
+        <input type="password" class="pass-input" id="mgrPass" placeholder="••••••" autocomplete="off"
                onkeydown="if(event.key==='Enter') loginManager()">
         <button class="pass-toggle" onclick="togglePass('mgrPass', this)">👁️</button>
       </div>
-      <button class="login-btn primary" onclick="loginManager()">
-        <span>🔓 Kirish</span>
-      </button>
-      <button class="login-btn back" onclick="backToStep1()">
-        <span>← Orqaga</span>
-      </button>
+      <button class="login-btn primary" onclick="loginManager()"><span>🔓 Kirish</span></button>
+      <button class="login-btn back" onclick="backToStep1()"><span>← Orqaga</span></button>
     </div>
 
-    <!-- Manager: birinchi marta parol yaratish -->
     <div id="loginStepManagerSetup" style="display:none">
       <div class="login-question">🔐 Yangi parol yarating</div>
-      <div class="login-info">
-        <strong>Birinchi kirish</strong>
-        Iltimos, o'zingizga parol o'ylab toping.<br>
-        Har safar shu parol bilan kirasiz.
-      </div>
+      <div class="login-info"><strong>Birinchi kirish</strong>
+        Iltimos, o'zingizga parol o'ylab toping.<br>Har safar shu parol bilan kirasiz.</div>
       <div class="login-error" id="errManagerSetup"></div>
       <label class="pass-label">Yangi parol (min 4 belgi)</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="setupPass1" 
-               placeholder="••••••" autocomplete="off">
+        <input type="password" class="pass-input" id="setupPass1" placeholder="••••••" autocomplete="off">
         <button class="pass-toggle" onclick="togglePass('setupPass1', this)">👁️</button>
       </div>
       <label class="pass-label">Parolni takrorlang</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="setupPass2" 
-               placeholder="••••••" autocomplete="off"
+        <input type="password" class="pass-input" id="setupPass2" placeholder="••••••" autocomplete="off"
                onkeydown="if(event.key==='Enter') setupManagerPassword()">
         <button class="pass-toggle" onclick="togglePass('setupPass2', this)">👁️</button>
       </div>
-      <button class="login-btn primary" onclick="setupManagerPassword()">
-        <span>✅ Parolni saqlash</span>
-      </button>
-      <button class="login-btn back" onclick="backToStep1()">
-        <span>← Orqaga</span>
-      </button>
+      <button class="login-btn primary" onclick="setupManagerPassword()"><span>✅ Parolni saqlash</span></button>
+      <button class="login-btn back" onclick="backToStep1()"><span>← Orqaga</span></button>
     </div>
 
-    <!-- Employee: xodim tanlash -->
     <div id="loginStepEmployee" style="display:none">
       <div class="login-question">👷 Xodim kirishi</div>
       <div class="login-error" id="errEmployee"></div>
@@ -536,70 +507,48 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
       <select class="emp-select" id="employeeSelect">
         <option value="">— Xodimni tanlang —</option>
       </select>
-      <button class="login-btn primary green" onclick="nextEmployeeStep()">
-        <span>➡️ Davom etish</span>
-      </button>
-      <button class="login-btn back" onclick="backToStep1()">
-        <span>← Orqaga</span>
-      </button>
+      <button class="login-btn primary green" onclick="nextEmployeeStep()"><span>➡️ Davom etish</span></button>
+      <button class="login-btn back" onclick="backToStep1()"><span>← Orqaga</span></button>
     </div>
 
-    <!-- Employee: parol kiritish (mavjud parol) -->
     <div id="loginStepEmployeePass" style="display:none">
-      <div class="login-question" id="empPassQuestion">🔒 Parolni kiriting</div>
+      <div class="login-question">🔒 Parolni kiriting</div>
       <div class="login-info" id="empPassInfo"></div>
       <div class="login-error" id="errEmployeePass"></div>
       <label class="pass-label">Parol</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="empPass" 
-               placeholder="••••••" autocomplete="off"
+        <input type="password" class="pass-input" id="empPass" placeholder="••••••" autocomplete="off"
                onkeydown="if(event.key==='Enter') loginEmployeePass()">
         <button class="pass-toggle" onclick="togglePass('empPass', this)">👁️</button>
       </div>
-      <button class="login-btn primary green" onclick="loginEmployeePass()">
-        <span>🔓 Kirish</span>
-      </button>
-      <button class="login-btn back" onclick="backToEmployeeSelect()">
-        <span>← Orqaga</span>
-      </button>
+      <button class="login-btn primary green" onclick="loginEmployeePass()"><span>🔓 Kirish</span></button>
+      <button class="login-btn back" onclick="backToEmployeeSelect()"><span>← Orqaga</span></button>
     </div>
 
-    <!-- Employee: birinchi marta parol yaratish -->
     <div id="loginStepEmployeeSetup" style="display:none">
       <div class="login-question">🎉 Xush kelibsiz!</div>
-      <div class="login-info" id="empSetupInfo">
-        <strong>Birinchi kirish</strong>
-        Iltimos, o'zingizga parol o'ylab toping.<br>
-        Har safar shu parol bilan kirasiz.
-      </div>
+      <div class="login-info" id="empSetupInfo"></div>
       <div class="login-error" id="errEmployeeSetup"></div>
       <label class="pass-label">Yangi parol (min 4 belgi)</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="empSetupPass1" 
-               placeholder="••••••" autocomplete="off">
+        <input type="password" class="pass-input" id="empSetupPass1" placeholder="••••••" autocomplete="off">
         <button class="pass-toggle" onclick="togglePass('empSetupPass1', this)">👁️</button>
       </div>
       <label class="pass-label">Parolni takrorlang</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="empSetupPass2" 
-               placeholder="••••••" autocomplete="off"
+        <input type="password" class="pass-input" id="empSetupPass2" placeholder="••••••" autocomplete="off"
                onkeydown="if(event.key==='Enter') setupEmployeePassword()">
         <button class="pass-toggle" onclick="togglePass('empSetupPass2', this)">👁️</button>
       </div>
-      <button class="login-btn primary green" onclick="setupEmployeePassword()">
-        <span>✅ Parolni saqlash va kirish</span>
-      </button>
-      <button class="login-btn back" onclick="backToEmployeeSelect()">
-        <span>← Orqaga</span>
-      </button>
+      <button class="login-btn primary green" onclick="setupEmployeePassword()"><span>✅ Parolni saqlash va kirish</span></button>
+      <button class="login-btn back" onclick="backToEmployeeSelect()"><span>← Orqaga</span></button>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div class="desktop-wrapper" id="mainApp" style="display:none">
   <aside class="sidebar">
     <div class="sidebar-logo">
@@ -675,9 +624,6 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
 <div class="toast" id="toast"></div>
 
 <script>
-// =========================================================
-// MA'LUMOTLAR
-// =========================================================
 const ZONES = [
   {id:'bread', name:'🍞 Non bo\'limi'},
   {id:'dairy', name:'🥛 Sut bo\'limi'},
@@ -774,11 +720,8 @@ const DB = {
 
 let currentUser = { role: null, employeeId: null, employeeName: null };
 let currentTab = 'employees';
-let tempEmployeeId = null; // Xodim tanlanganda saqlanadi
+let tempEmployeeId = null;
 
-// =========================================================
-// PAROL XESHLASH
-// =========================================================
 function hashPassword(pwd){
   let hash = 0;
   const salt = 'store_control_2026_secure';
@@ -804,7 +747,6 @@ function togglePass(inputId, btn){
   if(input.type === 'password'){ input.type = 'text'; btn.textContent = '🙈'; }
   else { input.type = 'password'; btn.textContent = '👁️'; }
 }
-
 function showError(id, msg){
   const el = document.getElementById(id);
   if(!el) return;
@@ -813,9 +755,6 @@ function showError(id, msg){
   setTimeout(() => el.classList.remove('show'), 4000);
 }
 
-// =========================================================
-// LOGIN FLOW
-// =========================================================
 function hideAllLoginSteps(){
   ['loginStep1','loginStepManager','loginStepManagerSetup',
    'loginStepEmployee','loginStepEmployeePass','loginStepEmployeeSetup']
@@ -862,7 +801,6 @@ function backToEmployeeSelect(){
   document.getElementById('empSetupPass2').value = '';
 }
 
-// Manager setup
 function setupManagerPassword(){
   const p1 = document.getElementById('setupPass1').value;
   const p2 = document.getElementById('setupPass2').value;
@@ -886,16 +824,13 @@ function loginManager(){
   saveUser(); enterApp();
 }
 
-// Employee: xodimni tanlash -> keyingi qadam
 function nextEmployeeStep(){
   const empId = parseInt(document.getElementById('employeeSelect').value);
   if(!empId){ showError('errEmployee', '⚠️ Xodimni tanlang!'); return; }
   const emp = DB.employees.find(e => e.id === empId);
   if(!emp){ showError('errEmployee', '❌ Xodim topilmadi!'); return; }
   tempEmployeeId = empId;
-
   if(!emp.passwordHash){
-    // Parol yo'q — parol yaratish
     document.getElementById('empSetupInfo').innerHTML =
       `<strong>Xush kelibsiz, ${esc(emp.name)}!</strong><br>
        Siz birinchi marta kirmoqdasiz.<br>
@@ -903,17 +838,14 @@ function nextEmployeeStep(){
     hideAllLoginSteps();
     document.getElementById('loginStepEmployeeSetup').style.display = 'block';
   } else {
-    // Parol bor — parol kiritish
     document.getElementById('empPassInfo').innerHTML =
-      `<strong>Salom, ${esc(emp.name)}!</strong><br>
-       Parolingizni kiriting.`;
+      `<strong>Salom, ${esc(emp.name)}!</strong><br>Parolingizni kiriting.`;
     hideAllLoginSteps();
     document.getElementById('loginStepEmployeePass').style.display = 'block';
     setTimeout(() => document.getElementById('empPass').focus(), 200);
   }
 }
 
-// Employee login (parol bor)
 function loginEmployeePass(){
   const pwd = document.getElementById('empPass').value;
   if(!pwd){ showError('errEmployeePass', '⚠️ Parolni kiriting!'); return; }
@@ -927,7 +859,6 @@ function loginEmployeePass(){
   saveUser(); enterApp();
 }
 
-// Employee setup (birinchi marta)
 function setupEmployeePassword(){
   const p1 = document.getElementById('empSetupPass1').value;
   const p2 = document.getElementById('empSetupPass2').value;
@@ -937,7 +868,7 @@ function setupEmployeePassword(){
   if(!emp){ showError('errEmployeeSetup', '❌ Xodim topilmadi!'); return; }
   emp.passwordHash = hashPassword(p1);
   DB.save();
-  toast('✅ Parol yaratildi! Endi har safar shu parol bilan kirasiz', 'success');
+  toast('✅ Parol yaratildi!', 'success');
   currentUser = { role: 'employee', employeeId: emp.id, employeeName: emp.name };
   saveUser();
   setTimeout(() => enterApp(), 800);
@@ -970,9 +901,6 @@ function logout(){
   backToStep1();
 }
 
-// =========================================================
-// SROK
-// =========================================================
 function getSrokStatus(expiryDate){
   if(!expiryDate) return {cls:'normal', label:'—', days:null};
   const today = new Date(); today.setHours(0,0,0,0);
@@ -994,9 +922,6 @@ function srokStats(){
   return stats;
 }
 
-// =========================================================
-// YORDAMCHI
-// =========================================================
 function toast(msg, type){
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + (type||'');
@@ -1032,9 +957,6 @@ function shiftName(id){
   return s ? s.name : '—';
 }
 
-// =========================================================
-// FOTO SIQISH
-// =========================================================
 function compressImage(file, maxWidth = 700, quality = 0.7){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1056,9 +978,6 @@ function compressImage(file, maxWidth = 700, quality = 0.7){
   });
 }
 
-// =========================================================
-// THEME
-// =========================================================
 function toggleTheme(){
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
@@ -1073,9 +992,6 @@ function toggleTheme(){
   }
 })();
 
-// =========================================================
-// STATS
-// =========================================================
 function loadStats(){
   const isEmp = currentUser.role === 'employee';
   let activeShifts, openTasks, reportsCount;
@@ -1109,9 +1025,6 @@ function loadStats(){
   setC('cnt-issue', openIssues);
 }
 
-// =========================================================
-// RENDER — XODIMLAR
-// =========================================================
 function renderEmployees(){
   const sec = document.getElementById('sec-employees');
   if(!DB.employees.length){
@@ -1148,9 +1061,6 @@ function renderEmployees(){
   }).join('');
 }
 
-// =========================================================
-// RENDER — SMENALAR
-// =========================================================
 function renderShifts(){
   const sec = document.getElementById('sec-shifts');
   const isMgr = isManager();
@@ -1183,7 +1093,24 @@ function renderShifts(){
         </div>`;
     }).join('');
   } else {
-    activeCard = empty('🕐', isMgr ? 'Faol smenalar yo\'q' : 'Sizda faol smena yo\'q');
+    if(!isMgr){
+      activeCard = `
+        <div class="list-item" style="flex-direction:column;align-items:center;text-align:center;padding:32px 20px;border-left:4px solid #10b981">
+          <div style="font-size:64px;margin-bottom:14px">🕐</div>
+          <div style="font-size:15px;color:#666;margin-bottom:6px;font-weight:600">
+            Sizda faol smena yo'q
+          </div>
+          <div style="font-size:12px;color:#999;margin-bottom:20px">
+            Smenani boshlash uchun quyidagi tugmani bosing
+          </div>
+          <button class="btn btn-success" style="font-size:15px;padding:14px 32px;border-radius:12px;font-weight:700" onclick="openModal()">
+            ▶️ Smenani boshlash
+          </button>
+        </div>
+      `;
+    } else {
+      activeCard = empty('🕐', 'Faol smenalar yo\'q');
+    }
   }
   let allShifts = '';
   if(isMgr){
@@ -1206,9 +1133,6 @@ function renderShifts(){
   sec.innerHTML = activeCard + allShifts;
 }
 
-// =========================================================
-// RENDER — HISOBOTLAR
-// =========================================================
 function renderReports(){
   const sec = document.getElementById('sec-reports');
   let reports = DB.reports;
@@ -1266,9 +1190,6 @@ function viewPhoto(src, title){
   document.getElementById('modalBg').classList.add('show');
 }
 
-// =========================================================
-// RENDER — TOPSHIRIQLAR
-// =========================================================
 function renderTasks(){
   const sec = document.getElementById('sec-tasks');
   let tasks = DB.tasks;
@@ -1306,9 +1227,6 @@ function renderTasks(){
   }).join('');
 }
 
-// =========================================================
-// RENDER — TOVARLAR
-// =========================================================
 function renderProducts(){
   const sec = document.getElementById('sec-products');
   if(!DB.products.length){
@@ -1332,9 +1250,6 @@ function renderProducts(){
   }).join('');
 }
 
-// =========================================================
-// RENDER — SROK
-// =========================================================
 function renderExpiry(){
   const sec = document.getElementById('sec-expiry');
   if(!DB.product_batches.length){
@@ -1376,9 +1291,6 @@ function renderExpiry(){
   sec.innerHTML = statsHtml + '<div style="padding:0 12px">' + itemsHtml + '</div>';
 }
 
-// =========================================================
-// RENDER — MUAMMOLAR
-// =========================================================
 function renderIssues(){
   const sec = document.getElementById('sec-issues');
   if(!DB.issues.length){
@@ -1399,9 +1311,6 @@ function renderIssues(){
   `).join('');
 }
 
-// =========================================================
-// NAVIGATION
-// =========================================================
 function switchTab(name){
   currentTab = name;
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
@@ -1413,9 +1322,6 @@ function switchTab(name){
 document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
 document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
 
-// =========================================================
-// ACTIONS
-// =========================================================
 function startTask(id){
   const t = DB.tasks.find(x=>x.id===id);
   if(!t) return;
@@ -1446,7 +1352,6 @@ function deleteBatch(id){
   DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
 }
 
-// Parolni tiklash — xodim qayta parol yaratadi
 function resetEmployeePassword(empId){
   if(!isManager()) return;
   const emp = DB.employees.find(e => e.id === empId);
@@ -1457,9 +1362,6 @@ function resetEmployeePassword(empId){
   toast('✅ Parol o\'chirildi. Xodim keyingi kirishda yangi parol yaratadi', 'success');
 }
 
-// =========================================================
-// SMENANI YAKUNLASH — FOTO HISOBOT
-// =========================================================
 let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, note: '' };
 
 function openEndShiftModal(siId){
@@ -1561,9 +1463,6 @@ function confirmEndShift(){
   toast('✅ Smena yakunlandi! 🎉', 'success');
 }
 
-// =========================================================
-// MODAL
-// =========================================================
 function openModal(){
   const today = new Date().toISOString().slice(0,10);
   const isMgr = isManager();
@@ -1591,15 +1490,35 @@ function openModal(){
         <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
         <button class="btn btn-primary btn-lg" onclick="save('employees')">Saqlash</button>
       </div>`,
-    shifts: `
+    shifts: isMgr ? `
       <h3>🕐 Smena boshlash</h3>
-      <div class="field"><label>Xodim</label>
-        <select id="f_emp">${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
-      <div class="field"><label>Smena</label>
-        <select id="f_shift">${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}</select></div>
+      <div class="field"><label>Xodim *</label>
+        <select id="f_emp">
+          <option value="">— Xodimni tanlang —</option>
+          ${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}
+        </select></div>
+      <div class="field"><label>Smena *</label>
+        <select id="f_shift">
+          <option value="">— Smenani tanlang —</option>
+          ${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}
+        </select></div>
       <div class="modal-actions">
         <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-success btn-lg" onclick="save('shifts')">Boshlash</button>
+        <button class="btn btn-success btn-lg" onclick="save('shifts')">▶️ Boshlash</button>
+      </div>` : `
+      <h3>🕐 Mening smenamni boshlash</h3>
+      <div class="login-info" style="text-align:left;font-size:13px">
+        <strong>👷 ${esc(currentUser.employeeName)}</strong>
+        Siz o'z smenangizni boshlamoqdasiz
+      </div>
+      <div class="field"><label>Qaysi smena? *</label>
+        <select id="f_shift">
+          <option value="">— Smenani tanlang —</option>
+          ${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}
+        </select></div>
+      <div class="modal-actions">
+        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+        <button class="btn btn-success btn-lg" onclick="save('shifts')">▶️ Boshlash</button>
       </div>`,
     tasks: `
       <h3>➕ Yangi topshiriq</h3>
@@ -1645,7 +1564,7 @@ function openModal(){
         <button class="btn btn-primary btn-lg" onclick="save('issues')">Saqlash</button>
       </div>`
   };
-  if(!isMgr && currentTab !== 'issues') return;
+  if(!isMgr && currentTab !== 'issues' && currentTab !== 'shifts') return;
   document.getElementById('modalContent').innerHTML = forms[currentTab] || forms.employees;
   document.getElementById('modalBg').classList.add('show');
 }
@@ -1655,9 +1574,6 @@ function closeModal(e){
   document.getElementById('modalBg').classList.remove('show');
 }
 
-// =========================================================
-// SETTINGS
-// =========================================================
 function openSettings(){
   if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   const stats = `
@@ -1741,36 +1657,37 @@ function clearData(){
   toast('🗑️ Tozalandi','success');
 }
 
-// =========================================================
-// SAVE
-// =========================================================
 function save(type){
-  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   const v = id => (document.getElementById(id)?.value || '').trim();
   const n = id => parseInt(document.getElementById(id)?.value) || null;
 
   if(type==='employees'){
+    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
     if(!v('f_name')) return toast('Ism kiritilishi shart','error');
     if(!n('f_shift')) return toast('Smenani tanlang!','error');
     DB.employees.push({
       id: DB.nextId('employees'), store_id: 1,
       name: v('f_name'), phone: v('f_phone')||null,
       role: v('f_role'), shift_id: n('f_shift'),
-      passwordHash: null, // Xodim o'zi yaratadi!
+      passwordHash: null,
       status: 'active', created_at: new Date().toISOString()
     });
   }
   else if(type==='shifts'){
-    const empId = n('f_emp'), shiftId = n('f_shift');
+    // Xodim: o'zi uchun. Menejer: tanlangan xodim uchun
+    const empId = isManager() ? n('f_emp') : currentUser.employeeId;
+    const shiftId = n('f_shift');
     if(!empId){ toast('Xodim tanlanishi shart','error'); return; }
+    if(!shiftId){ toast('Smenani tanlang!','error'); return; }
     const exists = DB.shift_instances.find(s => s.employee_id === empId && s.status === 'active');
-    if(exists){ toast('Xodimda allaqachon faol smena bor','error'); return; }
+    if(exists){ toast('Bu xodimda allaqachon faol smena bor!','error'); return; }
     DB.shift_instances.push({
       id: DB.nextId('shift_instances'), shift_id: shiftId,
       employee_id: empId, status: 'active', started_at: new Date().toISOString()
     });
   }
   else if(type==='tasks'){
+    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
     if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
     DB.tasks.push({
       id: DB.nextId('tasks'), store_id: 1, title: v('f_title'),
@@ -1780,6 +1697,7 @@ function save(type){
     });
   }
   else if(type==='products'){
+    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
     if(!v('f_name')) return toast('Nomi kiritilishi shart','error');
     DB.products.push({
       id: DB.nextId('products'), store_id: 1, name: v('f_name'),
@@ -1788,6 +1706,7 @@ function save(type){
     });
   }
   else if(type==='expiry'){
+    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
     const prodId = n('f_prod'), qty = n('f_qty'), expiry = v('f_expiry');
     if(!prodId) return toast('Tovar tanlanishi shart','error');
     if(!qty || qty < 1) return toast('Miqdor kiritilishi shart','error');
@@ -1816,9 +1735,6 @@ function save(type){
   DB.save(); closeModal(); toast('✅ Saqlandi','success'); refresh();
 }
 
-// =========================================================
-// REFRESH
-// =========================================================
 function refresh(){
   if(!currentUser.role) return;
   loadStats();
@@ -1829,15 +1745,13 @@ function refresh(){
   (renderers[currentTab] || renderEmployees)();
   const fab = document.getElementById('fabBtn');
   if(isManager()){
-    fab.style.display = (currentTab !== 'reports' && currentTab !== 'shifts') ? 'flex' : 'none';
+    fab.style.display = (currentTab !== 'reports') ? 'flex' : 'none';
   } else {
-    fab.style.display = (currentTab === 'issues') ? 'flex' : 'none';
+    const canAdd = currentTab === 'issues' || currentTab === 'shifts';
+    fab.style.display = canAdd ? 'flex' : 'none';
   }
 }
 
-// =========================================================
-// INIT
-// =========================================================
 DB.load();
 loadUser();
 
