@@ -7,35 +7,28 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Store Control">
-<meta name="description" content="Supermarket boshqaruv tizimi">
 <title>Store Control</title>
-
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 background:#f0f2f5;color:#333;line-height:1.5;overscroll-behavior:none;
 -webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
-button{font-family:inherit}
-input,select,textarea{font-family:inherit}
+button,input,select,textarea{font-family:inherit}
 .app{max-width:500px;margin:0 auto;min-height:100vh;background:#f0f2f5;
 position:relative;padding-bottom:90px;transition:background .3s}
 .sidebar{display:none}
 .desktop-wrapper{display:contents}
 
-/* =========================================================
-   SPLASH SCREEN
-   ========================================================= */
+/* SPLASH */
 #splash{position:fixed;inset:0;z-index:99999;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 transition:opacity .5s ease,visibility .5s ease}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
 .splash-logo{width:120px;height:120px;border-radius:28px;
-box-shadow:0 20px 60px rgba(0,0,0,.35);animation:splashScale .8s ease-out;
-object-fit:cover}
+box-shadow:0 20px 60px rgba(0,0,0,.35);animation:splashScale .8s ease-out;object-fit:cover}
 @keyframes splashScale{0%{transform:scale(0) rotate(-180deg);opacity:0}
 60%{transform:scale(1.15) rotate(10deg)}100%{transform:scale(1) rotate(0);opacity:1}}
 .splash-title{margin-top:24px;font-size:28px;font-weight:800;color:white;
@@ -51,29 +44,26 @@ animation:bounce 1.4s ease-in-out infinite both}
 .splash-loader span:nth-child(3){animation-delay:.32s}
 @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-/* =========================================================
-   LOGIN SCREEN
-   ========================================================= */
+/* LOGIN */
 #login{position:fixed;inset:0;z-index:9998;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
-padding:24px;transition:opacity .4s ease,visibility .4s ease}
+padding:24px;transition:opacity .4s ease,visibility .4s ease;overflow-y:auto}
 #login.hide{opacity:0;visibility:hidden;pointer-events:none}
 .login-container{width:100%;max-width:420px;
 background:white;border-radius:24px;padding:32px 24px;
-box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out}
+box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out;
+margin:auto}
 @keyframes loginIn{from{opacity:0;transform:translateY(30px) scale(.95)}
 to{opacity:1;transform:translateY(0) scale(1)}}
 .login-logo{width:80px;height:80px;border-radius:20px;margin:0 auto 20px;
 display:block;object-fit:cover;box-shadow:0 10px 30px rgba(102,126,234,.4)}
 .login-title{text-align:center;font-size:24px;font-weight:800;color:#333;margin-bottom:6px}
 .login-subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:28px}
-.login-question{text-align:center;font-size:14px;color:#666;
-font-weight:600;margin-bottom:16px}
+.login-question{text-align:center;font-size:14px;color:#666;font-weight:600;margin-bottom:16px}
 .role-btn{width:100%;padding:20px;border:2px solid #e5e7eb;border-radius:16px;
-background:white;cursor:pointer;font-family:inherit;
-display:flex;align-items:center;gap:16px;margin-bottom:12px;
-transition:all .2s;text-align:left}
+background:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;
+gap:16px;margin-bottom:12px;transition:all .2s;text-align:left}
 .role-btn:hover{border-color:#667eea;transform:translateY(-2px);
 box-shadow:0 8px 24px rgba(102,126,234,.15)}
 .role-btn:active{transform:translateY(0)}
@@ -90,25 +80,50 @@ border-radius:16px;display:flex;align-items:center;justify-content:center}
 .role-btn.employee .ico{background:#d1fae5;width:60px;height:60px;
 border-radius:16px;display:flex;align-items:center;justify-content:center}
 
-/* Employee select */
+/* PASSWORD FIELD */
+.pass-wrap{position:relative;margin-bottom:16px}
+.pass-input{width:100%;padding:14px 44px 14px 44px;border:2px solid #e5e7eb;
+border-radius:12px;font-size:16px;font-family:inherit;
+background:#fafbfc;transition:border-color .2s,background .3s;
+letter-spacing:2px}
+.pass-input:focus{outline:none;border-color:#667eea;background:white}
+.pass-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);
+font-size:18px;opacity:.5;pointer-events:none}
+.pass-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+background:none;border:none;font-size:18px;cursor:pointer;
+padding:6px;opacity:.6;transition:opacity .2s}
+.pass-toggle:hover{opacity:1}
+.pass-label{display:block;font-size:12px;font-weight:700;color:#555;
+margin-bottom:6px;text-align:left}
+.pass-hint{font-size:11px;color:#999;margin-top:-10px;margin-bottom:12px;text-align:left}
+
 .emp-select{width:100%;padding:12px 14px;border:2px solid #e5e7eb;
-border-radius:12px;font-size:15px;font-family:inherit;
-background:#fafbfc;margin-bottom:16px}
+border-radius:12px;font-size:15px;font-family:inherit;background:#fafbfc;margin-bottom:14px}
 .emp-select:focus{outline:none;border-color:#667eea;background:white}
 
-/* Login buttons */
 .login-btn{width:100%;padding:14px;border:none;border-radius:12px;
 font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
-transition:all .2s;margin-bottom:8px}
+transition:all .2s;margin-bottom:8px;display:flex;align-items:center;
+justify-content:center;gap:8px}
 .login-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
-.login-btn.primary:hover{transform:translateY(-2px);
-box-shadow:0 8px 20px rgba(102,126,234,.4)}
+.login-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(102,126,234,.4)}
+.login-btn.primary.green{background:linear-gradient(135deg,#10b981,#059669)}
+.login-btn.primary.green:hover{box-shadow:0 8px 20px rgba(16,185,129,.4)}
 .login-btn.back{background:#f3f4f6;color:#666}
 .login-btn.back:hover{background:#e5e7eb}
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+.login-info{background:#f0f4ff;border-radius:12px;padding:14px;
+margin-bottom:18px;font-size:13px;color:#555;text-align:center;
+border-left:3px solid #667eea}
+.login-info strong{color:#333;display:block;margin-bottom:4px;font-size:14px}
+.login-error{background:#fee2e2;color:#991b1b;padding:10px 14px;
+border-radius:10px;font-size:13px;margin-bottom:14px;display:none;
+text-align:center;font-weight:600}
+.login-error.show{display:block;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}
+75%{transform:translateX(6px)}}
+
+/* HEADER */
 .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
 box-shadow:0 4px 20px rgba(102,126,234,.3)}
@@ -121,20 +136,14 @@ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .header h1 span{overflow:hidden;text-overflow:ellipsis}
 .header-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
 .role-badge{background:rgba(255,255,255,.25);padding:5px 10px;border-radius:20px;
-font-size:10px;font-weight:700;backdrop-filter:blur(10px);white-space:nowrap;
-letter-spacing:.3px}
-.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+font-size:10px;font-weight:700;backdrop-filter:blur(10px);white-space:nowrap}
 .icon-btn{background:rgba(255,255,255,.2);border:none;color:white;
 width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;
 display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
 transition:background .2s;flex-shrink:0}
 .icon-btn:hover{background:rgba(255,255,255,.3)}
-.refresh-btn{display:none}
 
-/* =========================================================
-   STATS
-   ========================================================= */
+/* STATS */
 .stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:white;border-radius:14px;padding:14px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
@@ -151,13 +160,10 @@ transition:transform .2s,background .3s}
 letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
 
-/* =========================================================
-   NAV
-   ========================================================= */
+/* NAV */
 .nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
 display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
-position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;
-transition:background .3s}
+position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;transition:background .3s}
 .nav::-webkit-scrollbar{display:none}
 .nav-btn{min-width:60px;flex:1;padding:8px 4px;border:none;background:transparent;
 border-radius:10px;cursor:pointer;font-size:10px;font-weight:600;
@@ -169,9 +175,7 @@ color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
 body.employee-mode .nav-btn.active{background:linear-gradient(135deg,#10b981,#059669);
 box-shadow:0 4px 12px rgba(16,185,129,.3)}
 
-/* =========================================================
-   CONTENT
-   ========================================================= */
+/* CONTENT */
 .content{padding:0 12px}
 .section{display:none}
 .section.active{display:block}
@@ -197,8 +201,7 @@ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .info .sub{font-size:12px;color:#888;
 white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;
-white-space:nowrap}
+.badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
 .badge.blue{background:#dbeafe;color:#1e40af}
 .badge.green{background:#d1fae5;color:#065f46}
 .badge.orange{background:#fef3c7;color:#92400e}
@@ -207,7 +210,7 @@ white-space:nowrap}
 .badge.yellow{background:#fef9c3;color:#854d0e}
 .badge.gray{background:#f3f4f6;color:#4b5563}
 
-.actions{display:flex;gap:6px;margin-top:8px}
+.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .btn{padding:6px 12px;border:none;border-radius:8px;font-size:11px;
 font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 .btn:active{transform:scale(.95)}
@@ -215,13 +218,12 @@ font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 .btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
 .btn-success{background:#10b981;color:white}
 .btn-danger{background:#ef4444;color:white}
+.btn-warning{background:#f59e0b;color:white}
 .btn-del{background:#fee2e2;color:#dc2626;padding:6px 8px;font-size:14px;
 border-radius:8px;border:none;cursor:pointer}
 .btn-del:hover{background:#fecaca}
 
-/* =========================================================
-   SROK
-   ========================================================= */
+/* SROK */
 .srok-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
 gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:background .3s}
@@ -236,11 +238,9 @@ gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:backgroun
 .srok-days.critical{color:#f59e0b}
 .srok-days.warning{color:#eab308}
 .srok-days.normal{color:#10b981}
-.srok-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;
-padding:12px;margin-bottom:8px}
-.srok-stat{background:white;border-radius:12px;padding:12px;
-text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04);
-border-top:3px solid #e5e7eb;transition:background .3s}
+.srok-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;margin-bottom:8px}
+.srok-stat{background:white;border-radius:12px;padding:12px;text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.04);border-top:3px solid #e5e7eb;transition:background .3s}
 .srok-stat.expired{border-top-color:#ef4444}
 .srok-stat.today{border-top-color:#dc2626}
 .srok-stat.critical{border-top-color:#f59e0b}
@@ -253,9 +253,7 @@ border-top:3px solid #e5e7eb;transition:background .3s}
 .empty .ico{font-size:56px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:13px}
 
-/* =========================================================
-   FAB
-   ========================================================= */
+/* FAB */
 .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;
 border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);
 color:white;border:none;font-size:24px;cursor:pointer;
@@ -263,17 +261,14 @@ box-shadow:0 6px 20px rgba(102,126,234,.4);z-index:50;
 display:flex;align-items:center;justify-content:center;transition:transform .2s}
 .fab:active{transform:scale(.9)}
 .fab:hover{transform:scale(1.05)}
-.fab.hidden{display:none}
 
-/* =========================================================
-   MODAL
-   ========================================================= */
+/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
 backdrop-filter:blur(4px);z-index:1000;display:none;
 align-items:flex-end;justify-content:center}
 .modal-bg.show{display:flex}
 .modal{background:white;border-radius:24px 24px 0 0;padding:24px;
-width:100%;max-width:500px;max-height:90vh;overflow-y:auto;
+width:100%;max-width:500px;max-height:92vh;overflow-y:auto;
 animation:slideUp .3s ease;transition:background .3s}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal h3{margin-bottom:18px;font-size:18px}
@@ -284,13 +279,51 @@ border:2px solid #e5e7eb;border-radius:12px;font-size:15px;
 font-family:inherit;background:#fafbfc;transition:border-color .2s,background .3s}
 .field input:focus,.field select:focus,.field textarea:focus{
 outline:none;border-color:#667eea;background:white}
+.field .hint{font-size:11px;color:#999;margin-top:4px;display:block}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 .btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
 .btn-cancel{background:#f3f4f6;color:#666}
 
-/* =========================================================
-   TOAST
-   ========================================================= */
+/* PHOTO UPLOAD */
+.photo-upload{border:2px dashed #cbd5e1;border-radius:12px;padding:16px;
+text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc;
+margin-bottom:12px;position:relative}
+.photo-upload:hover{border-color:#667eea;background:#f0f4ff}
+.photo-upload.done{border-color:#10b981;background:#f0fdf4;border-style:solid}
+.photo-upload .label-row{display:flex;align-items:center;gap:10px;
+justify-content:space-between;margin-bottom:8px}
+.photo-upload .label-row strong{font-size:13px;color:#333;font-weight:700}
+.photo-upload .label-row .check{font-size:20px;color:#10b981;display:none}
+.photo-upload.done .check{display:block}
+.photo-upload .hint{font-size:11px;color:#888}
+.photo-upload .preview{width:100%;max-height:200px;border-radius:10px;
+object-fit:cover;margin-top:8px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.photo-upload.done .preview{display:block}
+
+/* ZONE */
+.zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.zone-btn{padding:12px 8px;border:2px solid #e5e7eb;border-radius:10px;
+background:white;cursor:pointer;font-family:inherit;font-size:12px;
+font-weight:600;color:#555;transition:all .2s;display:flex;
+flex-direction:column;align-items:center;gap:4px}
+.zone-btn:hover{border-color:#667eea;background:#f0f4ff}
+.zone-btn.active{border-color:#667eea;background:#ede9fe;color:#6b21a8}
+.zone-btn .ico{font-size:20px}
+
+/* REPORT */
+.report-card{background:white;border-radius:14px;padding:14px;
+margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:background .3s}
+.report-header{display:flex;justify-content:space-between;align-items:center;
+margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.report-photos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.report-photo{position:relative;border-radius:10px;overflow:hidden;
+aspect-ratio:1;background:#f3f4f6;cursor:pointer}
+.report-photo img{width:100%;height:100%;object-fit:cover}
+.report-photo .caption{position:absolute;bottom:0;left:0;right:0;
+background:linear-gradient(transparent,rgba(0,0,0,.8));color:white;
+padding:16px 6px 4px;font-size:9px;font-weight:600;text-align:center}
+
+/* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
 background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
 font-size:13px;font-weight:600;z-index:2000;transition:transform .3s;
@@ -307,9 +340,6 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 .data-actions .import{background:#d1fae5;color:#065f46}
 .data-actions .clear{background:#fee2e2;color:#991b1b}
 
-/* =========================================================
-   DESKTOP
-   ========================================================= */
 @media (min-width:768px){
   body{background:#e5e7eb}
   .desktop-wrapper{display:grid;grid-template-columns:260px 1fr;
@@ -320,8 +350,7 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
     color:white;padding:24px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
   body.employee-mode .sidebar{background:linear-gradient(180deg,#10b981 0%,#059669 100%)}
   .sidebar-logo{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,.15);
-    margin-bottom:20px;display:flex;align-items:center;gap:10px;
-    font-size:18px;font-weight:700}
+    margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
   .sidebar-logo img{width:36px;height:36px;border-radius:10px;object-fit:cover}
   .sidebar-nav{display:flex;flex-direction:column;gap:4px;padding:0 12px;flex:1}
   .sidebar-btn{padding:12px 16px;border:none;background:transparent;
@@ -330,8 +359,7 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
     gap:12px;transition:all .2s;text-align:left}
   .sidebar-btn .ico{font-size:20px}
   .sidebar-btn:hover{background:rgba(255,255,255,.1);color:white}
-  .sidebar-btn.active{background:rgba(255,255,255,.2);color:white;
-    box-shadow:0 4px 12px rgba(0,0,0,.15)}
+  .sidebar-btn.active{background:rgba(255,255,255,.2);color:white;box-shadow:0 4px 12px rgba(0,0,0,.15)}
   .sidebar-btn .badge-count{margin-left:auto;background:rgba(255,255,255,.25);
     padding:2px 8px;border-radius:10px;font-size:11px}
   .sidebar-user{padding:16px 20px;border-top:1px solid rgba(255,255,255,.15);
@@ -339,16 +367,14 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
   .sidebar-user .name{font-weight:700;margin-bottom:2px}
   .sidebar-user .role{font-size:10px;opacity:.7;text-transform:uppercase;
     letter-spacing:1px;margin-bottom:8px}
-  .sidebar-user .logout{background:rgba(255,255,255,.15);border:none;
-    color:white;padding:6px 12px;border-radius:8px;font-size:11px;
-    cursor:pointer;font-family:inherit;width:100%;font-weight:600}
+  .sidebar-user .logout{background:rgba(255,255,255,.15);border:none;color:white;
+    padding:6px 12px;border-radius:8px;font-size:11px;cursor:pointer;
+    font-family:inherit;width:100%;font-weight:600}
   .sidebar-user .logout:hover{background:rgba(255,255,255,.25)}
-  .main{display:flex;flex-direction:column;min-height:100vh;background:#f0f2f5;
-    transition:background .3s}
+  .main{display:flex;flex-direction:column;min-height:100vh;background:#f0f2f5;transition:background .3s}
   .header{padding:20px 32px;position:sticky;top:0;z-index:100}
   .header h1{font-size:22px}
   .header h1 img{width:38px;height:38px}
-  .refresh-btn{display:flex}
   .stats{padding:24px 32px 12px;grid-template-columns:repeat(6,1fr);gap:16px}
   .stat{padding:18px 20px;border-radius:16px}
   .stat .label{font-size:11px}
@@ -365,14 +391,15 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
   .empty p{font-size:15px}
   .fab{width:64px;height:64px;font-size:28px;bottom:32px;right:32px}
   .modal-bg{align-items:center;padding:20px}
-  .modal{border-radius:20px;max-width:520px;animation:fadeInScale .25s ease}
+  .modal{border-radius:20px;max-width:600px;animation:fadeInScale .25s ease}
   @keyframes fadeInScale{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
   .toast{bottom:32px;left:auto;right:32px;transform:translate(0,200px)}
   .toast.show{transform:translate(0,0)}
   .srok-stats{grid-template-columns:repeat(5,1fr);padding:24px 32px 12px;gap:16px}
   .srok-stat .num{font-size:28px}
+  .zone-grid{grid-template-columns:repeat(4,1fr)}
+  .report-photos{grid-template-columns:repeat(4,1fr)}
 }
-
 @media (min-width:1200px){
   .desktop-wrapper{grid-template-columns:280px 1fr}
   .stats{grid-template-columns:repeat(6,1fr);gap:20px}
@@ -380,35 +407,20 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
   .content{padding:12px 40px 40px}
 }
 
-/* =========================================================
-   DARK MODE
-   ========================================================= */
 body.dark{background:#0f172a !important;color:#f1f5f9 !important}
-body.dark .app,
-body.dark .desktop-wrapper,
-body.dark .main{background:#0f172a !important}
+body.dark .app,body.dark .desktop-wrapper,body.dark .main{background:#0f172a !important}
 body.dark .header{background:linear-gradient(135deg,#4c1d95 0%,#1e1b4b 100%) !important}
 body.dark.employee-mode .header{background:linear-gradient(135deg,#064e3b 0%,#022c22 100%) !important}
-body.dark .stat,
-body.dark .list-item,
-body.dark .srok-item,
-body.dark .nav,
-body.dark .srok-stat{background:#1e293b !important;color:#f1f5f9 !important}
-body.dark .stat .label,
-body.dark .info .sub,
-body.dark .srok-stat .lbl{color:#94a3b8 !important}
-body.dark .stat .value,
-body.dark .info .title,
-body.dark .srok-stat .num{color:#f1f5f9 !important}
+body.dark .stat,body.dark .list-item,body.dark .srok-item,body.dark .nav,body.dark .srok-stat,
+body.dark .report-card{background:#1e293b !important;color:#f1f5f9 !important}
+body.dark .stat .label,body.dark .info .sub,body.dark .srok-stat .lbl{color:#94a3b8 !important}
+body.dark .stat .value,body.dark .info .title,body.dark .srok-stat .num{color:#f1f5f9 !important}
 body.dark .nav-btn{color:#94a3b8 !important}
 body.dark .modal{background:#1e293b !important;color:#f1f5f9 !important}
-body.dark .field input,
-body.dark .field select,
-body.dark .field textarea{
-  background:#0f172a !important;color:#f1f5f9 !important;
-  border-color:#334155 !important
-}
-body.dark .field label{color:#cbd5e1 !important}
+body.dark .field input,body.dark .field select,body.dark .field textarea,
+body.dark .pass-input,body.dark .emp-select{
+  background:#0f172a !important;color:#f1f5f9 !important;border-color:#334155 !important}
+body.dark .field label,body.dark .pass-label{color:#cbd5e1 !important}
 body.dark .btn-cancel{background:#334155 !important;color:#cbd5e1 !important}
 body.dark .sidebar{background:linear-gradient(180deg,#4c1d95 0%,#1e1b4b 100%) !important}
 body.dark.employee-mode .sidebar{background:linear-gradient(180deg,#064e3b 0%,#022c22 100%) !important}
@@ -420,65 +432,125 @@ body.dark .srok-item.warning{background:#713f12 !important}
 body.dark .srok-item.normal{background:#1e293b !important}
 body.dark #login .login-container{background:#1e293b;color:#f1f5f9}
 body.dark .login-title{color:#f1f5f9}
-body.dark .login-subtitle,.login-question{color:#94a3b8}
+body.dark .login-subtitle,body.dark .login-question{color:#94a3b8}
 body.dark .role-btn{background:#0f172a;border-color:#334155}
 body.dark .role-btn .txt strong{color:#f1f5f9}
 body.dark .role-btn .txt span{color:#94a3b8}
-body.dark .emp-select{background:#0f172a;color:#f1f5f9;border-color:#334155}
 body.dark .login-btn.back{background:#334155;color:#cbd5e1}
+body.dark .photo-upload{background:#0f172a;border-color:#334155}
+body.dark .photo-upload:hover{border-color:#667eea;background:#1e1b4b}
+body.dark .photo-upload.done{background:#064e3b;border-color:#10b981}
+body.dark .photo-upload .label-row strong{color:#f1f5f9}
+body.dark .zone-btn{background:#0f172a;border-color:#334155;color:#cbd5e1}
+body.dark .zone-btn.active{background:#4c1d95;border-color:#8b5cf6;color:white}
+body.dark .login-info{background:#1e1b4b;color:#cbd5e1;border-left-color:#8b5cf6}
+body.dark .login-info strong{color:#f1f5f9}
+body.dark .login-error{background:#7f1d1d;color:#fecaca}
 </style>
 </head>
 <body>
 
-<!-- SPLASH SCREEN -->
 <div id="splash">
   <img src="logo.png" class="splash-logo" alt="Store Control" onerror="this.style.display='none'">
   <div class="splash-title">Store Control</div>
   <div class="splash-subtitle">Supermarket tizimi</div>
-  <div class="splash-loader">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="splash-loader"><span></span><span></span><span></span></div>
 </div>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="login">
   <div class="login-container">
     <img src="logo.png" class="login-logo" alt="Logo" onerror="this.style.display='none'">
     <div class="login-title">Store Control</div>
     <div class="login-subtitle">Supermarket boshqaruv tizimi</div>
 
+    <!-- Step 1: Role tanlash -->
     <div id="loginStep1">
       <div class="login-question">👤 Kim sifatida kirmoqchisiz?</div>
-
       <button class="role-btn manager" onclick="selectRole('manager')">
         <div class="ico">👨‍💼</div>
-        <div class="txt">
-          <strong>Menejer</strong>
-          <span>To'liq boshqaruv huquqi</span>
-        </div>
+        <div class="txt"><strong>Menejer</strong><span>To'liq boshqaruv huquqi</span></div>
         <div class="arrow">›</div>
       </button>
-
       <button class="role-btn employee" onclick="selectRole('employee')">
         <div class="ico">👷</div>
-        <div class="txt">
-          <strong>Xodim</strong>
-          <span>Faqat o'z vazifalarini ko'rish</span>
-        </div>
+        <div class="txt"><strong>Xodim</strong><span>Faqat o'z vazifalarini ko'rish</span></div>
         <div class="arrow">›</div>
       </button>
     </div>
 
-    <div id="loginStep2" style="display:none">
-      <div class="login-question">👷 O'zingizni tanlang:</div>
+    <!-- Step 2: Parol kiritish (Menejer) -->
+    <div id="loginStepManager" style="display:none">
+      <div class="login-question">🔒 Menejer parolini kiriting</div>
+      <div class="login-error" id="errManager"></div>
+      <label class="pass-label">Parol</label>
+      <div class="pass-wrap">
+        <span class="pass-icon">🔒</span>
+        <input type="password" class="pass-input" id="mgrPass" 
+               placeholder="••••••" autocomplete="off"
+               onkeydown="if(event.key==='Enter') loginManager()">
+        <button class="pass-toggle" onclick="togglePass('mgrPass', this)">👁️</button>
+      </div>
+      <button class="login-btn primary" onclick="loginManager()">
+        <span>🔓 Kirish</span>
+      </button>
+      <button class="login-btn back" onclick="backToStep1()">
+        <span>← Orqaga</span>
+      </button>
+    </div>
+
+    <!-- Step 2b: Birinchi marta parol yaratish (Menejer) -->
+    <div id="loginStepManagerSetup" style="display:none">
+      <div class="login-question">🔐 Yangi parol yarating</div>
+      <div class="login-info">
+        <strong>Birinchi kirish</strong>
+        Iltimos, o'zingizga parol o'ylab toping. Har safar shu parol bilan kirasiz.
+      </div>
+      <div class="login-error" id="errManagerSetup"></div>
+      <label class="pass-label">Yangi parol (min 4 belgi)</label>
+      <div class="pass-wrap">
+        <span class="pass-icon">🔒</span>
+        <input type="password" class="pass-input" id="setupPass1" 
+               placeholder="••••••" autocomplete="off">
+        <button class="pass-toggle" onclick="togglePass('setupPass1', this)">👁️</button>
+      </div>
+      <label class="pass-label">Parolni takrorlang</label>
+      <div class="pass-wrap">
+        <span class="pass-icon">🔒</span>
+        <input type="password" class="pass-input" id="setupPass2" 
+               placeholder="••••••" autocomplete="off"
+               onkeydown="if(event.key==='Enter') setupManagerPassword()">
+        <button class="pass-toggle" onclick="togglePass('setupPass2', this)">👁️</button>
+      </div>
+      <button class="login-btn primary" onclick="setupManagerPassword()">
+        <span>✅ Parolni saqlash</span>
+      </button>
+      <button class="login-btn back" onclick="backToStep1()">
+        <span>← Orqaga</span>
+      </button>
+    </div>
+
+    <!-- Step 3: Xodim tanlash + parol -->
+    <div id="loginStepEmployee" style="display:none">
+      <div class="login-question">👷 Xodim kirishi</div>
+      <div class="login-error" id="errEmployee"></div>
+      <label class="pass-label">Xodimni tanlang</label>
       <select class="emp-select" id="employeeSelect">
         <option value="">— Xodimni tanlang —</option>
       </select>
-      <button class="login-btn primary" onclick="confirmEmployee()">
-        ✅ Kirish
+      <label class="pass-label">Parol</label>
+      <div class="pass-wrap">
+        <span class="pass-icon">🔒</span>
+        <input type="password" class="pass-input" id="empPass" 
+               placeholder="••••••" autocomplete="off"
+               onkeydown="if(event.key==='Enter') loginEmployee()">
+        <button class="pass-toggle" onclick="togglePass('empPass', this)">👁️</button>
+      </div>
+      <button class="login-btn primary green" onclick="loginEmployee()">
+        <span>🔓 Kirish</span>
       </button>
       <button class="login-btn back" onclick="backToStep1()">
-        ← Orqaga
+        <span>← Orqaga</span>
       </button>
     </div>
   </div>
@@ -486,37 +558,19 @@ body.dark .login-btn.back{background:#334155;color:#cbd5e1}
 
 <!-- MAIN APP -->
 <div class="desktop-wrapper" id="mainApp" style="display:none">
-
   <aside class="sidebar">
     <div class="sidebar-logo">
       <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
       <span>Store Control</span>
     </div>
     <nav class="sidebar-nav">
-      <button class="sidebar-btn active" data-tab="employees">
-        <span class="ico">👥</span><span>Xodimlar</span>
-        <span class="badge-count" id="cnt-emp">0</span>
-      </button>
-      <button class="sidebar-btn" data-tab="shifts">
-        <span class="ico">🕐</span><span>Smenalar</span>
-        <span class="badge-count" id="cnt-shift">0</span>
-      </button>
-      <button class="sidebar-btn" data-tab="tasks">
-        <span class="ico">📋</span><span>Topshiriqlar</span>
-        <span class="badge-count" id="cnt-task">0</span>
-      </button>
-      <button class="sidebar-btn" data-tab="products">
-        <span class="ico">📦</span><span>Tovarlar</span>
-        <span class="badge-count" id="cnt-prod">0</span>
-      </button>
-      <button class="sidebar-btn" data-tab="expiry">
-        <span class="ico">⏰</span><span>Srok</span>
-        <span class="badge-count" id="cnt-srok">0</span>
-      </button>
-      <button class="sidebar-btn" data-tab="issues">
-        <span class="ico">⚠️</span><span>Muammolar</span>
-        <span class="badge-count" id="cnt-issue">0</span>
-      </button>
+      <button class="sidebar-btn active" data-tab="employees"><span class="ico">👥</span><span>Xodimlar</span><span class="badge-count" id="cnt-emp">0</span></button>
+      <button class="sidebar-btn" data-tab="shifts"><span class="ico">🕐</span><span>Smenalar</span><span class="badge-count" id="cnt-shift">0</span></button>
+      <button class="sidebar-btn" data-tab="reports"><span class="ico">📸</span><span>Hisobotlar</span><span class="badge-count" id="cnt-reports">0</span></button>
+      <button class="sidebar-btn" data-tab="tasks"><span class="ico">📋</span><span>Topshiriqlar</span><span class="badge-count" id="cnt-task">0</span></button>
+      <button class="sidebar-btn" data-tab="products"><span class="ico">📦</span><span>Tovarlar</span><span class="badge-count" id="cnt-prod">0</span></button>
+      <button class="sidebar-btn" data-tab="expiry"><span class="ico">⏰</span><span>Srok</span><span class="badge-count" id="cnt-srok">0</span></button>
+      <button class="sidebar-btn" data-tab="issues"><span class="ico">⚠️</span><span>Muammolar</span><span class="badge-count" id="cnt-issue">0</span></button>
     </nav>
     <div class="sidebar-user">
       <div class="name" id="sidebarUserName">—</div>
@@ -529,32 +583,29 @@ body.dark .login-btn.back{background:#334155;color:#cbd5e1}
     <div class="app">
       <div class="header" id="appHeader">
         <div class="header-top">
-          <h1>
-            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-            <span id="headerTitle">Store Control</span>
-          </h1>
+          <h1><img src="logo.png" alt="Logo" onerror="this.style.display='none'"><span id="headerTitle">Store Control</span></h1>
           <div class="header-right">
             <span class="role-badge" id="headerRole">👨‍💼 MENEJER</span>
-            <button class="icon-btn refresh-btn" onclick="refresh()" title="Yangilash">🔄</button>
+            <button class="icon-btn" onclick="refresh()" title="Yangilash">🔄</button>
             <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Rejim">🌙</button>
             <button class="icon-btn" onclick="openSettings()" id="settingsBtn" title="Sozlamalar">⚙️</button>
-            <button class="icon-btn" onclick="logout()" id="logoutBtn" title="Chiqish" style="display:none">🚪</button>
           </div>
         </div>
       </div>
 
       <div class="stats">
         <div class="stat blue"><div class="label">Xodimlar</div><div class="value" id="sEmp">0</div></div>
-        <div class="stat green"><div class="label">Smenalar</div><div class="value" id="sShift">0</div></div>
+        <div class="stat green"><div class="label">Faol smena</div><div class="value" id="sShift">0</div></div>
+        <div class="stat purple"><div class="label">Hisobotlar</div><div class="value" id="sReports">0</div></div>
         <div class="stat orange"><div class="label">Topshiriq</div><div class="value" id="sTask">0</div></div>
         <div class="stat red"><div class="label">Muammo</div><div class="value" id="sIssue">0</div></div>
-        <div class="stat purple"><div class="label">Tovarlar</div><div class="value" id="sProduct">0</div></div>
         <div class="stat yellow"><div class="label">⚠️ Srok</div><div class="value" id="sSrok">0</div></div>
       </div>
 
       <div class="nav">
         <button class="nav-btn active" data-tab="employees"><span class="ico">👥</span>Xodimlar</button>
         <button class="nav-btn" data-tab="shifts"><span class="ico">🕐</span>Smenalar</button>
+        <button class="nav-btn" data-tab="reports"><span class="ico">📸</span>Hisobot</button>
         <button class="nav-btn" data-tab="tasks"><span class="ico">📋</span>Topshiriq</button>
         <button class="nav-btn" data-tab="products"><span class="ico">📦</span>Tovarlar</button>
         <button class="nav-btn" data-tab="expiry"><span class="ico">⏰</span>Srok</button>
@@ -564,6 +615,7 @@ body.dark .login-btn.back{background:#334155;color:#cbd5e1}
       <div class="content">
         <div class="section active" id="sec-employees"></div>
         <div class="section" id="sec-shifts"></div>
+        <div class="section" id="sec-reports"></div>
         <div class="section" id="sec-tasks"></div>
         <div class="section" id="sec-products"></div>
         <div class="section" id="sec-expiry"></div>
@@ -573,24 +625,38 @@ body.dark .login-btn.back{background:#334155;color:#cbd5e1}
   </main>
 </div>
 
-<!-- FAB -->
 <button class="fab" id="fabBtn" onclick="openModal()" style="display:none">➕</button>
-
-<!-- MODAL -->
 <div class="modal-bg" id="modalBg" onclick="closeModal(event)">
   <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
 // =========================================================
-// MA'LUMOTLAR BAZASI
+// MA'LUMOTLAR
 // =========================================================
+const ZONES = [
+  {id:'bread', name:'🍞 Non bo\'limi'},
+  {id:'dairy', name:'🥛 Sut bo\'limi'},
+  {id:'meat', name:'🥩 Go\'sht bo\'limi'},
+  {id:'vegetables', name:'🥬 Sabzavot'},
+  {id:'fruits', name:'🍎 Mevalar'},
+  {id:'frozen', name:'❄️ Muzlatilgan'},
+  {id:'drinks', name:'🥤 Ichimliklar'},
+  {id:'warehouse', name:'📦 Omborxona'}
+];
+
+const PHOTO_TYPES = [
+  {id:'shelf', name:'🛒 Addellar to\'la', hint:'Barcha addellar to\'la turganini rasmga oling'},
+  {id:'fridge', name:'❄️ Xolodilniklar', hint:'Xolodilniklar ishlayotganini va to\'la ekanini ko\'rsating'},
+  {id:'prices', name:'💰 Narxlar yangilangan', hint:'Narx yorliqlari yangilanganini tekshiring'},
+  {id:'cleanliness', name:'🧹 Tozalik', hint:'Bo\'lim tozaligini rasmga oling'}
+];
+
 const DB = {
   stores: [], employees: [], shifts: [], shift_instances: [],
-  tasks: [], products: [], product_batches: [], issues: [],
+  tasks: [], products: [], product_batches: [], issues: [], reports: [],
+  managerPassword: null,
 
   load(){
     const data = localStorage.getItem('store_control_db');
@@ -599,6 +665,7 @@ const DB = {
         const parsed = JSON.parse(data);
         Object.assign(this, parsed);
         if(!Array.isArray(this.product_batches)) this.product_batches = [];
+        if(!Array.isArray(this.reports)) this.reports = [];
       } catch(e){ this.seed(); }
     } else { this.seed(); }
   },
@@ -606,10 +673,13 @@ const DB = {
   seed(){
     this.stores = [{id:1, name:"Asosiy Do'kon", address:"Toshkent"}];
     this.shifts = [
-      {id:1, store_id:1, name:"1-smena", start_time:"08:00", end_time:"16:00"},
-      {id:2, store_id:1, name:"2-smena", start_time:"16:00", end_time:"00:00"}
+      {id:1, store_id:1, name:"1-smena", start_time:"06:00", end_time:"14:00"},
+      {id:2, store_id:1, name:"2-smena", start_time:"14:00", end_time:"22:00"},
+      {id:3, store_id:1, name:"3-smena", start_time:"22:00", end_time:"06:00"}
     ];
     this.product_batches = [];
+    this.reports = [];
+    this.managerPassword = null;
     this.save();
   },
 
@@ -618,7 +688,8 @@ const DB = {
       stores: this.stores, employees: this.employees, shifts: this.shifts,
       shift_instances: this.shift_instances, tasks: this.tasks,
       products: this.products, product_batches: this.product_batches,
-      issues: this.issues
+      issues: this.issues, reports: this.reports,
+      managerPassword: this.managerPassword
     }));
   },
 
@@ -633,7 +704,9 @@ const DB = {
       stores: this.stores, employees: this.employees, shifts: this.shifts,
       shift_instances: this.shift_instances, tasks: this.tasks,
       products: this.products, product_batches: this.product_batches,
-      issues: this.issues, exported_at: new Date().toISOString()
+      issues: this.issues, reports: this.reports,
+      managerPassword: this.managerPassword,
+      exported_at: new Date().toISOString()
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -646,82 +719,190 @@ const DB = {
 
   import(data){
     if(!data || typeof data !== 'object') throw new Error('Noto\'g\'ri format');
-    ['stores','employees','shifts','shift_instances','tasks','products','product_batches','issues'].forEach(k=>{
+    ['stores','employees','shifts','shift_instances','tasks','products','product_batches','issues','reports'].forEach(k=>{
       if(Array.isArray(data[k])) this[k] = data[k];
     });
+    if(typeof data.managerPassword === 'string' || data.managerPassword === null){
+      this.managerPassword = data.managerPassword;
+    }
     this.save();
   }
 };
 
+let currentUser = { role: null, employeeId: null, employeeName: null };
+let currentTab = 'employees';
+
+// =========================================================
+// PAROL XESHLASH (oddiy)
+// =========================================================
+function hashPassword(pwd){
+  let hash = 0;
+  const salt = 'store_control_2026_secure';
+  const str = salt + pwd + salt;
+  for(let i = 0; i < str.length; i++){
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return 'h' + Math.abs(hash).toString(36);
+}
+
 // =========================================================
 // FOYDALANUVCHI
 // =========================================================
-let currentUser = {
-  role: null,        // 'manager' | 'employee'
-  employeeId: null,
-  employeeName: null
-};
-
-let currentTab = 'employees';
-
 function loadUser(){
   const data = localStorage.getItem('store_control_user');
-  if(data){
-    try {
-      const parsed = JSON.parse(data);
-      if(parsed.role) currentUser = parsed;
-    } catch(e){}
+  if(data){ try{ const p = JSON.parse(data); if(p.role) currentUser = p; }catch(e){} }
+}
+function saveUser(){ localStorage.setItem('store_control_user', JSON.stringify(currentUser)); }
+function clearUser(){ localStorage.removeItem('store_control_user'); currentUser = {role:null,employeeId:null,employeeName:null}; }
+function isManager(){ return currentUser.role === 'manager'; }
+
+// =========================================================
+// PAROLNI KO'RSATISH/YASHIRISH
+// =========================================================
+function togglePass(inputId, btn){
+  const input = document.getElementById(inputId);
+  if(input.type === 'password'){
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
   }
 }
 
-function saveUser(){
-  localStorage.setItem('store_control_user', JSON.stringify(currentUser));
-}
-
-function clearUser(){
-  localStorage.removeItem('store_control_user');
-  currentUser = { role: null, employeeId: null, employeeName: null };
+function showError(id, msg){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
 }
 
 // =========================================================
-// LOGIN LOGIKASI
+// LOGIN FLOW
 // =========================================================
 function selectRole(role){
+  // Barcha step'larni yashirish
+  ['loginStep1','loginStepManager','loginStepManagerSetup','loginStepEmployee'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+
   if(role === 'manager'){
-    currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
-    saveUser();
-    enterApp();
+    if(!DB.managerPassword){
+      // Birinchi marta — parol yaratish
+      document.getElementById('loginStepManagerSetup').style.display = 'block';
+    } else {
+      // Parol kiritish
+      document.getElementById('loginStepManager').style.display = 'block';
+      setTimeout(() => document.getElementById('mgrPass').focus(), 200);
+    }
   } else {
-    // Employee tanlash
+    // Xodim
+    if(!DB.employees.length){
+      toast('⚠️ Xodimlar yo\'q. Menejerga murojaat qiling!', 'error');
+      return;
+    }
     const select = document.getElementById('employeeSelect');
     select.innerHTML = '<option value="">— Xodimni tanlang —</option>' +
-      DB.employees.map(e => `<option value="${e.id}">${esc(e.name)} (${e.role})</option>`).join('');
-    document.getElementById('loginStep1').style.display = 'none';
-    document.getElementById('loginStep2').style.display = 'block';
+      DB.employees.map(e => `<option value="${e.id}">${esc(e.name)} (${zoneName(e.zone).replace(/^[^\s]+\s/,'')})</option>`).join('');
+    document.getElementById('loginStepEmployee').style.display = 'block';
   }
 }
 
 function backToStep1(){
+  ['loginStepManager','loginStepManagerSetup','loginStepEmployee'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
   document.getElementById('loginStep1').style.display = 'block';
-  document.getElementById('loginStep2').style.display = 'none';
+  // Maydonlarni tozalash
+  document.getElementById('mgrPass').value = '';
+  document.getElementById('empPass').value = '';
+  document.getElementById('setupPass1').value = '';
+  document.getElementById('setupPass2').value = '';
+  document.getElementById('employeeSelect').value = '';
 }
 
-function confirmEmployee(){
-  const empId = parseInt(document.getElementById('employeeSelect').value);
-  if(!empId){
-    toast('⚠️ Xodimni tanlang!', 'error');
+// Menejer parolini yaratish (birinchi marta)
+function setupManagerPassword(){
+  const p1 = document.getElementById('setupPass1').value;
+  const p2 = document.getElementById('setupPass2').value;
+
+  if(p1.length < 4){
+    showError('errManagerSetup', '⚠️ Parol kamida 4 belgidan iborat bo\'lsin!');
     return;
   }
+  if(p1 !== p2){
+    showError('errManagerSetup', '⚠️ Parollar mos kelmadi!');
+    return;
+  }
+
+  DB.managerPassword = hashPassword(p1);
+  DB.save();
+
+  toast('✅ Parol yaratildi!', 'success');
+
+  // Darhol kirish
+  currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
+  saveUser();
+  enterApp();
+}
+
+// Menejer kirishi
+function loginManager(){
+  const pwd = document.getElementById('mgrPass').value;
+  if(!pwd){
+    showError('errManager', '⚠️ Parolni kiriting!');
+    return;
+  }
+  if(hashPassword(pwd) !== DB.managerPassword){
+    showError('errManager', '❌ Parol noto\'g\'ri!');
+    document.getElementById('mgrPass').value = '';
+    return;
+  }
+  currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
+  saveUser();
+  enterApp();
+}
+
+// Xodim kirishi
+function loginEmployee(){
+  const empId = parseInt(document.getElementById('employeeSelect').value);
+  const pwd = document.getElementById('empPass').value;
+
+  if(!empId){
+    showError('errEmployee', '⚠️ Xodimni tanlang!');
+    return;
+  }
+  if(!pwd){
+    showError('errEmployee', '⚠️ Parolni kiriting!');
+    return;
+  }
+
   const emp = DB.employees.find(e => e.id === empId);
   if(!emp){
-    toast('⚠️ Xodim topilmadi!', 'error');
+    showError('errEmployee', '❌ Xodim topilmadi!');
     return;
   }
+  if(!emp.passwordHash){
+    showError('errEmployee', '❌ Parol o\'rnatilmagan. Menejerga murojaat qiling!');
+    return;
+  }
+  if(hashPassword(pwd) !== emp.passwordHash){
+    showError('errEmployee', '❌ Parol noto\'g\'ri!');
+    document.getElementById('empPass').value = '';
+    return;
+  }
+
   currentUser = { role: 'employee', employeeId: empId, employeeName: emp.name };
   saveUser();
   enterApp();
 }
 
+// =========================================================
+// APP ENTRY
+// =========================================================
 function enterApp(){
   document.getElementById('login').classList.add('hide');
   document.getElementById('mainApp').style.display = '';
@@ -731,36 +912,12 @@ function enterApp(){
 
 function applyRole(){
   const isEmployee = currentUser.role === 'employee';
-  const body = document.body;
-
-  // Body class
-  body.classList.toggle('employee-mode', isEmployee);
-
-  // Header
-  const header = document.getElementById('appHeader');
-  header.classList.toggle('employee', isEmployee);
-
-  // Header role badge
-  document.getElementById('headerRole').textContent =
-    isEmployee ? '👷 XODIM' : '👨‍💼 MENEJER';
-
-  // Header title
-  document.getElementById('headerTitle').textContent =
-    isEmployee ? currentUser.employeeName : 'Store Control';
-
-  // Sidebar user
-  document.getElementById('sidebarUserName').textContent =
-    isEmployee ? currentUser.employeeName : 'Menejer';
-  document.getElementById('sidebarUserRole').textContent =
-    isEmployee ? 'Xodim' : 'Menejer';
-
-  // Logout button (mobil uchun)
-  document.getElementById('logoutBtn').style.display = isEmployee ? 'flex' : 'none';
-
-  // FAB — faqat menejer uchun
-  document.getElementById('fabBtn').style.display = isEmployee ? 'none' : 'flex';
-
-  // Sozlamalar tugmasi
+  document.body.classList.toggle('employee-mode', isEmployee);
+  document.getElementById('appHeader').classList.toggle('employee', isEmployee);
+  document.getElementById('headerRole').textContent = isEmployee ? '👷 XODIM' : '👨‍💼 MENEJER';
+  document.getElementById('headerTitle').textContent = isEmployee ? currentUser.employeeName : 'Store Control';
+  document.getElementById('sidebarUserName').textContent = isEmployee ? currentUser.employeeName : 'Menejer';
+  document.getElementById('sidebarUserRole').textContent = isEmployee ? 'Xodim' : 'Menejer';
   document.getElementById('settingsBtn').style.display = isEmployee ? 'none' : 'flex';
 }
 
@@ -787,7 +944,6 @@ function getSrokStatus(expiryDate){
   if(days <= 7) return {cls:'warning', label:'Ogohlantirish', days, ico:'🟢'};
   return {cls:'normal', label:'Normada', days, ico:'⚪'};
 }
-
 function srokStats(){
   const stats = {expired:0, today:0, critical:0, warning:0, normal:0};
   DB.product_batches.forEach(b=>{
@@ -799,82 +955,14 @@ function srokStats(){
 }
 
 // =========================================================
-// TOAST
+// YORDAMCHI
 // =========================================================
 function toast(msg, type){
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + (type||'');
+  t.textContent = msg; t.className = 'toast ' + (type||'');
   setTimeout(()=>t.classList.add('show'),10);
   setTimeout(()=>t.classList.remove('show'),2500);
 }
-
-// =========================================================
-// THEME
-// =========================================================
-function toggleTheme(){
-  document.body.classList.toggle('dark');
-  const isDark = document.body.classList.contains('dark');
-  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
-  localStorage.setItem('store_theme', isDark ? 'dark' : 'light');
-}
-
-(function(){
-  const saved = localStorage.getItem('store_theme');
-  if(saved === 'dark'){
-    document.body.classList.add('dark');
-    setTimeout(()=>{
-      const btn = document.getElementById('themeBtn');
-      if(btn) btn.textContent = '☀️';
-    }, 100);
-  }
-})();
-
-// =========================================================
-// STATS
-// =========================================================
-function loadStats(){
-  const isEmployee = currentUser.role === 'employee';
-
-  let activeShifts, openTasks;
-
-  if(isEmployee){
-    // Faqat o'z ma'lumotlari
-    activeShifts = DB.shift_instances.filter(s =>
-      s.status==='active' && s.employee_id === currentUser.employeeId).length;
-    openTasks = DB.tasks.filter(t =>
-      t.assigned_employee_id === currentUser.employeeId &&
-      t.status !== 'completed').length;
-  } else {
-    activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
-    openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
-  }
-
-  const openIssues = DB.issues.filter(i=>i.status==='open').length;
-  const srokS = srokStats();
-  const problemSrok = srokS.expired + srokS.today + srokS.critical;
-
-  document.getElementById('sEmp').textContent = isEmployee ? '—' : DB.employees.length;
-  document.getElementById('sShift').textContent = activeShifts;
-  document.getElementById('sTask').textContent = openTasks;
-  document.getElementById('sIssue').textContent = openIssues;
-  document.getElementById('sProduct').textContent = DB.products.length;
-  const srokEl = document.getElementById('sSrok');
-  srokEl.textContent = problemSrok;
-  srokEl.style.color = problemSrok === 0 ? '#10b981' : (problemSrok < 3 ? '#f59e0b' : '#ef4444');
-
-  const setC = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
-  setC('cnt-emp', isEmployee ? '—' : DB.employees.length);
-  setC('cnt-shift', activeShifts);
-  setC('cnt-task', openTasks);
-  setC('cnt-prod', DB.products.length);
-  setC('cnt-srok', problemSrok);
-  setC('cnt-issue', openIssues);
-}
-
-// =========================================================
-// HELPERS
-// =========================================================
 function empty(ico, txt){
   return '<div class="empty"><div class="ico">'+ico+'</div><p>'+txt.replace(/\n/g,'<br>')+'</p></div>';
 }
@@ -889,28 +977,115 @@ function fmtDate(d){
   const dt = new Date(d);
   return dt.toLocaleDateString('uz-UZ', {day:'2-digit', month:'2-digit', year:'numeric'});
 }
-function isManager(){ return currentUser.role === 'manager'; }
+function fmtDateTime(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('uz-UZ', {day:'2-digit', month:'2-digit'}) + ' ' +
+    dt.toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'});
+}
+function zoneName(id){
+  const z = ZONES.find(x => x.id === id);
+  return z ? z.name : '—';
+}
+
+// =========================================================
+// FOTO SIQISH
+// =========================================================
+function compressImage(file, maxWidth = 700, quality = 0.7){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if(w > maxWidth){ h = (maxWidth / w) * h; w = maxWidth; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// =========================================================
+// THEME
+// =========================================================
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('store_theme', isDark ? 'dark' : 'light');
+}
+(function(){
+  const saved = localStorage.getItem('store_theme');
+  if(saved === 'dark'){
+    document.body.classList.add('dark');
+    setTimeout(()=>{ const b = document.getElementById('themeBtn'); if(b) b.textContent = '☀️'; }, 100);
+  }
+})();
+
+// =========================================================
+// STATS
+// =========================================================
+function loadStats(){
+  const isEmp = currentUser.role === 'employee';
+  let activeShifts, openTasks, reportsCount;
+  if(isEmp){
+    activeShifts = DB.shift_instances.filter(s => s.status==='active' && s.employee_id === currentUser.employeeId).length;
+    openTasks = DB.tasks.filter(t => t.assigned_employee_id === currentUser.employeeId && t.status !== 'completed').length;
+    reportsCount = DB.reports.filter(r => r.employee_id === currentUser.employeeId).length;
+  } else {
+    activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
+    openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
+    reportsCount = DB.reports.length;
+  }
+  const openIssues = DB.issues.filter(i=>i.status==='open').length;
+  const srokS = srokStats();
+  const problemSrok = srokS.expired + srokS.today + srokS.critical;
+  document.getElementById('sEmp').textContent = isEmp ? '—' : DB.employees.length;
+  document.getElementById('sShift').textContent = activeShifts;
+  document.getElementById('sReports').textContent = reportsCount;
+  document.getElementById('sTask').textContent = openTasks;
+  document.getElementById('sIssue').textContent = openIssues;
+  const srEl = document.getElementById('sSrok');
+  srEl.textContent = problemSrok;
+  srEl.style.color = problemSrok === 0 ? '#10b981' : (problemSrok < 3 ? '#f59e0b' : '#ef4444');
+  const setC = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  setC('cnt-emp', isEmp ? '—' : DB.employees.length);
+  setC('cnt-shift', activeShifts);
+  setC('cnt-reports', reportsCount);
+  setC('cnt-task', openTasks);
+  setC('cnt-prod', DB.products.length);
+  setC('cnt-srok', problemSrok);
+  setC('cnt-issue', openIssues);
+}
 
 // =========================================================
 // RENDER — XODIMLAR
 // =========================================================
 function renderEmployees(){
   const sec = document.getElementById('sec-employees');
-
   if(!DB.employees.length){
     sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!');
     return;
   }
-
   sec.innerHTML = DB.employees.map(e=>`
     <div class="list-item">
       <div class="avatar blue">${e.id}</div>
       <div class="info">
         <div class="title">${esc(e.name)}</div>
-        <div class="sub">${esc(e.phone)||'—'}</div>
+        <div class="sub">${esc(e.phone)||'—'} • ${zoneName(e.zone)}</div>
       </div>
       ${badge(e.role,'blue')}
-      ${isManager() ? `<button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>` : ''}
+      ${isManager() ? `
+        <button class="btn-del" onclick="resetEmployeePassword(${e.id})" title="Parolni yangilash">🔑</button>
+        <button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>
+      ` : ''}
     </div>
   `).join('');
 }
@@ -920,37 +1095,117 @@ function renderEmployees(){
 // =========================================================
 function renderShifts(){
   const sec = document.getElementById('sec-shifts');
-  let active = DB.shift_instances.filter(s=>s.status==='active');
-
-  // Xodim faqat o'z smenasini ko'radi
-  if(!isManager()){
-    active = active.filter(s => s.employee_id === currentUser.employeeId);
+  const isMgr = isManager();
+  let instances = DB.shift_instances.filter(s => s.status === 'active');
+  if(!isMgr){
+    instances = instances.filter(s => s.employee_id === currentUser.employeeId);
   }
+  let activeCard = '';
+  if(instances.length){
+    activeCard = instances.map(si => {
+      const emp = DB.employees.find(e => e.id === si.employee_id);
+      const shift = DB.shifts.find(s => s.id === si.shift_id);
+      if(!emp || !shift) return '';
+      const started = fmtDateTime(si.started_at);
+      const canEnd = isMgr || si.employee_id === currentUser.employeeId;
+      return `
+        <div class="list-item" style="flex-direction:column;align-items:stretch;border-left:4px solid #10b981">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div class="avatar green">🕐</div>
+            <div class="info">
+              <div class="title">${esc(emp.name)}</div>
+              <div class="sub">${esc(shift.name)} • ${started}</div>
+            </div>
+            ${badge(shift.name, 'green')}
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <span style="font-size:12px;color:#10b981;font-weight:700">🟢 Faol</span>
+            ${canEnd ? `<button class="btn btn-warning btn-sm" onclick="openEndShiftModal(${si.id})">⏹️ Smenani yakunlash</button>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  } else {
+    activeCard = empty('🕐', isMgr ? 'Faol smenalar yo\'q' : 'Sizda faol smena yo\'q');
+  }
+  let allShifts = '';
+  if(isMgr){
+    allShifts = `
+      <div style="margin:20px 0 10px;padding:0 4px;font-size:13px;font-weight:700;color:#666">
+        BARCHA SMENALAR
+      </div>
+      ${DB.shifts.map(s => `
+        <div class="list-item">
+          <div class="avatar purple">${s.id}</div>
+          <div class="info">
+            <div class="title">${esc(s.name)}</div>
+            <div class="sub">${esc(s.start_time)} - ${esc(s.end_time)}</div>
+          </div>
+          ${badge('Smena', 'purple')}
+        </div>
+      `).join('')}
+    `;
+  }
+  sec.innerHTML = activeCard + allShifts;
+}
 
-  if(!active.length){
-    sec.innerHTML = empty('🕐',
-      isManager()
-        ? 'Faol smenalar yo\'q.\n➕ tugmasini bosing!'
-        : 'Sizda faol smena yo\'q.\nMenejerga murojaat qiling!');
+// =========================================================
+// RENDER — HISOBOTLAR
+// =========================================================
+function renderReports(){
+  const sec = document.getElementById('sec-reports');
+  let reports = DB.reports;
+  if(!isManager()){
+    reports = reports.filter(r => r.employee_id === currentUser.employeeId);
+  }
+  reports = [...reports].sort((a,b) => new Date(b.ended_at) - new Date(a.ended_at));
+  if(!reports.length){
+    sec.innerHTML = empty('📸', isManager() ? 'Hisobotlar yo\'q' : 'Sizda hisobotlar yo\'q');
     return;
   }
-
-  sec.innerHTML = active.map(si=>{
-    const emp = DB.employees.find(e=>e.id===si.employee_id);
-    const shift = DB.shifts.find(s=>s.id===si.shift_id);
-    if(!emp || !shift) return '';
-    const started = new Date(si.started_at).toLocaleTimeString('uz-UZ',{hour:'2-digit',minute:'2-digit'});
+  sec.innerHTML = reports.map(r => {
+    const emp = DB.employees.find(e => e.id === r.employee_id);
+    const shift = DB.shifts.find(s => s.id === r.shift_id);
+    const photos = r.photos || {};
     return `
-    <div class="list-item">
-      <div class="avatar green">🕐</div>
-      <div class="info">
-        <div class="title">${esc(emp.name)}</div>
-        <div class="sub">${esc(shift.start_time)} - ${esc(shift.end_time)} • ${started}</div>
+      <div class="report-card">
+        <div class="report-header">
+          <div>
+            <div style="font-weight:700;font-size:14px">${esc(emp ? emp.name : '—')}</div>
+            <div style="font-size:11px;color:#888;margin-top:2px">
+              ${esc(shift ? shift.name : '—')} • ${fmtDateTime(r.ended_at)}
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            ${badge(zoneName(r.zone), 'purple')}
+          </div>
+        </div>
+        ${r.note ? `<div style="font-size:12px;color:#555;background:#f9fafb;padding:8px 10px;border-radius:8px;margin-bottom:10px">💬 ${esc(r.note)}</div>` : ''}
+        <div class="report-photos">
+          ${PHOTO_TYPES.map(pt => {
+            const photo = photos[pt.id];
+            if(!photo) return '';
+            return `
+              <div class="report-photo" onclick="viewPhoto('${photo}', '${pt.name}')">
+                <img src="${photo}" alt="${pt.name}">
+                <div class="caption">${pt.name}</div>
+              </div>`;
+          }).join('')}
+        </div>
       </div>
-      ${badge(shift.name,'green')}
-      ${isManager() ? `<button class="btn-del" onclick="endShift(${si.id})">⏹️</button>` : ''}
-    </div>`;
+    `;
   }).join('');
+}
+
+function viewPhoto(src, title){
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <h3>${title}</h3>
+    <img src="${src}" style="width:100%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15)">
+    <div class="modal-actions">
+      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Yopish</button>
+    </div>
+  `;
+  document.getElementById('modalBg').classList.add('show');
 }
 
 // =========================================================
@@ -959,34 +1214,25 @@ function renderShifts(){
 function renderTasks(){
   const sec = document.getElementById('sec-tasks');
   let tasks = DB.tasks;
-
-  // Xodim faqat o'z topshiriqlarini ko'radi
   if(!isManager()){
     tasks = tasks.filter(t => t.assigned_employee_id === currentUser.employeeId);
   }
-
   if(!tasks.length){
-    sec.innerHTML = empty('📋',
-      isManager()
-        ? 'Topshiriqlar yo\'q.\n➕ tugmasini bosing!'
-        : 'Sizda topshiriqlar yo\'q. 🎉');
+    sec.innerHTML = empty('📋', isManager() ? 'Topshiriqlar yo\'q' : 'Sizda topshiriqlar yo\'q 🎉');
     return;
   }
-
   const pCls = {high:'red', normal:'orange', low:'gray'};
   const sCls = {pending:'orange', in_progress:'blue', completed:'green'};
   const sLbl = {pending:'Kutilmoqda', in_progress:'Jarayonda', completed:'Bajarilgan'};
-
-  sec.innerHTML = tasks.map(t=>{
-    const emp = DB.employees.find(e=>e.id===t.assigned_employee_id);
+  sec.innerHTML = tasks.map(t => {
+    const emp = DB.employees.find(e => e.id === t.assigned_employee_id);
     const canAct = isManager() || t.assigned_employee_id === currentUser.employeeId;
-
     return `
     <div class="list-item" style="flex-direction:column;align-items:stretch">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="info">
           <div class="title">${esc(t.title)}</div>
-          <div class="sub">${emp?esc(emp.name):'— biriktirilmagan'}</div>
+          <div class="sub">${emp ? esc(emp.name) : '—'}</div>
         </div>
         ${badge(t.priority, pCls[t.priority]||'gray')}
       </div>
@@ -1008,23 +1254,23 @@ function renderTasks(){
 function renderProducts(){
   const sec = document.getElementById('sec-products');
   if(!DB.products.length){
-    sec.innerHTML = empty('📦','Tovarlar yo\'q.\n➕ tugmasini bosing!');
+    sec.innerHTML = empty('📦','Tovarlar yo\'q');
     return;
   }
-  sec.innerHTML = DB.products.map(p=>{
-    const batches = DB.product_batches.filter(b=>b.product_id===p.id && b.quantity > 0);
-    const totalQty = batches.reduce((sum,b)=>sum+b.quantity,0);
-    const problemBatches = batches.filter(b=>getSrokStatus(b.expiry_date).cls !== 'normal').length;
+  sec.innerHTML = DB.products.map(p => {
+    const batches = DB.product_batches.filter(b => b.product_id === p.id && b.quantity > 0);
+    const totalQty = batches.reduce((s,b) => s+b.quantity, 0);
+    const prob = batches.filter(b => getSrokStatus(b.expiry_date).cls !== 'normal').length;
     return `
-    <div class="list-item">
-      <div class="avatar purple">📦</div>
-      <div class="info">
-        <div class="title">${esc(p.name)}</div>
-        <div class="sub">${esc(p.category)||'—'} • ${totalQty} dona ${problemBatches ? '• ⚠️ '+problemBatches+' partiya' : ''}</div>
-      </div>
-      ${badge(p.category||'—','purple')}
-      ${isManager() ? `<button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>` : ''}
-    </div>`;
+      <div class="list-item">
+        <div class="avatar purple">📦</div>
+        <div class="info">
+          <div class="title">${esc(p.name)}</div>
+          <div class="sub">${esc(p.category)||'—'} • ${totalQty} dona ${prob ? '• ⚠️ '+prob : ''}</div>
+        </div>
+        ${badge(p.category||'—','purple')}
+        ${isManager() ? `<button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>` : ''}
+      </div>`;
   }).join('');
 }
 
@@ -1034,7 +1280,7 @@ function renderProducts(){
 function renderExpiry(){
   const sec = document.getElementById('sec-expiry');
   if(!DB.product_batches.length){
-    sec.innerHTML = empty('⏰','Srok yozuvlari yo\'q.\n➕ tugmasini bosing va\nmahsulot partiyasini qo\'shing!');
+    sec.innerHTML = empty('⏰','Srok yozuvlari yo\'q');
     return;
   }
   const s = srokStats();
@@ -1046,15 +1292,10 @@ function renderExpiry(){
       <div class="srok-stat warning"><div class="num" style="color:#eab308">${s.warning}</div><div class="lbl">7 kun ichida</div></div>
       <div class="srok-stat normal"><div class="num" style="color:#10b981">${s.normal}</div><div class="lbl">Normada</div></div>
     </div>`;
-
-  const sorted = [...DB.product_batches].sort((a,b)=>{
-    const da = new Date(a.expiry_date).getTime();
-    const db = new Date(b.expiry_date).getTime();
-    return da - db;
-  });
-
-  const itemsHtml = sorted.map(b=>{
-    const product = DB.products.find(p=>p.id===b.product_id);
+  const sorted = [...DB.product_batches].sort((a,b) =>
+    new Date(a.expiry_date) - new Date(b.expiry_date));
+  const itemsHtml = sorted.map(b => {
+    const product = DB.products.find(p => p.id === b.product_id);
     if(!product) return '';
     const s = getSrokStatus(b.expiry_date);
     return `
@@ -1066,16 +1307,14 @@ function renderExpiry(){
       <div class="info">
         <div class="title">${esc(product.name)}</div>
         <div class="sub">${fmtDate(b.expiry_date)} • ${b.quantity} dona</div>
-        <div style="margin-top:4px">
-          <span class="badge ${s.cls === 'expired' ? 'red' : s.cls === 'today' ? 'red' : s.cls === 'critical' ? 'orange' : s.cls === 'warning' ? 'yellow' : 'green'}">
-            ${s.label}
-          </span>
-        </div>
+        <div style="margin-top:4px"><span class="badge ${
+          s.cls === 'expired' || s.cls === 'today' ? 'red' :
+          s.cls === 'critical' ? 'orange' :
+          s.cls === 'warning' ? 'yellow' : 'green'}">${s.label}</span></div>
       </div>
       ${isManager() ? `<button class="btn-del" onclick="deleteBatch(${b.id})">🗑️</button>` : ''}
     </div>`;
   }).join('');
-
   sec.innerHTML = statsHtml + '<div style="padding:0 12px">' + itemsHtml + '</div>';
 }
 
@@ -1089,7 +1328,7 @@ function renderIssues(){
     return;
   }
   const pCls = {high:'red', normal:'orange', low:'gray'};
-  sec.innerHTML = DB.issues.map(i=>`
+  sec.innerHTML = DB.issues.map(i => `
     <div class="list-item">
       <div class="avatar orange">⚠️</div>
       <div class="info">
@@ -1111,19 +1350,8 @@ function switchTab(name){
   document.querySelectorAll('.sidebar-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+name).classList.add('active');
-
-  // FAB ko'rinishi
-  const fab = document.getElementById('fabBtn');
-  if(isManager()){
-    fab.style.display = 'flex';
-  } else {
-    // Xodim faqat muammo qo'shishi mumkin
-    fab.style.display = (name === 'issues') ? 'flex' : 'none';
-  }
-
   refresh();
 }
-
 document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
 document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
 
@@ -1133,65 +1361,185 @@ document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click',
 function startTask(id){
   const t = DB.tasks.find(x=>x.id===id);
   if(!t) return;
-
-  // Himoya: xodim faqat o'z topshirig'ini boshqaradi
   if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
-    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error');
-    return;
+    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error'); return;
   }
-
-  t.status = 'in_progress';
-  DB.save(); refresh();
-  toast('✅ Topshiriq boshlandi','success');
+  t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Topshiriq boshlandi','success');
 }
-
 function completeTask(id){
   const t = DB.tasks.find(x=>x.id===id);
   if(!t) return;
-
   if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
-    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error');
-    return;
+    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error'); return;
   }
-
-  t.status = 'completed';
-  t.completed_at = new Date().toISOString();
-  DB.save(); refresh();
-  toast('✅ Topshiriq yakunlandi','success');
+  t.status = 'completed'; t.completed_at = new Date().toISOString();
+  DB.save(); refresh(); toast('✅ Topshiriq yakunlandi','success');
 }
-
-function endShift(id){
-  if(!isManager()){
-    toast('❌ Faqat menejer bu amalni qila oladi!', 'error');
-    return;
-  }
-  if(!confirm('Smenani yakunlaysizmi?')) return;
-  const si = DB.shift_instances.find(x=>x.id===id);
-  if(si){ si.status = 'ended'; si.ended_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Smena yakunlandi','success'); }
-}
-
 function deleteItem(table, id){
-  if(!isManager()){
-    toast('❌ Faqat menejer o\'chira oladi!', 'error');
-    return;
-  }
+  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   if(!confirm('O\'chirishni tasdiqlaysizmi?')) return;
   DB[table] = DB[table].filter(i=>i.id!==id);
   DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
 }
-
 function deleteBatch(id){
-  if(!isManager()){
-    toast('❌ Faqat menejer o\'chira oladi!', 'error');
-    return;
-  }
+  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   if(!confirm('Bu partiyani o\'chirasizmi?')) return;
   DB.product_batches = DB.product_batches.filter(b=>b.id!==id);
-  DB.save(); refresh(); toast('🗑️ Partiya o\'chirildi','success');
+  DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
+}
+
+// Parolni yangilash (menejer xodim uchun)
+function resetEmployeePassword(empId){
+  if(!isManager()) return;
+  const emp = DB.employees.find(e => e.id === empId);
+  if(!emp) return;
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <h3>🔑 ${esc(emp.name)} uchun yangi parol</h3>
+    <div class="field">
+      <label>Yangi parol (min 4 belgi)</label>
+      <input type="password" id="resetPass1" placeholder="••••••">
+    </div>
+    <div class="field">
+      <label>Parolni takrorlang</label>
+      <input type="password" id="resetPass2" placeholder="••••••">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+      <button class="btn btn-primary btn-lg" onclick="saveResetPassword(${empId})">Saqlash</button>
+    </div>
+  `;
+  document.getElementById('modalBg').classList.add('show');
+}
+
+function saveResetPassword(empId){
+  const p1 = document.getElementById('resetPass1').value;
+  const p2 = document.getElementById('resetPass2').value;
+  if(p1.length < 4){ toast('⚠️ Kamida 4 belgi!', 'error'); return; }
+  if(p1 !== p2){ toast('⚠️ Parollar mos kelmadi!', 'error'); return; }
+  const emp = DB.employees.find(e => e.id === empId);
+  if(!emp) return;
+  emp.passwordHash = hashPassword(p1);
+  DB.save(); closeModal(); refresh();
+  toast('✅ Parol yangilandi!', 'success');
 }
 
 // =========================================================
-// MODAL
+// SMENANI YAKUNLASH — FOTO HISOBOT
+// =========================================================
+let endShiftData = {
+  shiftInstanceId: null,
+  zone: null,
+  photos: {},
+  note: ''
+};
+
+function openEndShiftModal(siId){
+  const si = DB.shift_instances.find(x => x.id === siId);
+  if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
+  const emp = DB.employees.find(e => e.id === si.employee_id);
+  const shift = DB.shifts.find(s => s.id === si.shift_id);
+  endShiftData = { shiftInstanceId: siId, zone: null, photos: {}, note: '' };
+
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <h3>⏹️ Smenani yakunlash</h3>
+    <div style="background:#f0f4ff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px">
+      <strong>${esc(emp ? emp.name : '—')}</strong><br>
+      <span style="color:#666">${esc(shift ? shift.name : '—')}</span>
+    </div>
+    <div class="field">
+      <label>📍 Bo'limni tanlang *</label>
+      <div class="zone-grid" id="zoneGrid">
+        ${ZONES.map(z => `
+          <button class="zone-btn" data-zone="${z.id}" onclick="selectZone('${z.id}')">
+            <span class="ico">${z.name.split(' ')[0]}</span>
+            <span>${z.name.replace(/^[^\s]+\s/, '')}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:#555;margin:16px 0 10px">
+      📸 Majburiy foto hisobotlar
+    </div>
+    ${PHOTO_TYPES.map(pt => `
+      <div class="photo-upload" id="upload-${pt.id}" onclick="triggerPhoto('${pt.id}')">
+        <div class="label-row">
+          <div>
+            <strong>${pt.name}</strong>
+            <div class="hint">${pt.hint}</div>
+          </div>
+          <span class="check">✅</span>
+        </div>
+        <img class="preview" id="preview-${pt.id}" alt="${pt.name}">
+        <input type="file" accept="image/*" capture="environment" 
+               id="file-${pt.id}" style="display:none" 
+               onchange="handlePhoto('${pt.id}', this)">
+      </div>
+    `).join('')}
+    <div class="field">
+      <label>💬 Izoh (ixtiyoriy)</label>
+      <textarea id="endShiftNote" rows="2" placeholder="Qo'shimcha ma'lumot..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
+      <button class="btn btn-warning btn-lg" onclick="confirmEndShift()">✅ Smenani yakunlash</button>
+    </div>
+  `;
+  document.getElementById('modalBg').classList.add('show');
+}
+
+function selectZone(zoneId){
+  endShiftData.zone = zoneId;
+  document.querySelectorAll('.zone-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.zone === zoneId);
+  });
+}
+
+function triggerPhoto(typeId){ document.getElementById('file-' + typeId).click(); }
+
+async function handlePhoto(typeId, input){
+  if(!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  toast('📸 Foto qayta ishlanmoqda...', 'warning');
+  try {
+    const compressed = await compressImage(file, 700, 0.7);
+    endShiftData.photos[typeId] = compressed;
+    const uploadEl = document.getElementById('upload-' + typeId);
+    uploadEl.classList.add('done');
+    document.getElementById('preview-' + typeId).src = compressed;
+    toast('✅ Foto qo\'shildi', 'success');
+  } catch(e){ toast('❌ Xato: ' + e.message, 'error'); }
+}
+
+function confirmEndShift(){
+  if(!endShiftData.zone){
+    toast('⚠️ Bo\'limni tanlang!', 'error'); return;
+  }
+  const missing = PHOTO_TYPES.filter(pt => !endShiftData.photos[pt.id]);
+  if(missing.length){
+    toast('⚠️ ' + missing.length + ' ta foto yetishmayapti!', 'error'); return;
+  }
+  const si = DB.shift_instances.find(x => x.id === endShiftData.shiftInstanceId);
+  if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
+  si.status = 'ended';
+  si.ended_at = new Date().toISOString();
+  si.zone = endShiftData.zone;
+  const report = {
+    id: DB.nextId('reports'),
+    shift_instance_id: si.id, shift_id: si.shift_id,
+    employee_id: si.employee_id, zone: endShiftData.zone,
+    photos: { ...endShiftData.photos },
+    note: document.getElementById('endShiftNote').value.trim() || null,
+    started_at: si.started_at, ended_at: si.ended_at
+  };
+  DB.reports.push(report);
+  DB.save(); closeModal(); refresh();
+  toast('✅ Smena yakunlandi! 🎉', 'success');
+}
+
+// =========================================================
+// MODAL — Boshqa formlar
 // =========================================================
 function openModal(){
   const today = new Date().toISOString().slice(0,10);
@@ -1203,7 +1551,21 @@ function openModal(){
       <div class="field"><label>Ism *</label><input id="f_name" placeholder="Ali Valiyev" autofocus></div>
       <div class="field"><label>Telefon</label><input id="f_phone" placeholder="+998901234567" inputmode="tel"></div>
       <div class="field"><label>Rol</label>
-        <select id="f_role"><option value="employee">Xodim</option><option value="manager">Menejer</option><option value="admin">Admin</option></select></div>
+        <select id="f_role"><option value="employee">Xodim</option><option value="manager">Menejer</option></select></div>
+      <div class="field"><label>Bo'lim *</label>
+        <select id="f_zone">
+          <option value="">— Tanlang —</option>
+          ${ZONES.map(z => `<option value="${z.id}">${z.name}</option>`).join('')}
+        </select></div>
+      <div class="field">
+        <label>Parol * (min 4 belgi)</label>
+        <input type="password" id="f_pass1" placeholder="••••••" autocomplete="new-password">
+        <span class="hint">Xodim shu parol bilan kiradi</span>
+      </div>
+      <div class="field">
+        <label>Parolni takrorlang *</label>
+        <input type="password" id="f_pass2" placeholder="••••••" autocomplete="new-password">
+      </div>
       <div class="modal-actions">
         <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
         <button class="btn btn-primary btn-lg" onclick="save('employees')">Saqlash</button>
@@ -1262,12 +1624,7 @@ function openModal(){
         <button class="btn btn-primary btn-lg" onclick="save('issues')">Saqlash</button>
       </div>`
   };
-
-  // Xodim faqat muammo qo'sha oladi
-  if(!isMgr && currentTab !== 'issues'){
-    return;
-  }
-
+  if(!isMgr && currentTab !== 'issues') return;
   document.getElementById('modalContent').innerHTML = forms[currentTab] || forms.employees;
   document.getElementById('modalBg').classList.add('show');
 }
@@ -1281,35 +1638,27 @@ function closeModal(e){
 // SETTINGS
 // =========================================================
 function openSettings(){
-  if(!isManager()){
-    toast('❌ Faqat menejer uchun!', 'error');
-    return;
-  }
-
+  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   const stats = `
     <h3>⚙️ Sozlamalar</h3>
+    <button class="login-btn primary" style="margin-bottom:16px" onclick="openChangePassword()">
+      🔑 Parolni o'zgartirish
+    </button>
     <div style="background:#f9fafb;border-radius:12px;padding:14px;margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Xodimlar</span><strong style="font-size:13px">${DB.employees.length}</strong></div>
+        <span style="font-size:13px;color:#666">Xodimlar</span><strong>${DB.employees.length}</strong></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Faol smenalar</span><strong style="font-size:13px">${DB.shift_instances.filter(s=>s.status==='active').length}</strong></div>
+        <span style="font-size:13px;color:#666">Faol smenalar</span><strong>${DB.shift_instances.filter(s=>s.status==='active').length}</strong></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Topshiriqlar</span><strong style="font-size:13px">${DB.tasks.length}</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Tovarlar</span><strong style="font-size:13px">${DB.products.length}</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Srok partiyalari</span><strong style="font-size:13px">${DB.product_batches.length}</strong></div>
+        <span style="font-size:13px;color:#666">Foto hisobotlar</span><strong>${DB.reports.length}</strong></div>
       <div style="display:flex;justify-content:space-between;padding:6px 0">
-        <span style="font-size:13px;color:#666">Muammolar</span><strong style="font-size:13px">${DB.issues.length}</strong></div>
+        <span style="font-size:13px;color:#666">Tovarlar</span><strong>${DB.products.length}</strong></div>
     </div>
     <div class="data-actions">
       <button class="export" onclick="exportData()">💾 Eksport</button>
       <button class="import" onclick="importData()">📂 Import</button>
       <button class="clear" onclick="clearData()">🗑️ Tozalash</button>
     </div>
-    <p style="font-size:11px;color:#999;text-align:center;margin-top:16px">
-      Ma'lumotlar faqat shu qurilmada saqlanadi
-    </p>
     <div class="modal-actions">
       <button class="btn btn-cancel btn-lg" onclick="closeModal()">Yopish</button>
     </div>
@@ -1318,75 +1667,117 @@ function openSettings(){
   document.getElementById('modalBg').classList.add('show');
 }
 
-function exportData(){ DB.export(); toast('✅ Fayl yuklandi','success'); }
+function openChangePassword(){
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <h3>🔑 Parolni o'zgartirish</h3>
+    <div class="field">
+      <label>Joriy parol</label>
+      <input type="password" id="cp_old" placeholder="••••••">
+    </div>
+    <div class="field">
+      <label>Yangi parol (min 4 belgi)</label>
+      <input type="password" id="cp_new1" placeholder="••••••">
+    </div>
+    <div class="field">
+      <label>Yangi parolni takrorlang</label>
+      <input type="password" id="cp_new2" placeholder="••••••">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel btn-lg" onclick="openSettings()">Bekor</button>
+      <button class="btn btn-primary btn-lg" onclick="saveChangePassword()">Saqlash</button>
+    </div>
+  `;
+}
+
+function saveChangePassword(){
+  const oldPass = document.getElementById('cp_old').value;
+  const p1 = document.getElementById('cp_new1').value;
+  const p2 = document.getElementById('cp_new2').value;
+  if(hashPassword(oldPass) !== DB.managerPassword){
+    toast('❌ Joriy parol noto\'g\'ri!', 'error'); return;
+  }
+  if(p1.length < 4){ toast('⚠️ Kamida 4 belgi!', 'error'); return; }
+  if(p1 !== p2){ toast('⚠️ Parollar mos kelmadi!', 'error'); return; }
+  DB.managerPassword = hashPassword(p1);
+  DB.save(); closeModal();
+  toast('✅ Parol yangilandi!', 'success');
+}
+
+function exportData(){ DB.export(); toast('✅ Yuklandi','success'); }
 function importData(){
   const input = document.createElement('input');
   input.type = 'file'; input.accept = '.json';
-  input.onchange = (e)=>{
+  input.onchange = (e) => {
     const file = e.target.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = (ev)=>{
+    reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        DB.import(data);
-        toast('✅ Import muvaffaqiyatli','success');
-        closeModal(); refresh();
-      } catch(err){ toast('❌ Xato: ' + err.message, 'error'); }
+        DB.import(data); toast('✅ Import OK','success'); closeModal(); refresh();
+      } catch(err){ toast('❌ ' + err.message, 'error'); }
     };
     reader.readAsText(file);
   };
   input.click();
 }
 function clearData(){
-  if(!isManager()){
-    toast('❌ Faqat menejer uchun!', 'error');
-    return;
-  }
+  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   if(!confirm('BARCHA ma\'lumotlarni o\'chirasizmi?')) return;
   if(!confirm('Ishonchingiz komilmi?')) return;
   localStorage.removeItem('store_control_db');
   DB.load(); closeModal(); refresh();
-  toast('🗑️ Hammasi tozalandi','success');
+  toast('🗑️ Tozalandi','success');
 }
 
 // =========================================================
 // SAVE
 // =========================================================
 function save(type){
-  if(!isManager()){
-    toast('❌ Faqat menejer qo\'sha oladi!', 'error');
-    return;
-  }
-
+  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   const v = id => (document.getElementById(id)?.value || '').trim();
   const n = id => parseInt(document.getElementById(id)?.value) || null;
 
   if(type==='employees'){
     if(!v('f_name')) return toast('Ism kiritilishi shart','error');
-    DB.employees.push({id: DB.nextId('employees'), store_id: 1, name: v('f_name'),
-      phone: v('f_phone')||null, role: v('f_role'), status: 'active', created_at: new Date().toISOString()});
+    if(!v('f_zone')) return toast('Bo\'limni tanlang!','error');
+    const p1 = v('f_pass1'), p2 = v('f_pass2');
+    if(p1.length < 4) return toast('⚠️ Parol kamida 4 belgi!','error');
+    if(p1 !== p2) return toast('⚠️ Parollar mos kelmadi!','error');
+    DB.employees.push({
+      id: DB.nextId('employees'), store_id: 1, name: v('f_name'),
+      phone: v('f_phone')||null, role: v('f_role'), zone: v('f_zone'),
+      passwordHash: hashPassword(p1),
+      status: 'active', created_at: new Date().toISOString()
+    });
   }
   else if(type==='shifts'){
     const empId = n('f_emp'), shiftId = n('f_shift');
     if(!empId){ toast('Xodim tanlanishi shart','error'); return; }
-    const exists = DB.shift_instances.find(s=>s.employee_id===empId && s.status==='active');
+    const exists = DB.shift_instances.find(s => s.employee_id === empId && s.status === 'active');
     if(exists){ toast('Xodimda allaqachon faol smena bor','error'); return; }
-    DB.shift_instances.push({id: DB.nextId('shift_instances'), shift_id: shiftId,
-      employee_id: empId, status: 'active', started_at: new Date().toISOString()});
+    DB.shift_instances.push({
+      id: DB.nextId('shift_instances'), shift_id: shiftId,
+      employee_id: empId, status: 'active', started_at: new Date().toISOString()
+    });
   }
   else if(type==='tasks'){
     if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
-    DB.tasks.push({id: DB.nextId('tasks'), store_id: 1, title: v('f_title'),
+    DB.tasks.push({
+      id: DB.nextId('tasks'), store_id: 1, title: v('f_title'),
       description: v('f_desc')||null, assigned_employee_id: n('f_emp'),
       priority: v('f_priority'), status: 'pending', is_photo_required: false,
-      created_at: new Date().toISOString()});
+      created_at: new Date().toISOString()
+    });
   }
   else if(type==='products'){
     if(!v('f_name')) return toast('Nomi kiritilishi shart','error');
-    DB.products.push({id: DB.nextId('products'), store_id: 1, name: v('f_name'),
+    DB.products.push({
+      id: DB.nextId('products'), store_id: 1, name: v('f_name'),
       barcode: v('f_barcode')||null, category: v('f_category')||null,
-      created_at: new Date().toISOString()});
+      created_at: new Date().toISOString()
+    });
   }
   else if(type==='expiry'){
     const prodId = n('f_prod'), qty = n('f_qty'), expiry = v('f_expiry');
@@ -1400,20 +1791,20 @@ function save(type){
       expiry_date: expiry, created_at: new Date().toISOString()
     });
     const s = getSrokStatus(expiry);
-    if(s.cls === 'expired') toast('⚠️ Diqqat! Muddati o\'tgan!','error');
+    if(s.cls === 'expired') toast('⚠️ Muddati o\'tgan!','error');
     else if(s.cls === 'today') toast('⚠️ Bugun tugaydi!','error');
-    else if(s.cls === 'critical') toast('⚠️ ' + s.days + ' kun ichida tugaydi!','warning');
-    else toast('✅ Partiya qo\'shildi','success');
-    DB.save(); closeModal(); refresh();
-    return;
+    else if(s.cls === 'critical') toast('⚠️ ' + s.days + ' kun ichida!','warning');
+    else toast('✅ Saqlandi','success');
+    DB.save(); closeModal(); refresh(); return;
   }
   else if(type==='issues'){
     if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
-    DB.issues.push({id: DB.nextId('issues'), store_id: 1, title: v('f_title'),
-      description: v('f_desc')||null, priority: v('f_priority'), status: 'open',
-      created_at: new Date().toISOString()});
+    DB.issues.push({
+      id: DB.nextId('issues'), store_id: 1, title: v('f_title'),
+      description: v('f_desc')||null, priority: v('f_priority'),
+      status: 'open', created_at: new Date().toISOString()
+    });
   }
-
   DB.save(); closeModal(); toast('✅ Saqlandi','success'); refresh();
 }
 
@@ -1424,15 +1815,13 @@ function refresh(){
   if(!currentUser.role) return;
   loadStats();
   const renderers = {
-    employees: renderEmployees, shifts: renderShifts, tasks: renderTasks,
-    products: renderProducts, expiry: renderExpiry, issues: renderIssues
+    employees: renderEmployees, shifts: renderShifts, reports: renderReports,
+    tasks: renderTasks, products: renderProducts, expiry: renderExpiry, issues: renderIssues
   };
   (renderers[currentTab] || renderEmployees)();
-
-  // FAB holatini yangilash
   const fab = document.getElementById('fabBtn');
   if(isManager()){
-    fab.style.display = 'flex';
+    fab.style.display = (currentTab !== 'reports' && currentTab !== 'shifts') ? 'flex' : 'none';
   } else {
     fab.style.display = (currentTab === 'issues') ? 'flex' : 'none';
   }
@@ -1447,23 +1836,17 @@ loadUser();
 window.addEventListener('load', () => {
   setTimeout(() => {
     const splash = document.getElementById('splash');
-    if (splash) {
+    if(splash){
       splash.classList.add('hide');
       setTimeout(() => splash.remove(), 600);
     }
-
-    // Agar foydalanuvchi saqlangan bo'lsa — avtomatik kirish
-    if(currentUser.role){
-      document.getElementById('login').classList.add('hide');
-      document.getElementById('mainApp').style.display = '';
-      applyRole();
-      refresh();
-    }
+    // Avtomatik kirish YO'Q — har safar parol so'raladi!
+    // Faqat login ekranida qoladi
   }, 1500);
 });
 
 let lastWidth = window.innerWidth;
-window.addEventListener('resize', ()=>{
+window.addEventListener('resize', () => {
   const w = window.innerWidth;
   const wasMobile = lastWidth < 768;
   const isMobile = w < 768;
