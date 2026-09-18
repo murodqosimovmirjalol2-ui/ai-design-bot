@@ -10,7 +10,6 @@
 <meta name="description" content="Supermarket boshqaruv tizimi">
 <title>Store Control</title>
 
-<!-- LOGO -->
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 
@@ -26,15 +25,17 @@ position:relative;padding-bottom:90px;transition:background .3s}
 .sidebar{display:none}
 .desktop-wrapper{display:contents}
 
-/* SPLASH SCREEN */
+/* =========================================================
+   SPLASH SCREEN
+   ========================================================= */
 #splash{position:fixed;inset:0;z-index:99999;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 transition:opacity .5s ease,visibility .5s ease}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
 .splash-logo{width:120px;height:120px;border-radius:28px;
-box-shadow:0 20px 60px rgba(0,0,0,.35);
-animation:splashScale .8s ease-out}
+box-shadow:0 20px 60px rgba(0,0,0,.35);animation:splashScale .8s ease-out;
+object-fit:cover}
 @keyframes splashScale{0%{transform:scale(0) rotate(-180deg);opacity:0}
 60%{transform:scale(1.15) rotate(10deg)}100%{transform:scale(1) rotate(0);opacity:1}}
 .splash-title{margin-top:24px;font-size:28px;font-weight:800;color:white;
@@ -42,8 +43,7 @@ letter-spacing:.5px;animation:splashFade .8s ease-out .3s both}
 .splash-subtitle{margin-top:6px;font-size:13px;color:rgba(255,255,255,.75);
 letter-spacing:2px;text-transform:uppercase;animation:splashFade .8s ease-out .4s both}
 @keyframes splashFade{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.splash-loader{margin-top:40px;display:flex;gap:8px;
-animation:splashFade .8s ease-out .6s both}
+.splash-loader{margin-top:40px;display:flex;gap:8px;animation:splashFade .8s ease-out .6s both}
 .splash-loader span{width:10px;height:10px;border-radius:50%;background:white;
 animation:bounce 1.4s ease-in-out infinite both}
 .splash-loader span:nth-child(1){animation-delay:0s}
@@ -51,27 +51,90 @@ animation:bounce 1.4s ease-in-out infinite both}
 .splash-loader span:nth-child(3){animation-delay:.32s}
 @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
-/* HEADER */
+/* =========================================================
+   LOGIN SCREEN
+   ========================================================= */
+#login{position:fixed;inset:0;z-index:9998;
+background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+padding:24px;transition:opacity .4s ease,visibility .4s ease}
+#login.hide{opacity:0;visibility:hidden;pointer-events:none}
+.login-container{width:100%;max-width:420px;
+background:white;border-radius:24px;padding:32px 24px;
+box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out}
+@keyframes loginIn{from{opacity:0;transform:translateY(30px) scale(.95)}
+to{opacity:1;transform:translateY(0) scale(1)}}
+.login-logo{width:80px;height:80px;border-radius:20px;margin:0 auto 20px;
+display:block;object-fit:cover;box-shadow:0 10px 30px rgba(102,126,234,.4)}
+.login-title{text-align:center;font-size:24px;font-weight:800;color:#333;margin-bottom:6px}
+.login-subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:28px}
+.login-question{text-align:center;font-size:14px;color:#666;
+font-weight:600;margin-bottom:16px}
+.role-btn{width:100%;padding:20px;border:2px solid #e5e7eb;border-radius:16px;
+background:white;cursor:pointer;font-family:inherit;
+display:flex;align-items:center;gap:16px;margin-bottom:12px;
+transition:all .2s;text-align:left}
+.role-btn:hover{border-color:#667eea;transform:translateY(-2px);
+box-shadow:0 8px 24px rgba(102,126,234,.15)}
+.role-btn:active{transform:translateY(0)}
+.role-btn .ico{font-size:36px;flex-shrink:0}
+.role-btn .txt{flex:1}
+.role-btn .txt strong{display:block;font-size:16px;color:#333;margin-bottom:2px}
+.role-btn .txt span{font-size:12px;color:#888}
+.role-btn .arrow{font-size:20px;color:#ccc;transition:transform .2s}
+.role-btn:hover .arrow{transform:translateX(4px);color:#667eea}
+.role-btn.manager:hover{border-color:#8b5cf6}
+.role-btn.employee:hover{border-color:#10b981}
+.role-btn.manager .ico{background:#ede9fe;width:60px;height:60px;
+border-radius:16px;display:flex;align-items:center;justify-content:center}
+.role-btn.employee .ico{background:#d1fae5;width:60px;height:60px;
+border-radius:16px;display:flex;align-items:center;justify-content:center}
+
+/* Employee select */
+.emp-select{width:100%;padding:12px 14px;border:2px solid #e5e7eb;
+border-radius:12px;font-size:15px;font-family:inherit;
+background:#fafbfc;margin-bottom:16px}
+.emp-select:focus{outline:none;border-color:#667eea;background:white}
+
+/* Login buttons */
+.login-btn{width:100%;padding:14px;border:none;border-radius:12px;
+font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
+transition:all .2s;margin-bottom:8px}
+.login-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
+.login-btn.primary:hover{transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(102,126,234,.4)}
+.login-btn.back{background:#f3f4f6;color:#666}
+.login-btn.back:hover{background:#e5e7eb}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
 box-shadow:0 4px 20px rgba(102,126,234,.3)}
+.header.employee{background:linear-gradient(135deg,#10b981 0%,#059669 100%);
+box-shadow:0 4px 20px rgba(16,185,129,.3)}
 .header-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
-.header h1 img{width:32px;height:32px;border-radius:8px}
-.header-right{display:flex;gap:8px;align-items:center}
-.status{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:20px;
-font-size:11px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(10px);
-white-space:nowrap}
+.header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.header h1 img{width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.header h1 span{overflow:hidden;text-overflow:ellipsis}
+.header-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.role-badge{background:rgba(255,255,255,.25);padding:5px 10px;border-radius:20px;
+font-size:10px;font-weight:700;backdrop-filter:blur(10px);white-space:nowrap;
+letter-spacing:.3px}
 .dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.menu-btn,.refresh-btn{background:rgba(255,255,255,.2);border:none;color:white;
+.icon-btn{background:rgba(255,255,255,.2);border:none;color:white;
 width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;
 display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
-transition:background .2s}
-.menu-btn:hover,.refresh-btn:hover{background:rgba(255,255,255,.3)}
+transition:background .2s;flex-shrink:0}
+.icon-btn:hover{background:rgba(255,255,255,.3)}
 .refresh-btn{display:none}
 
-/* STATS */
+/* =========================================================
+   STATS
+   ========================================================= */
 .stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:white;border-radius:14px;padding:14px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
@@ -88,7 +151,9 @@ transition:transform .2s,background .3s}
 letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
 
-/* NAV */
+/* =========================================================
+   NAV
+   ========================================================= */
 .nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
 display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
 position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;
@@ -101,8 +166,12 @@ gap:3px;font-family:inherit;transition:all .2s}
 .nav-btn .ico{font-size:18px;line-height:1}
 .nav-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);
 color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
+body.employee-mode .nav-btn.active{background:linear-gradient(135deg,#10b981,#059669);
+box-shadow:0 4px 12px rgba(16,185,129,.3)}
 
-/* CONTENT */
+/* =========================================================
+   CONTENT
+   ========================================================= */
 .content{padding:0 12px}
 .section{display:none}
 .section.active{display:block}
@@ -150,7 +219,9 @@ font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 border-radius:8px;border:none;cursor:pointer}
 .btn-del:hover{background:#fecaca}
 
-/* SROK */
+/* =========================================================
+   SROK
+   ========================================================= */
 .srok-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
 gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:background .3s}
@@ -182,7 +253,9 @@ border-top:3px solid #e5e7eb;transition:background .3s}
 .empty .ico{font-size:56px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:13px}
 
-/* FAB */
+/* =========================================================
+   FAB
+   ========================================================= */
 .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;
 border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);
 color:white;border:none;font-size:24px;cursor:pointer;
@@ -190,8 +263,11 @@ box-shadow:0 6px 20px rgba(102,126,234,.4);z-index:50;
 display:flex;align-items:center;justify-content:center;transition:transform .2s}
 .fab:active{transform:scale(.9)}
 .fab:hover{transform:scale(1.05)}
+.fab.hidden{display:none}
 
-/* MODAL */
+/* =========================================================
+   MODAL
+   ========================================================= */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
 backdrop-filter:blur(4px);z-index:1000;display:none;
 align-items:flex-end;justify-content:center}
@@ -212,7 +288,9 @@ outline:none;border-color:#667eea;background:white}
 .btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
 .btn-cancel{background:#f3f4f6;color:#666}
 
-/* TOAST */
+/* =========================================================
+   TOAST
+   ========================================================= */
 .toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
 background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
 font-size:13px;font-weight:600;z-index:2000;transition:transform .3s;
@@ -229,7 +307,9 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 .data-actions .import{background:#d1fae5;color:#065f46}
 .data-actions .clear{background:#fee2e2;color:#991b1b}
 
-/* DESKTOP */
+/* =========================================================
+   DESKTOP
+   ========================================================= */
 @media (min-width:768px){
   body{background:#e5e7eb}
   .desktop-wrapper{display:grid;grid-template-columns:260px 1fr;
@@ -238,10 +318,11 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
   .sidebar{display:flex;flex-direction:column;
     background:linear-gradient(180deg,#667eea 0%,#764ba2 100%);
     color:white;padding:24px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+  body.employee-mode .sidebar{background:linear-gradient(180deg,#10b981 0%,#059669 100%)}
   .sidebar-logo{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,.15);
     margin-bottom:20px;display:flex;align-items:center;gap:10px;
     font-size:18px;font-weight:700}
-  .sidebar-logo img{width:36px;height:36px;border-radius:10px}
+  .sidebar-logo img{width:36px;height:36px;border-radius:10px;object-fit:cover}
   .sidebar-nav{display:flex;flex-direction:column;gap:4px;padding:0 12px;flex:1}
   .sidebar-btn{padding:12px 16px;border:none;background:transparent;
     color:rgba(255,255,255,.8);border-radius:10px;cursor:pointer;font-size:14px;
@@ -253,15 +334,21 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
     box-shadow:0 4px 12px rgba(0,0,0,.15)}
   .sidebar-btn .badge-count{margin-left:auto;background:rgba(255,255,255,.25);
     padding:2px 8px;border-radius:10px;font-size:11px}
-  .sidebar-status{padding:16px 20px;border-top:1px solid rgba(255,255,255,.15);
-    font-size:11px;color:rgba(255,255,255,.7)}
+  .sidebar-user{padding:16px 20px;border-top:1px solid rgba(255,255,255,.15);
+    font-size:12px;color:rgba(255,255,255,.9)}
+  .sidebar-user .name{font-weight:700;margin-bottom:2px}
+  .sidebar-user .role{font-size:10px;opacity:.7;text-transform:uppercase;
+    letter-spacing:1px;margin-bottom:8px}
+  .sidebar-user .logout{background:rgba(255,255,255,.15);border:none;
+    color:white;padding:6px 12px;border-radius:8px;font-size:11px;
+    cursor:pointer;font-family:inherit;width:100%;font-weight:600}
+  .sidebar-user .logout:hover{background:rgba(255,255,255,.25)}
   .main{display:flex;flex-direction:column;min-height:100vh;background:#f0f2f5;
     transition:background .3s}
   .header{padding:20px 32px;position:sticky;top:0;z-index:100}
   .header h1{font-size:22px}
   .header h1 img{width:38px;height:38px}
   .refresh-btn{display:flex}
-  .menu-btn{display:none}
   .stats{padding:24px 32px 12px;grid-template-columns:repeat(6,1fr);gap:16px}
   .stat{padding:18px 20px;border-radius:16px}
   .stat .label{font-size:11px}
@@ -293,12 +380,15 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
   .content{padding:12px 40px 40px}
 }
 
-/* DARK MODE (toggle orqali) */
+/* =========================================================
+   DARK MODE
+   ========================================================= */
 body.dark{background:#0f172a !important;color:#f1f5f9 !important}
 body.dark .app,
 body.dark .desktop-wrapper,
 body.dark .main{background:#0f172a !important}
 body.dark .header{background:linear-gradient(135deg,#4c1d95 0%,#1e1b4b 100%) !important}
+body.dark.employee-mode .header{background:linear-gradient(135deg,#064e3b 0%,#022c22 100%) !important}
 body.dark .stat,
 body.dark .list-item,
 body.dark .srok-item,
@@ -311,7 +401,6 @@ body.dark .stat .value,
 body.dark .info .title,
 body.dark .srok-stat .num{color:#f1f5f9 !important}
 body.dark .nav-btn{color:#94a3b8 !important}
-body.dark .nav-btn.active{color:white !important}
 body.dark .modal{background:#1e293b !important;color:#f1f5f9 !important}
 body.dark .field input,
 body.dark .field select,
@@ -322,12 +411,21 @@ body.dark .field textarea{
 body.dark .field label{color:#cbd5e1 !important}
 body.dark .btn-cancel{background:#334155 !important;color:#cbd5e1 !important}
 body.dark .sidebar{background:linear-gradient(180deg,#4c1d95 0%,#1e1b4b 100%) !important}
+body.dark.employee-mode .sidebar{background:linear-gradient(180deg,#064e3b 0%,#022c22 100%) !important}
 body.dark .empty{color:#64748b !important}
 body.dark .srok-item.expired{background:#7f1d1d !important}
 body.dark .srok-item.today{background:#7f1d1d !important}
 body.dark .srok-item.critical{background:#78350f !important}
 body.dark .srok-item.warning{background:#713f12 !important}
 body.dark .srok-item.normal{background:#1e293b !important}
+body.dark #login .login-container{background:#1e293b;color:#f1f5f9}
+body.dark .login-title{color:#f1f5f9}
+body.dark .login-subtitle,.login-question{color:#94a3b8}
+body.dark .role-btn{background:#0f172a;border-color:#334155}
+body.dark .role-btn .txt strong{color:#f1f5f9}
+body.dark .role-btn .txt span{color:#94a3b8}
+body.dark .emp-select{background:#0f172a;color:#f1f5f9;border-color:#334155}
+body.dark .login-btn.back{background:#334155;color:#cbd5e1}
 </style>
 </head>
 <body>
@@ -342,7 +440,52 @@ body.dark .srok-item.normal{background:#1e293b !important}
   </div>
 </div>
 
-<div class="desktop-wrapper">
+<!-- LOGIN SCREEN -->
+<div id="login">
+  <div class="login-container">
+    <img src="logo.png" class="login-logo" alt="Logo" onerror="this.style.display='none'">
+    <div class="login-title">Store Control</div>
+    <div class="login-subtitle">Supermarket boshqaruv tizimi</div>
+
+    <div id="loginStep1">
+      <div class="login-question">👤 Kim sifatida kirmoqchisiz?</div>
+
+      <button class="role-btn manager" onclick="selectRole('manager')">
+        <div class="ico">👨‍💼</div>
+        <div class="txt">
+          <strong>Menejer</strong>
+          <span>To'liq boshqaruv huquqi</span>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+
+      <button class="role-btn employee" onclick="selectRole('employee')">
+        <div class="ico">👷</div>
+        <div class="txt">
+          <strong>Xodim</strong>
+          <span>Faqat o'z vazifalarini ko'rish</span>
+        </div>
+        <div class="arrow">›</div>
+      </button>
+    </div>
+
+    <div id="loginStep2" style="display:none">
+      <div class="login-question">👷 O'zingizni tanlang:</div>
+      <select class="emp-select" id="employeeSelect">
+        <option value="">— Xodimni tanlang —</option>
+      </select>
+      <button class="login-btn primary" onclick="confirmEmployee()">
+        ✅ Kirish
+      </button>
+      <button class="login-btn back" onclick="backToStep1()">
+        ← Orqaga
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="desktop-wrapper" id="mainApp" style="display:none">
 
   <aside class="sidebar">
     <div class="sidebar-logo">
@@ -375,30 +518,27 @@ body.dark .srok-item.normal{background:#1e293b !important}
         <span class="badge-count" id="cnt-issue">0</span>
       </button>
     </nav>
-    <div class="sidebar-status">
-      <div style="display:flex;align-items:center;gap:6px">
-        <span class="dot"></span>
-        <span>Tizim faol</span>
-      </div>
+    <div class="sidebar-user">
+      <div class="name" id="sidebarUserName">—</div>
+      <div class="role" id="sidebarUserRole">—</div>
+      <button class="logout" onclick="logout()">🚪 Chiqish</button>
     </div>
   </aside>
 
   <main class="main">
     <div class="app">
-      <div class="header">
+      <div class="header" id="appHeader">
         <div class="header-top">
           <h1>
             <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-            Store Control
+            <span id="headerTitle">Store Control</span>
           </h1>
           <div class="header-right">
-            <div class="status">
-              <span class="dot"></span>
-              <span>Faol</span>
-            </div>
-            <button class="refresh-btn" onclick="refresh()" title="Yangilash">🔄</button>
-            <button class="menu-btn" onclick="toggleTheme()" id="themeBtn" title="Rejim">🌙</button>
-            <button class="menu-btn" onclick="openSettings()" title="Sozlamalar">⚙️</button>
+            <span class="role-badge" id="headerRole">👨‍💼 MENEJER</span>
+            <button class="icon-btn refresh-btn" onclick="refresh()" title="Yangilash">🔄</button>
+            <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Rejim">🌙</button>
+            <button class="icon-btn" onclick="openSettings()" id="settingsBtn" title="Sozlamalar">⚙️</button>
+            <button class="icon-btn" onclick="logout()" id="logoutBtn" title="Chiqish" style="display:none">🚪</button>
           </div>
         </div>
       </div>
@@ -431,15 +571,17 @@ body.dark .srok-item.normal{background:#1e293b !important}
       </div>
     </div>
   </main>
-
 </div>
 
-<button class="fab" onclick="openModal()">➕</button>
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="openModal()" style="display:none">➕</button>
 
+<!-- MODAL -->
 <div class="modal-bg" id="modalBg" onclick="closeModal(event)">
   <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -511,10 +653,128 @@ const DB = {
   }
 };
 
+// =========================================================
+// FOYDALANUVCHI
+// =========================================================
+let currentUser = {
+  role: null,        // 'manager' | 'employee'
+  employeeId: null,
+  employeeName: null
+};
+
 let currentTab = 'employees';
 
+function loadUser(){
+  const data = localStorage.getItem('store_control_user');
+  if(data){
+    try {
+      const parsed = JSON.parse(data);
+      if(parsed.role) currentUser = parsed;
+    } catch(e){}
+  }
+}
+
+function saveUser(){
+  localStorage.setItem('store_control_user', JSON.stringify(currentUser));
+}
+
+function clearUser(){
+  localStorage.removeItem('store_control_user');
+  currentUser = { role: null, employeeId: null, employeeName: null };
+}
+
 // =========================================================
-// SROK HISOBLASH
+// LOGIN LOGIKASI
+// =========================================================
+function selectRole(role){
+  if(role === 'manager'){
+    currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
+    saveUser();
+    enterApp();
+  } else {
+    // Employee tanlash
+    const select = document.getElementById('employeeSelect');
+    select.innerHTML = '<option value="">— Xodimni tanlang —</option>' +
+      DB.employees.map(e => `<option value="${e.id}">${esc(e.name)} (${e.role})</option>`).join('');
+    document.getElementById('loginStep1').style.display = 'none';
+    document.getElementById('loginStep2').style.display = 'block';
+  }
+}
+
+function backToStep1(){
+  document.getElementById('loginStep1').style.display = 'block';
+  document.getElementById('loginStep2').style.display = 'none';
+}
+
+function confirmEmployee(){
+  const empId = parseInt(document.getElementById('employeeSelect').value);
+  if(!empId){
+    toast('⚠️ Xodimni tanlang!', 'error');
+    return;
+  }
+  const emp = DB.employees.find(e => e.id === empId);
+  if(!emp){
+    toast('⚠️ Xodim topilmadi!', 'error');
+    return;
+  }
+  currentUser = { role: 'employee', employeeId: empId, employeeName: emp.name };
+  saveUser();
+  enterApp();
+}
+
+function enterApp(){
+  document.getElementById('login').classList.add('hide');
+  document.getElementById('mainApp').style.display = '';
+  applyRole();
+  refresh();
+}
+
+function applyRole(){
+  const isEmployee = currentUser.role === 'employee';
+  const body = document.body;
+
+  // Body class
+  body.classList.toggle('employee-mode', isEmployee);
+
+  // Header
+  const header = document.getElementById('appHeader');
+  header.classList.toggle('employee', isEmployee);
+
+  // Header role badge
+  document.getElementById('headerRole').textContent =
+    isEmployee ? '👷 XODIM' : '👨‍💼 MENEJER';
+
+  // Header title
+  document.getElementById('headerTitle').textContent =
+    isEmployee ? currentUser.employeeName : 'Store Control';
+
+  // Sidebar user
+  document.getElementById('sidebarUserName').textContent =
+    isEmployee ? currentUser.employeeName : 'Menejer';
+  document.getElementById('sidebarUserRole').textContent =
+    isEmployee ? 'Xodim' : 'Menejer';
+
+  // Logout button (mobil uchun)
+  document.getElementById('logoutBtn').style.display = isEmployee ? 'flex' : 'none';
+
+  // FAB — faqat menejer uchun
+  document.getElementById('fabBtn').style.display = isEmployee ? 'none' : 'flex';
+
+  // Sozlamalar tugmasi
+  document.getElementById('settingsBtn').style.display = isEmployee ? 'none' : 'flex';
+}
+
+function logout(){
+  if(!confirm('Tizimdan chiqmoqchimisiz?')) return;
+  clearUser();
+  document.getElementById('login').classList.remove('hide');
+  document.getElementById('mainApp').style.display = 'none';
+  document.body.classList.remove('employee-mode');
+  backToStep1();
+}
+
+// =========================================================
+// SROK
 // =========================================================
 function getSrokStatus(expiryDate){
   if(!expiryDate) return {cls:'normal', label:'—', days:null};
@@ -559,7 +819,6 @@ function toggleTheme(){
   localStorage.setItem('store_theme', isDark ? 'dark' : 'light');
 }
 
-// Sahifa yuklanganda tema
 (function(){
   const saved = localStorage.getItem('store_theme');
   if(saved === 'dark'){
@@ -575,13 +834,27 @@ function toggleTheme(){
 // STATS
 // =========================================================
 function loadStats(){
-  const activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
-  const openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
+  const isEmployee = currentUser.role === 'employee';
+
+  let activeShifts, openTasks;
+
+  if(isEmployee){
+    // Faqat o'z ma'lumotlari
+    activeShifts = DB.shift_instances.filter(s =>
+      s.status==='active' && s.employee_id === currentUser.employeeId).length;
+    openTasks = DB.tasks.filter(t =>
+      t.assigned_employee_id === currentUser.employeeId &&
+      t.status !== 'completed').length;
+  } else {
+    activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
+    openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
+  }
+
   const openIssues = DB.issues.filter(i=>i.status==='open').length;
   const srokS = srokStats();
   const problemSrok = srokS.expired + srokS.today + srokS.critical;
 
-  document.getElementById('sEmp').textContent = DB.employees.length;
+  document.getElementById('sEmp').textContent = isEmployee ? '—' : DB.employees.length;
   document.getElementById('sShift').textContent = activeShifts;
   document.getElementById('sTask').textContent = openTasks;
   document.getElementById('sIssue').textContent = openIssues;
@@ -591,7 +864,7 @@ function loadStats(){
   srokEl.style.color = problemSrok === 0 ? '#10b981' : (problemSrok < 3 ? '#f59e0b' : '#ef4444');
 
   const setC = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
-  setC('cnt-emp', DB.employees.length);
+  setC('cnt-emp', isEmployee ? '—' : DB.employees.length);
   setC('cnt-shift', activeShifts);
   setC('cnt-task', openTasks);
   setC('cnt-prod', DB.products.length);
@@ -616,13 +889,19 @@ function fmtDate(d){
   const dt = new Date(d);
   return dt.toLocaleDateString('uz-UZ', {day:'2-digit', month:'2-digit', year:'numeric'});
 }
+function isManager(){ return currentUser.role === 'manager'; }
 
 // =========================================================
 // RENDER — XODIMLAR
 // =========================================================
 function renderEmployees(){
   const sec = document.getElementById('sec-employees');
-  if(!DB.employees.length){ sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!'); return; }
+
+  if(!DB.employees.length){
+    sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!');
+    return;
+  }
+
   sec.innerHTML = DB.employees.map(e=>`
     <div class="list-item">
       <div class="avatar blue">${e.id}</div>
@@ -631,7 +910,7 @@ function renderEmployees(){
         <div class="sub">${esc(e.phone)||'—'}</div>
       </div>
       ${badge(e.role,'blue')}
-      <button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>
+      ${isManager() ? `<button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>` : ''}
     </div>
   `).join('');
 }
@@ -641,8 +920,21 @@ function renderEmployees(){
 // =========================================================
 function renderShifts(){
   const sec = document.getElementById('sec-shifts');
-  const active = DB.shift_instances.filter(s=>s.status==='active');
-  if(!active.length){ sec.innerHTML = empty('🕐','Faol smenalar yo\'q.\n➕ tugmasini bosing!'); return; }
+  let active = DB.shift_instances.filter(s=>s.status==='active');
+
+  // Xodim faqat o'z smenasini ko'radi
+  if(!isManager()){
+    active = active.filter(s => s.employee_id === currentUser.employeeId);
+  }
+
+  if(!active.length){
+    sec.innerHTML = empty('🕐',
+      isManager()
+        ? 'Faol smenalar yo\'q.\n➕ tugmasini bosing!'
+        : 'Sizda faol smena yo\'q.\nMenejerga murojaat qiling!');
+    return;
+  }
+
   sec.innerHTML = active.map(si=>{
     const emp = DB.employees.find(e=>e.id===si.employee_id);
     const shift = DB.shifts.find(s=>s.id===si.shift_id);
@@ -656,7 +948,7 @@ function renderShifts(){
         <div class="sub">${esc(shift.start_time)} - ${esc(shift.end_time)} • ${started}</div>
       </div>
       ${badge(shift.name,'green')}
-      <button class="btn-del" onclick="endShift(${si.id})">⏹️</button>
+      ${isManager() ? `<button class="btn-del" onclick="endShift(${si.id})">⏹️</button>` : ''}
     </div>`;
   }).join('');
 }
@@ -666,12 +958,29 @@ function renderShifts(){
 // =========================================================
 function renderTasks(){
   const sec = document.getElementById('sec-tasks');
-  if(!DB.tasks.length){ sec.innerHTML = empty('📋','Topshiriqlar yo\'q.\n➕ tugmasini bosing!'); return; }
+  let tasks = DB.tasks;
+
+  // Xodim faqat o'z topshiriqlarini ko'radi
+  if(!isManager()){
+    tasks = tasks.filter(t => t.assigned_employee_id === currentUser.employeeId);
+  }
+
+  if(!tasks.length){
+    sec.innerHTML = empty('📋',
+      isManager()
+        ? 'Topshiriqlar yo\'q.\n➕ tugmasini bosing!'
+        : 'Sizda topshiriqlar yo\'q. 🎉');
+    return;
+  }
+
   const pCls = {high:'red', normal:'orange', low:'gray'};
   const sCls = {pending:'orange', in_progress:'blue', completed:'green'};
   const sLbl = {pending:'Kutilmoqda', in_progress:'Jarayonda', completed:'Bajarilgan'};
-  sec.innerHTML = DB.tasks.map(t=>{
+
+  sec.innerHTML = tasks.map(t=>{
     const emp = DB.employees.find(e=>e.id===t.assigned_employee_id);
+    const canAct = isManager() || t.assigned_employee_id === currentUser.employeeId;
+
     return `
     <div class="list-item" style="flex-direction:column;align-items:stretch">
       <div style="display:flex;align-items:center;gap:10px">
@@ -684,9 +993,9 @@ function renderTasks(){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px">
         ${badge(sLbl[t.status]||t.status, sCls[t.status]||'gray')}
         <div class="actions" style="margin:0">
-          ${t.status==='pending' ? `<button class="btn btn-success btn-sm" onclick="startTask(${t.id})">▶️ Boshlash</button>` : ''}
-          ${t.status==='in_progress' ? `<button class="btn btn-primary btn-sm" onclick="completeTask(${t.id})">✅ Yakunlash</button>` : ''}
-          <button class="btn-del" onclick="deleteItem('tasks',${t.id})">🗑️</button>
+          ${canAct && t.status==='pending' ? `<button class="btn btn-success btn-sm" onclick="startTask(${t.id})">▶️ Boshlash</button>` : ''}
+          ${canAct && t.status==='in_progress' ? `<button class="btn btn-primary btn-sm" onclick="completeTask(${t.id})">✅ Yakunlash</button>` : ''}
+          ${isManager() ? `<button class="btn-del" onclick="deleteItem('tasks',${t.id})">🗑️</button>` : ''}
         </div>
       </div>
     </div>`;
@@ -698,7 +1007,10 @@ function renderTasks(){
 // =========================================================
 function renderProducts(){
   const sec = document.getElementById('sec-products');
-  if(!DB.products.length){ sec.innerHTML = empty('📦','Tovarlar yo\'q.\n➕ tugmasini bosing!'); return; }
+  if(!DB.products.length){
+    sec.innerHTML = empty('📦','Tovarlar yo\'q.\n➕ tugmasini bosing!');
+    return;
+  }
   sec.innerHTML = DB.products.map(p=>{
     const batches = DB.product_batches.filter(b=>b.product_id===p.id && b.quantity > 0);
     const totalQty = batches.reduce((sum,b)=>sum+b.quantity,0);
@@ -711,7 +1023,7 @@ function renderProducts(){
         <div class="sub">${esc(p.category)||'—'} • ${totalQty} dona ${problemBatches ? '• ⚠️ '+problemBatches+' partiya' : ''}</div>
       </div>
       ${badge(p.category||'—','purple')}
-      <button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>
+      ${isManager() ? `<button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>` : ''}
     </div>`;
   }).join('');
 }
@@ -760,7 +1072,7 @@ function renderExpiry(){
           </span>
         </div>
       </div>
-      <button class="btn-del" onclick="deleteBatch(${b.id})">🗑️</button>
+      ${isManager() ? `<button class="btn-del" onclick="deleteBatch(${b.id})">🗑️</button>` : ''}
     </div>`;
   }).join('');
 
@@ -772,7 +1084,10 @@ function renderExpiry(){
 // =========================================================
 function renderIssues(){
   const sec = document.getElementById('sec-issues');
-  if(!DB.issues.length){ sec.innerHTML = empty('⚠️','Muammolar yo\'q. Ajoyib! 🎉'); return; }
+  if(!DB.issues.length){
+    sec.innerHTML = empty('⚠️','Muammolar yo\'q. Ajoyib! 🎉');
+    return;
+  }
   const pCls = {high:'red', normal:'orange', low:'gray'};
   sec.innerHTML = DB.issues.map(i=>`
     <div class="list-item">
@@ -782,7 +1097,7 @@ function renderIssues(){
         <div class="sub">${esc(i.status)}</div>
       </div>
       ${badge(i.priority, pCls[i.priority]||'gray')}
-      <button class="btn-del" onclick="deleteItem('issues',${i.id})">🗑️</button>
+      ${isManager() ? `<button class="btn-del" onclick="deleteItem('issues',${i.id})">🗑️</button>` : ''}
     </div>
   `).join('');
 }
@@ -796,6 +1111,16 @@ function switchTab(name){
   document.querySelectorAll('.sidebar-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+name).classList.add('active');
+
+  // FAB ko'rinishi
+  const fab = document.getElementById('fabBtn');
+  if(isManager()){
+    fab.style.display = 'flex';
+  } else {
+    // Xodim faqat muammo qo'shishi mumkin
+    fab.style.display = (name === 'issues') ? 'flex' : 'none';
+  }
+
   refresh();
 }
 
@@ -807,23 +1132,59 @@ document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click',
 // =========================================================
 function startTask(id){
   const t = DB.tasks.find(x=>x.id===id);
-  if(t){ t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Topshiriq boshlandi','success'); }
+  if(!t) return;
+
+  // Himoya: xodim faqat o'z topshirig'ini boshqaradi
+  if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
+    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error');
+    return;
+  }
+
+  t.status = 'in_progress';
+  DB.save(); refresh();
+  toast('✅ Topshiriq boshlandi','success');
 }
+
 function completeTask(id){
   const t = DB.tasks.find(x=>x.id===id);
-  if(t){ t.status = 'completed'; t.completed_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Topshiriq yakunlandi','success'); }
+  if(!t) return;
+
+  if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
+    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error');
+    return;
+  }
+
+  t.status = 'completed';
+  t.completed_at = new Date().toISOString();
+  DB.save(); refresh();
+  toast('✅ Topshiriq yakunlandi','success');
 }
+
 function endShift(id){
+  if(!isManager()){
+    toast('❌ Faqat menejer bu amalni qila oladi!', 'error');
+    return;
+  }
   if(!confirm('Smenani yakunlaysizmi?')) return;
   const si = DB.shift_instances.find(x=>x.id===id);
   if(si){ si.status = 'ended'; si.ended_at = new Date().toISOString(); DB.save(); refresh(); toast('✅ Smena yakunlandi','success'); }
 }
+
 function deleteItem(table, id){
+  if(!isManager()){
+    toast('❌ Faqat menejer o\'chira oladi!', 'error');
+    return;
+  }
   if(!confirm('O\'chirishni tasdiqlaysizmi?')) return;
   DB[table] = DB[table].filter(i=>i.id!==id);
   DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
 }
+
 function deleteBatch(id){
+  if(!isManager()){
+    toast('❌ Faqat menejer o\'chira oladi!', 'error');
+    return;
+  }
   if(!confirm('Bu partiyani o\'chirasizmi?')) return;
   DB.product_batches = DB.product_batches.filter(b=>b.id!==id);
   DB.save(); refresh(); toast('🗑️ Partiya o\'chirildi','success');
@@ -834,6 +1195,8 @@ function deleteBatch(id){
 // =========================================================
 function openModal(){
   const today = new Date().toISOString().slice(0,10);
+  const isMgr = isManager();
+
   const forms = {
     employees: `
       <h3>➕ Yangi xodim</h3>
@@ -899,6 +1262,12 @@ function openModal(){
         <button class="btn btn-primary btn-lg" onclick="save('issues')">Saqlash</button>
       </div>`
   };
+
+  // Xodim faqat muammo qo'sha oladi
+  if(!isMgr && currentTab !== 'issues'){
+    return;
+  }
+
   document.getElementById('modalContent').innerHTML = forms[currentTab] || forms.employees;
   document.getElementById('modalBg').classList.add('show');
 }
@@ -912,6 +1281,11 @@ function closeModal(e){
 // SETTINGS
 // =========================================================
 function openSettings(){
+  if(!isManager()){
+    toast('❌ Faqat menejer uchun!', 'error');
+    return;
+  }
+
   const stats = `
     <h3>⚙️ Sozlamalar</h3>
     <div style="background:#f9fafb;border-radius:12px;padding:14px;margin-bottom:14px">
@@ -965,6 +1339,10 @@ function importData(){
   input.click();
 }
 function clearData(){
+  if(!isManager()){
+    toast('❌ Faqat menejer uchun!', 'error');
+    return;
+  }
   if(!confirm('BARCHA ma\'lumotlarni o\'chirasizmi?')) return;
   if(!confirm('Ishonchingiz komilmi?')) return;
   localStorage.removeItem('store_control_db');
@@ -976,6 +1354,11 @@ function clearData(){
 // SAVE
 // =========================================================
 function save(type){
+  if(!isManager()){
+    toast('❌ Faqat menejer qo\'sha oladi!', 'error');
+    return;
+  }
+
   const v = id => (document.getElementById(id)?.value || '').trim();
   const n = id => parseInt(document.getElementById(id)?.value) || null;
 
@@ -1038,27 +1421,43 @@ function save(type){
 // REFRESH
 // =========================================================
 function refresh(){
+  if(!currentUser.role) return;
   loadStats();
   const renderers = {
     employees: renderEmployees, shifts: renderShifts, tasks: renderTasks,
     products: renderProducts, expiry: renderExpiry, issues: renderIssues
   };
   (renderers[currentTab] || renderEmployees)();
+
+  // FAB holatini yangilash
+  const fab = document.getElementById('fabBtn');
+  if(isManager()){
+    fab.style.display = 'flex';
+  } else {
+    fab.style.display = (currentTab === 'issues') ? 'flex' : 'none';
+  }
 }
 
 // =========================================================
 // INIT
 // =========================================================
 DB.load();
-refresh();
+loadUser();
 
-// SPLASH SCREEN — 1.5 sekunddan keyin yashirish
 window.addEventListener('load', () => {
   setTimeout(() => {
     const splash = document.getElementById('splash');
     if (splash) {
       splash.classList.add('hide');
       setTimeout(() => splash.remove(), 600);
+    }
+
+    // Agar foydalanuvchi saqlangan bo'lsa — avtomatik kirish
+    if(currentUser.role){
+      document.getElementById('login').classList.add('hide');
+      document.getElementById('mainApp').style.display = '';
+      applyRole();
+      refresh();
     }
   }, 1500);
 });
