@@ -47,23 +47,29 @@ animation:bounce 1.4s ease-in-out infinite both}
 /* LOGIN */
 #login{position:fixed;inset:0;z-index:9998;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-padding:24px;transition:opacity .4s ease,visibility .4s ease;overflow-y:auto}
+padding:20px;padding-top:max(20px, env(safe-area-inset-top));
+padding-bottom:max(20px, env(safe-area-inset-bottom));
+overflow-y:auto;-webkit-overflow-scrolling:touch;
+display:block;transition:opacity .4s ease,visibility .4s ease}
 #login.hide{opacity:0;visibility:hidden;pointer-events:none}
 .login-container{width:100%;max-width:420px;
-background:white;border-radius:24px;padding:32px 24px;
+background:white;border-radius:24px;padding:28px 22px;
 box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out;
-margin:auto}
+margin:0 auto}
 @keyframes loginIn{from{opacity:0;transform:translateY(30px) scale(.95)}
 to{opacity:1;transform:translateY(0) scale(1)}}
+@media (min-width:500px) and (min-height:700px){
+  #login{display:flex;align-items:center;justify-content:center}
+  .login-container{margin:auto}
+}
 .login-logo{width:80px;height:80px;border-radius:20px;margin:0 auto 20px;
 display:block;object-fit:cover;box-shadow:0 10px 30px rgba(102,126,234,.4)}
 .login-title{text-align:center;font-size:24px;font-weight:800;color:#333;margin-bottom:6px}
-.login-subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:28px}
+.login-subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:24px}
 .login-question{text-align:center;font-size:14px;color:#666;font-weight:600;margin-bottom:16px}
-.role-btn{width:100%;padding:20px;border:2px solid #e5e7eb;border-radius:16px;
+.role-btn{width:100%;padding:18px;border:2px solid #e5e7eb;border-radius:16px;
 background:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;
-gap:16px;margin-bottom:12px;transition:all .2s;text-align:left}
+gap:14px;margin-bottom:12px;transition:all .2s;text-align:left;min-height:80px}
 .role-btn:hover{border-color:#667eea;transform:translateY(-2px);
 box-shadow:0 8px 24px rgba(102,126,234,.15)}
 .role-btn:active{transform:translateY(0)}
@@ -80,8 +86,7 @@ border-radius:16px;display:flex;align-items:center;justify-content:center}
 .role-btn.employee .ico{background:#d1fae5;width:60px;height:60px;
 border-radius:16px;display:flex;align-items:center;justify-content:center}
 
-/* PASSWORD FIELD */
-.pass-wrap{position:relative;margin-bottom:16px}
+.pass-wrap{position:relative;margin-bottom:14px}
 .pass-input{width:100%;padding:14px 44px 14px 44px;border:2px solid #e5e7eb;
 border-radius:12px;font-size:16px;font-family:inherit;
 background:#fafbfc;transition:border-color .2s,background .3s;
@@ -95,16 +100,19 @@ padding:6px;opacity:.6;transition:opacity .2s}
 .pass-toggle:hover{opacity:1}
 .pass-label{display:block;font-size:12px;font-weight:700;color:#555;
 margin-bottom:6px;text-align:left}
-.pass-hint{font-size:11px;color:#999;margin-top:-10px;margin-bottom:12px;text-align:left}
 
-.emp-select{width:100%;padding:12px 14px;border:2px solid #e5e7eb;
-border-radius:12px;font-size:15px;font-family:inherit;background:#fafbfc;margin-bottom:14px}
-.emp-select:focus{outline:none;border-color:#667eea;background:white}
+.emp-select{width:100%;padding:14px;border:2px solid #e5e7eb;
+border-radius:12px;font-size:16px;font-family:inherit;background:#fafbfc;margin-bottom:14px;
+-webkit-appearance:none;appearance:none;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'><path d='M7 10l5 5 5-5z'/></svg>");
+background-repeat:no-repeat;background-position:right 12px center;background-size:20px;
+padding-right:40px}
+.emp-select:focus{outline:none;border-color:#667eea;background-color:white}
 
-.login-btn{width:100%;padding:14px;border:none;border-radius:12px;
-font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
-transition:all .2s;margin-bottom:8px;display:flex;align-items:center;
-justify-content:center;gap:8px}
+.login-btn{width:100%;padding:16px;border:none;border-radius:12px;
+font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
+transition:all .2s;margin-bottom:10px;display:flex;align-items:center;
+justify-content:center;gap:8px;min-height:52px}
 .login-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
 .login-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(102,126,234,.4)}
 .login-btn.primary.green{background:linear-gradient(135deg,#10b981,#059669)}
@@ -114,7 +122,7 @@ justify-content:center;gap:8px}
 
 .login-info{background:#f0f4ff;border-radius:12px;padding:14px;
 margin-bottom:18px;font-size:13px;color:#555;text-align:center;
-border-left:3px solid #667eea}
+border-left:3px solid #667eea;line-height:1.5}
 .login-info strong{color:#333;display:block;margin-bottom:4px;font-size:14px}
 .login-error{background:#fee2e2;color:#991b1b;padding:10px 14px;
 border-radius:10px;font-size:13px;margin-bottom:14px;display:none;
@@ -123,7 +131,6 @@ text-align:center;font-weight:600}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}
 75%{transform:translateX(6px)}}
 
-/* HEADER */
 .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
 box-shadow:0 4px 20px rgba(102,126,234,.3)}
@@ -143,7 +150,6 @@ display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px
 transition:background .2s;flex-shrink:0}
 .icon-btn:hover{background:rgba(255,255,255,.3)}
 
-/* STATS */
 .stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:white;border-radius:14px;padding:14px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
@@ -160,7 +166,6 @@ transition:transform .2s,background .3s}
 letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
 
-/* NAV */
 .nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
 display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
 position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;transition:background .3s}
@@ -175,7 +180,6 @@ color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
 body.employee-mode .nav-btn.active{background:linear-gradient(135deg,#10b981,#059669);
 box-shadow:0 4px 12px rgba(16,185,129,.3)}
 
-/* CONTENT */
 .content{padding:0 12px}
 .section{display:none}
 .section.active{display:block}
@@ -223,7 +227,6 @@ font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 border-radius:8px;border:none;cursor:pointer}
 .btn-del:hover{background:#fecaca}
 
-/* SROK */
 .srok-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
 gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:background .3s}
@@ -253,7 +256,6 @@ box-shadow:0 2px 8px rgba(0,0,0,.04);border-top:3px solid #e5e7eb;transition:bac
 .empty .ico{font-size:56px;margin-bottom:12px;opacity:.4}
 .empty p{font-size:13px}
 
-/* FAB */
 .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;
 border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);
 color:white;border:none;font-size:24px;cursor:pointer;
@@ -262,7 +264,6 @@ display:flex;align-items:center;justify-content:center;transition:transform .2s}
 .fab:active{transform:scale(.9)}
 .fab:hover{transform:scale(1.05)}
 
-/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
 backdrop-filter:blur(4px);z-index:1000;display:none;
 align-items:flex-end;justify-content:center}
@@ -284,7 +285,6 @@ outline:none;border-color:#667eea;background:white}
 .btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
 .btn-cancel{background:#f3f4f6;color:#666}
 
-/* PHOTO UPLOAD */
 .photo-upload{border:2px dashed #cbd5e1;border-radius:12px;padding:16px;
 text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc;
 margin-bottom:12px;position:relative}
@@ -300,7 +300,6 @@ justify-content:space-between;margin-bottom:8px}
 object-fit:cover;margin-top:8px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .photo-upload.done .preview{display:block}
 
-/* ZONE */
 .zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .zone-btn{padding:12px 8px;border:2px solid #e5e7eb;border-radius:10px;
 background:white;cursor:pointer;font-family:inherit;font-size:12px;
@@ -310,7 +309,6 @@ flex-direction:column;align-items:center;gap:4px}
 .zone-btn.active{border-color:#667eea;background:#ede9fe;color:#6b21a8}
 .zone-btn .ico{font-size:20px}
 
-/* REPORT */
 .report-card{background:white;border-radius:14px;padding:14px;
 margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:background .3s}
 .report-header{display:flex;justify-content:space-between;align-items:center;
@@ -323,7 +321,6 @@ aspect-ratio:1;background:#f3f4f6;cursor:pointer}
 background:linear-gradient(transparent,rgba(0,0,0,.8));color:white;
 padding:16px 6px 4px;font-size:9px;font-weight:600;text-align:center}
 
-/* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
 background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
 font-size:13px;font-weight:600;z-index:2000;transition:transform .3s;
@@ -479,7 +476,7 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
       </button>
     </div>
 
-    <!-- Step 2: Parol kiritish (Menejer) -->
+    <!-- Manager: parol kiritish -->
     <div id="loginStepManager" style="display:none">
       <div class="login-question">🔒 Menejer parolini kiriting</div>
       <div class="login-error" id="errManager"></div>
@@ -499,12 +496,13 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
       </button>
     </div>
 
-    <!-- Step 2b: Birinchi marta parol yaratish (Menejer) -->
+    <!-- Manager: birinchi marta parol yaratish -->
     <div id="loginStepManagerSetup" style="display:none">
       <div class="login-question">🔐 Yangi parol yarating</div>
       <div class="login-info">
         <strong>Birinchi kirish</strong>
-        Iltimos, o'zingizga parol o'ylab toping. Har safar shu parol bilan kirasiz.
+        Iltimos, o'zingizga parol o'ylab toping.<br>
+        Har safar shu parol bilan kirasiz.
       </div>
       <div class="login-error" id="errManagerSetup"></div>
       <label class="pass-label">Yangi parol (min 4 belgi)</label>
@@ -530,7 +528,7 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
       </button>
     </div>
 
-    <!-- Step 3: Xodim tanlash + parol -->
+    <!-- Employee: xodim tanlash -->
     <div id="loginStepEmployee" style="display:none">
       <div class="login-question">👷 Xodim kirishi</div>
       <div class="login-error" id="errEmployee"></div>
@@ -538,18 +536,63 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
       <select class="emp-select" id="employeeSelect">
         <option value="">— Xodimni tanlang —</option>
       </select>
+      <button class="login-btn primary green" onclick="nextEmployeeStep()">
+        <span>➡️ Davom etish</span>
+      </button>
+      <button class="login-btn back" onclick="backToStep1()">
+        <span>← Orqaga</span>
+      </button>
+    </div>
+
+    <!-- Employee: parol kiritish (mavjud parol) -->
+    <div id="loginStepEmployeePass" style="display:none">
+      <div class="login-question" id="empPassQuestion">🔒 Parolni kiriting</div>
+      <div class="login-info" id="empPassInfo"></div>
+      <div class="login-error" id="errEmployeePass"></div>
       <label class="pass-label">Parol</label>
       <div class="pass-wrap">
         <span class="pass-icon">🔒</span>
         <input type="password" class="pass-input" id="empPass" 
                placeholder="••••••" autocomplete="off"
-               onkeydown="if(event.key==='Enter') loginEmployee()">
+               onkeydown="if(event.key==='Enter') loginEmployeePass()">
         <button class="pass-toggle" onclick="togglePass('empPass', this)">👁️</button>
       </div>
-      <button class="login-btn primary green" onclick="loginEmployee()">
+      <button class="login-btn primary green" onclick="loginEmployeePass()">
         <span>🔓 Kirish</span>
       </button>
-      <button class="login-btn back" onclick="backToStep1()">
+      <button class="login-btn back" onclick="backToEmployeeSelect()">
+        <span>← Orqaga</span>
+      </button>
+    </div>
+
+    <!-- Employee: birinchi marta parol yaratish -->
+    <div id="loginStepEmployeeSetup" style="display:none">
+      <div class="login-question">🎉 Xush kelibsiz!</div>
+      <div class="login-info" id="empSetupInfo">
+        <strong>Birinchi kirish</strong>
+        Iltimos, o'zingizga parol o'ylab toping.<br>
+        Har safar shu parol bilan kirasiz.
+      </div>
+      <div class="login-error" id="errEmployeeSetup"></div>
+      <label class="pass-label">Yangi parol (min 4 belgi)</label>
+      <div class="pass-wrap">
+        <span class="pass-icon">🔒</span>
+        <input type="password" class="pass-input" id="empSetupPass1" 
+               placeholder="••••••" autocomplete="off">
+        <button class="pass-toggle" onclick="togglePass('empSetupPass1', this)">👁️</button>
+      </div>
+      <label class="pass-label">Parolni takrorlang</label>
+      <div class="pass-wrap">
+        <span class="pass-icon">🔒</span>
+        <input type="password" class="pass-input" id="empSetupPass2" 
+               placeholder="••••••" autocomplete="off"
+               onkeydown="if(event.key==='Enter') setupEmployeePassword()">
+        <button class="pass-toggle" onclick="togglePass('empSetupPass2', this)">👁️</button>
+      </div>
+      <button class="login-btn primary green" onclick="setupEmployeePassword()">
+        <span>✅ Parolni saqlash va kirish</span>
+      </button>
+      <button class="login-btn back" onclick="backToEmployeeSelect()">
         <span>← Orqaga</span>
       </button>
     </div>
@@ -731,9 +774,10 @@ const DB = {
 
 let currentUser = { role: null, employeeId: null, employeeName: null };
 let currentTab = 'employees';
+let tempEmployeeId = null; // Xodim tanlanganda saqlanadi
 
 // =========================================================
-// PAROL XESHLASH (oddiy)
+// PAROL XESHLASH
 // =========================================================
 function hashPassword(pwd){
   let hash = 0;
@@ -747,9 +791,6 @@ function hashPassword(pwd){
   return 'h' + Math.abs(hash).toString(36);
 }
 
-// =========================================================
-// FOYDALANUVCHI
-// =========================================================
 function loadUser(){
   const data = localStorage.getItem('store_control_user');
   if(data){ try{ const p = JSON.parse(data); if(p.role) currentUser = p; }catch(e){} }
@@ -758,18 +799,10 @@ function saveUser(){ localStorage.setItem('store_control_user', JSON.stringify(c
 function clearUser(){ localStorage.removeItem('store_control_user'); currentUser = {role:null,employeeId:null,employeeName:null}; }
 function isManager(){ return currentUser.role === 'manager'; }
 
-// =========================================================
-// PAROLNI KO'RSATISH/YASHIRISH
-// =========================================================
 function togglePass(inputId, btn){
   const input = document.getElementById(inputId);
-  if(input.type === 'password'){
-    input.type = 'text';
-    btn.textContent = '🙈';
-  } else {
-    input.type = 'password';
-    btn.textContent = '👁️';
-  }
+  if(input.type === 'password'){ input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁️'; }
 }
 
 function showError(id, msg){
@@ -783,126 +816,133 @@ function showError(id, msg){
 // =========================================================
 // LOGIN FLOW
 // =========================================================
-function selectRole(role){
-  // Barcha step'larni yashirish
-  ['loginStep1','loginStepManager','loginStepManagerSetup','loginStepEmployee'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
+function hideAllLoginSteps(){
+  ['loginStep1','loginStepManager','loginStepManagerSetup',
+   'loginStepEmployee','loginStepEmployeePass','loginStepEmployeeSetup']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+}
 
+function selectRole(role){
+  hideAllLoginSteps();
   if(role === 'manager'){
     if(!DB.managerPassword){
-      // Birinchi marta — parol yaratish
       document.getElementById('loginStepManagerSetup').style.display = 'block';
     } else {
-      // Parol kiritish
       document.getElementById('loginStepManager').style.display = 'block';
       setTimeout(() => document.getElementById('mgrPass').focus(), 200);
     }
   } else {
-    // Xodim
     if(!DB.employees.length){
       toast('⚠️ Xodimlar yo\'q. Menejerga murojaat qiling!', 'error');
       return;
     }
     const select = document.getElementById('employeeSelect');
     select.innerHTML = '<option value="">— Xodimni tanlang —</option>' +
-      DB.employees.map(e => `<option value="${e.id}">${esc(e.name)} (${zoneName(e.zone).replace(/^[^\s]+\s/,'')})</option>`).join('');
+      DB.employees.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('');
     document.getElementById('loginStepEmployee').style.display = 'block';
   }
 }
 
 function backToStep1(){
-  ['loginStepManager','loginStepManagerSetup','loginStepEmployee'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
+  hideAllLoginSteps();
   document.getElementById('loginStep1').style.display = 'block';
-  // Maydonlarni tozalash
-  document.getElementById('mgrPass').value = '';
-  document.getElementById('empPass').value = '';
-  document.getElementById('setupPass1').value = '';
-  document.getElementById('setupPass2').value = '';
+  ['mgrPass','empPass','setupPass1','setupPass2','empSetupPass1','empSetupPass2'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
   document.getElementById('employeeSelect').value = '';
+  tempEmployeeId = null;
 }
 
-// Menejer parolini yaratish (birinchi marta)
+function backToEmployeeSelect(){
+  hideAllLoginSteps();
+  document.getElementById('loginStepEmployee').style.display = 'block';
+  document.getElementById('empPass').value = '';
+  document.getElementById('empSetupPass1').value = '';
+  document.getElementById('empSetupPass2').value = '';
+}
+
+// Manager setup
 function setupManagerPassword(){
   const p1 = document.getElementById('setupPass1').value;
   const p2 = document.getElementById('setupPass2').value;
-
-  if(p1.length < 4){
-    showError('errManagerSetup', '⚠️ Parol kamida 4 belgidan iborat bo\'lsin!');
-    return;
-  }
-  if(p1 !== p2){
-    showError('errManagerSetup', '⚠️ Parollar mos kelmadi!');
-    return;
-  }
-
+  if(p1.length < 4){ showError('errManagerSetup', '⚠️ Parol kamida 4 belgi!'); return; }
+  if(p1 !== p2){ showError('errManagerSetup', '⚠️ Parollar mos kelmadi!'); return; }
   DB.managerPassword = hashPassword(p1);
   DB.save();
-
   toast('✅ Parol yaratildi!', 'success');
-
-  // Darhol kirish
   currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
-  saveUser();
-  enterApp();
+  saveUser(); enterApp();
 }
 
-// Menejer kirishi
 function loginManager(){
   const pwd = document.getElementById('mgrPass').value;
-  if(!pwd){
-    showError('errManager', '⚠️ Parolni kiriting!');
-    return;
-  }
+  if(!pwd){ showError('errManager', '⚠️ Parolni kiriting!'); return; }
   if(hashPassword(pwd) !== DB.managerPassword){
     showError('errManager', '❌ Parol noto\'g\'ri!');
-    document.getElementById('mgrPass').value = '';
-    return;
+    document.getElementById('mgrPass').value = ''; return;
   }
   currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
-  saveUser();
-  enterApp();
+  saveUser(); enterApp();
 }
 
-// Xodim kirishi
-function loginEmployee(){
+// Employee: xodimni tanlash -> keyingi qadam
+function nextEmployeeStep(){
   const empId = parseInt(document.getElementById('employeeSelect').value);
-  const pwd = document.getElementById('empPass').value;
-
-  if(!empId){
-    showError('errEmployee', '⚠️ Xodimni tanlang!');
-    return;
-  }
-  if(!pwd){
-    showError('errEmployee', '⚠️ Parolni kiriting!');
-    return;
-  }
-
+  if(!empId){ showError('errEmployee', '⚠️ Xodimni tanlang!'); return; }
   const emp = DB.employees.find(e => e.id === empId);
-  if(!emp){
-    showError('errEmployee', '❌ Xodim topilmadi!');
-    return;
-  }
-  if(!emp.passwordHash){
-    showError('errEmployee', '❌ Parol o\'rnatilmagan. Menejerga murojaat qiling!');
-    return;
-  }
-  if(hashPassword(pwd) !== emp.passwordHash){
-    showError('errEmployee', '❌ Parol noto\'g\'ri!');
-    document.getElementById('empPass').value = '';
-    return;
-  }
+  if(!emp){ showError('errEmployee', '❌ Xodim topilmadi!'); return; }
+  tempEmployeeId = empId;
 
-  currentUser = { role: 'employee', employeeId: empId, employeeName: emp.name };
-  saveUser();
-  enterApp();
+  if(!emp.passwordHash){
+    // Parol yo'q — parol yaratish
+    document.getElementById('empSetupInfo').innerHTML =
+      `<strong>Xush kelibsiz, ${esc(emp.name)}!</strong><br>
+       Siz birinchi marta kirmoqdasiz.<br>
+       Iltimos, o'zingizga parol o'ylab toping.`;
+    hideAllLoginSteps();
+    document.getElementById('loginStepEmployeeSetup').style.display = 'block';
+  } else {
+    // Parol bor — parol kiritish
+    document.getElementById('empPassInfo').innerHTML =
+      `<strong>Salom, ${esc(emp.name)}!</strong><br>
+       Parolingizni kiriting.`;
+    hideAllLoginSteps();
+    document.getElementById('loginStepEmployeePass').style.display = 'block';
+    setTimeout(() => document.getElementById('empPass').focus(), 200);
+  }
 }
 
-// =========================================================
-// APP ENTRY
-// =========================================================
+// Employee login (parol bor)
+function loginEmployeePass(){
+  const pwd = document.getElementById('empPass').value;
+  if(!pwd){ showError('errEmployeePass', '⚠️ Parolni kiriting!'); return; }
+  const emp = DB.employees.find(e => e.id === tempEmployeeId);
+  if(!emp){ showError('errEmployeePass', '❌ Xodim topilmadi!'); return; }
+  if(hashPassword(pwd) !== emp.passwordHash){
+    showError('errEmployeePass', '❌ Parol noto\'g\'ri!');
+    document.getElementById('empPass').value = ''; return;
+  }
+  currentUser = { role: 'employee', employeeId: emp.id, employeeName: emp.name };
+  saveUser(); enterApp();
+}
+
+// Employee setup (birinchi marta)
+function setupEmployeePassword(){
+  const p1 = document.getElementById('empSetupPass1').value;
+  const p2 = document.getElementById('empSetupPass2').value;
+  if(p1.length < 4){ showError('errEmployeeSetup', '⚠️ Parol kamida 4 belgi!'); return; }
+  if(p1 !== p2){ showError('errEmployeeSetup', '⚠️ Parollar mos kelmadi!'); return; }
+  const emp = DB.employees.find(e => e.id === tempEmployeeId);
+  if(!emp){ showError('errEmployeeSetup', '❌ Xodim topilmadi!'); return; }
+  emp.passwordHash = hashPassword(p1);
+  DB.save();
+  toast('✅ Parol yaratildi! Endi har safar shu parol bilan kirasiz', 'success');
+  currentUser = { role: 'employee', employeeId: emp.id, employeeName: emp.name };
+  saveUser();
+  setTimeout(() => enterApp(), 800);
+}
+
 function enterApp(){
   document.getElementById('login').classList.add('hide');
   document.getElementById('mainApp').style.display = '';
@@ -961,7 +1001,7 @@ function toast(msg, type){
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + (type||'');
   setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>t.classList.remove('show'),2500);
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 function empty(ico, txt){
   return '<div class="empty"><div class="ico">'+ico+'</div><p>'+txt.replace(/\n/g,'<br>')+'</p></div>';
@@ -986,6 +1026,10 @@ function fmtDateTime(d){
 function zoneName(id){
   const z = ZONES.find(x => x.id === id);
   return z ? z.name : '—';
+}
+function shiftName(id){
+  const s = DB.shifts.find(x => x.id === id);
+  return s ? s.name : '—';
 }
 
 // =========================================================
@@ -1074,20 +1118,34 @@ function renderEmployees(){
     sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!');
     return;
   }
-  sec.innerHTML = DB.employees.map(e=>`
-    <div class="list-item">
-      <div class="avatar blue">${e.id}</div>
-      <div class="info">
-        <div class="title">${esc(e.name)}</div>
-        <div class="sub">${esc(e.phone)||'—'} • ${zoneName(e.zone)}</div>
+  sec.innerHTML = DB.employees.map(e => {
+    const hasPass = !!e.passwordHash;
+    const passBadge = hasPass
+      ? '<span class="badge green">✅ Parol bor</span>'
+      : '<span class="badge orange">⏳ Parol yo\'q</span>';
+    return `
+    <div class="list-item" style="flex-direction:column;align-items:stretch">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="avatar blue">${e.id}</div>
+        <div class="info">
+          <div class="title">${esc(e.name)}</div>
+          <div class="sub">${esc(e.phone)||'—'}</div>
+        </div>
+        ${badge(e.role,'blue')}
       </div>
-      ${badge(e.role,'blue')}
-      ${isManager() ? `
-        <button class="btn-del" onclick="resetEmployeePassword(${e.id})" title="Parolni yangilash">🔑</button>
-        <button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>
-      ` : ''}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:6px">
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${badge(shiftName(e.shift_id), 'purple')}
+          ${passBadge}
+        </div>
+        <div style="display:flex;gap:6px">
+          ${isManager() && hasPass ? `<button class="btn btn-warning btn-sm" onclick="resetEmployeePassword(${e.id})">🔑 Parolni tiklash</button>` : ''}
+          ${isManager() ? `<button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>` : ''}
+        </div>
+      </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // =========================================================
@@ -1185,7 +1243,7 @@ function renderReports(){
             const photo = photos[pt.id];
             if(!photo) return '';
             return `
-              <div class="report-photo" onclick="viewPhoto('${photo}', '${pt.name}')">
+              <div class="report-photo" onclick="viewPhoto('${photo.replace(/'/g, "\\'")}', '${pt.name}')">
                 <img src="${photo}" alt="${pt.name}">
                 <div class="caption">${pt.name}</div>
               </div>`;
@@ -1364,7 +1422,7 @@ function startTask(id){
   if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
     toast('❌ Bu sizning topshirig\'ingiz emas!', 'error'); return;
   }
-  t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Topshiriq boshlandi','success');
+  t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Boshlandi','success');
 }
 function completeTask(id){
   const t = DB.tasks.find(x=>x.id===id);
@@ -1373,7 +1431,7 @@ function completeTask(id){
     toast('❌ Bu sizning topshirig\'ingiz emas!', 'error'); return;
   }
   t.status = 'completed'; t.completed_at = new Date().toISOString();
-  DB.save(); refresh(); toast('✅ Topshiriq yakunlandi','success');
+  DB.save(); refresh(); toast('✅ Yakunlandi','success');
 }
 function deleteItem(table, id){
   if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
@@ -1388,51 +1446,21 @@ function deleteBatch(id){
   DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
 }
 
-// Parolni yangilash (menejer xodim uchun)
+// Parolni tiklash — xodim qayta parol yaratadi
 function resetEmployeePassword(empId){
   if(!isManager()) return;
   const emp = DB.employees.find(e => e.id === empId);
   if(!emp) return;
-  const modal = document.getElementById('modalContent');
-  modal.innerHTML = `
-    <h3>🔑 ${esc(emp.name)} uchun yangi parol</h3>
-    <div class="field">
-      <label>Yangi parol (min 4 belgi)</label>
-      <input type="password" id="resetPass1" placeholder="••••••">
-    </div>
-    <div class="field">
-      <label>Parolni takrorlang</label>
-      <input type="password" id="resetPass2" placeholder="••••••">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-      <button class="btn btn-primary btn-lg" onclick="saveResetPassword(${empId})">Saqlash</button>
-    </div>
-  `;
-  document.getElementById('modalBg').classList.add('show');
-}
-
-function saveResetPassword(empId){
-  const p1 = document.getElementById('resetPass1').value;
-  const p2 = document.getElementById('resetPass2').value;
-  if(p1.length < 4){ toast('⚠️ Kamida 4 belgi!', 'error'); return; }
-  if(p1 !== p2){ toast('⚠️ Parollar mos kelmadi!', 'error'); return; }
-  const emp = DB.employees.find(e => e.id === empId);
-  if(!emp) return;
-  emp.passwordHash = hashPassword(p1);
-  DB.save(); closeModal(); refresh();
-  toast('✅ Parol yangilandi!', 'success');
+  if(!confirm(`${emp.name} parolini o'chirib, yangidan yaratishga ruxsat berasizmi?\n\nXodim keyingi kirishda yangi parol o'rnatadi.`)) return;
+  emp.passwordHash = null;
+  DB.save(); refresh();
+  toast('✅ Parol o\'chirildi. Xodim keyingi kirishda yangi parol yaratadi', 'success');
 }
 
 // =========================================================
 // SMENANI YAKUNLASH — FOTO HISOBOT
 // =========================================================
-let endShiftData = {
-  shiftInstanceId: null,
-  zone: null,
-  photos: {},
-  note: ''
-};
+let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, note: '' };
 
 function openEndShiftModal(siId){
   const si = DB.shift_instances.find(x => x.id === siId);
@@ -1449,7 +1477,7 @@ function openEndShiftModal(siId){
       <span style="color:#666">${esc(shift ? shift.name : '—')}</span>
     </div>
     <div class="field">
-      <label>📍 Bo'limni tanlang *</label>
+      <label>📍 Qaysi bo'limda ishladingiz? *</label>
       <div class="zone-grid" id="zoneGrid">
         ${ZONES.map(z => `
           <button class="zone-btn" data-zone="${z.id}" onclick="selectZone('${z.id}')">
@@ -1483,7 +1511,7 @@ function openEndShiftModal(siId){
     </div>
     <div class="modal-actions">
       <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-      <button class="btn btn-warning btn-lg" onclick="confirmEndShift()">✅ Smenani yakunlash</button>
+      <button class="btn btn-warning btn-lg" onclick="confirmEndShift()">✅ Yakunlash</button>
     </div>
   `;
   document.getElementById('modalBg').classList.add('show');
@@ -1505,21 +1533,16 @@ async function handlePhoto(typeId, input){
   try {
     const compressed = await compressImage(file, 700, 0.7);
     endShiftData.photos[typeId] = compressed;
-    const uploadEl = document.getElementById('upload-' + typeId);
-    uploadEl.classList.add('done');
+    document.getElementById('upload-' + typeId).classList.add('done');
     document.getElementById('preview-' + typeId).src = compressed;
     toast('✅ Foto qo\'shildi', 'success');
   } catch(e){ toast('❌ Xato: ' + e.message, 'error'); }
 }
 
 function confirmEndShift(){
-  if(!endShiftData.zone){
-    toast('⚠️ Bo\'limni tanlang!', 'error'); return;
-  }
+  if(!endShiftData.zone){ toast('⚠️ Bo\'limni tanlang!', 'error'); return; }
   const missing = PHOTO_TYPES.filter(pt => !endShiftData.photos[pt.id]);
-  if(missing.length){
-    toast('⚠️ ' + missing.length + ' ta foto yetishmayapti!', 'error'); return;
-  }
+  if(missing.length){ toast('⚠️ ' + missing.length + ' ta foto yetishmayapti!', 'error'); return; }
   const si = DB.shift_instances.find(x => x.id === endShiftData.shiftInstanceId);
   if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
   si.status = 'ended';
@@ -1539,7 +1562,7 @@ function confirmEndShift(){
 }
 
 // =========================================================
-// MODAL — Boshqa formlar
+// MODAL
 // =========================================================
 function openModal(){
   const today = new Date().toISOString().slice(0,10);
@@ -1548,23 +1571,21 @@ function openModal(){
   const forms = {
     employees: `
       <h3>➕ Yangi xodim</h3>
+      <div class="login-info" style="text-align:left;font-size:12px;margin-bottom:14px">
+        <strong>ℹ️ Eslatma:</strong>
+        Xodim parolni <b>o'zi</b> birinchi kirganda yaratadi.
+        Siz faqat ma'lumotlarini kiritasiz.
+      </div>
       <div class="field"><label>Ism *</label><input id="f_name" placeholder="Ali Valiyev" autofocus></div>
       <div class="field"><label>Telefon</label><input id="f_phone" placeholder="+998901234567" inputmode="tel"></div>
       <div class="field"><label>Rol</label>
         <select id="f_role"><option value="employee">Xodim</option><option value="manager">Menejer</option></select></div>
-      <div class="field"><label>Bo'lim *</label>
-        <select id="f_zone">
-          <option value="">— Tanlang —</option>
-          ${ZONES.map(z => `<option value="${z.id}">${z.name}</option>`).join('')}
-        </select></div>
-      <div class="field">
-        <label>Parol * (min 4 belgi)</label>
-        <input type="password" id="f_pass1" placeholder="••••••" autocomplete="new-password">
-        <span class="hint">Xodim shu parol bilan kiradi</span>
-      </div>
-      <div class="field">
-        <label>Parolni takrorlang *</label>
-        <input type="password" id="f_pass2" placeholder="••••••" autocomplete="new-password">
+      <div class="field"><label>Smena *</label>
+        <select id="f_shift">
+          <option value="">— Smenani tanlang —</option>
+          ${DB.shifts.map(s => `<option value="${s.id}">${s.name} (${s.start_time}-${s.end_time})</option>`).join('')}
+        </select>
+        <span class="hint">Xodim qaysi smenada ishlaydi</span>
       </div>
       <div class="modal-actions">
         <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
@@ -1671,18 +1692,9 @@ function openChangePassword(){
   const modal = document.getElementById('modalContent');
   modal.innerHTML = `
     <h3>🔑 Parolni o'zgartirish</h3>
-    <div class="field">
-      <label>Joriy parol</label>
-      <input type="password" id="cp_old" placeholder="••••••">
-    </div>
-    <div class="field">
-      <label>Yangi parol (min 4 belgi)</label>
-      <input type="password" id="cp_new1" placeholder="••••••">
-    </div>
-    <div class="field">
-      <label>Yangi parolni takrorlang</label>
-      <input type="password" id="cp_new2" placeholder="••••••">
-    </div>
+    <div class="field"><label>Joriy parol</label><input type="password" id="cp_old" placeholder="••••••"></div>
+    <div class="field"><label>Yangi parol (min 4 belgi)</label><input type="password" id="cp_new1" placeholder="••••••"></div>
+    <div class="field"><label>Yangi parolni takrorlang</label><input type="password" id="cp_new2" placeholder="••••••"></div>
     <div class="modal-actions">
       <button class="btn btn-cancel btn-lg" onclick="openSettings()">Bekor</button>
       <button class="btn btn-primary btn-lg" onclick="saveChangePassword()">Saqlash</button>
@@ -1694,9 +1706,7 @@ function saveChangePassword(){
   const oldPass = document.getElementById('cp_old').value;
   const p1 = document.getElementById('cp_new1').value;
   const p2 = document.getElementById('cp_new2').value;
-  if(hashPassword(oldPass) !== DB.managerPassword){
-    toast('❌ Joriy parol noto\'g\'ri!', 'error'); return;
-  }
+  if(hashPassword(oldPass) !== DB.managerPassword){ toast('❌ Joriy parol noto\'g\'ri!', 'error'); return; }
   if(p1.length < 4){ toast('⚠️ Kamida 4 belgi!', 'error'); return; }
   if(p1 !== p2){ toast('⚠️ Parollar mos kelmadi!', 'error'); return; }
   DB.managerPassword = hashPassword(p1);
@@ -1741,14 +1751,12 @@ function save(type){
 
   if(type==='employees'){
     if(!v('f_name')) return toast('Ism kiritilishi shart','error');
-    if(!v('f_zone')) return toast('Bo\'limni tanlang!','error');
-    const p1 = v('f_pass1'), p2 = v('f_pass2');
-    if(p1.length < 4) return toast('⚠️ Parol kamida 4 belgi!','error');
-    if(p1 !== p2) return toast('⚠️ Parollar mos kelmadi!','error');
+    if(!n('f_shift')) return toast('Smenani tanlang!','error');
     DB.employees.push({
-      id: DB.nextId('employees'), store_id: 1, name: v('f_name'),
-      phone: v('f_phone')||null, role: v('f_role'), zone: v('f_zone'),
-      passwordHash: hashPassword(p1),
+      id: DB.nextId('employees'), store_id: 1,
+      name: v('f_name'), phone: v('f_phone')||null,
+      role: v('f_role'), shift_id: n('f_shift'),
+      passwordHash: null, // Xodim o'zi yaratadi!
       status: 'active', created_at: new Date().toISOString()
     });
   }
@@ -1840,8 +1848,6 @@ window.addEventListener('load', () => {
       splash.classList.add('hide');
       setTimeout(() => splash.remove(), 600);
     }
-    // Avtomatik kirish YO'Q — har safar parol so'raladi!
-    // Faqat login ekranida qoladi
   }, 1500);
 });
 
