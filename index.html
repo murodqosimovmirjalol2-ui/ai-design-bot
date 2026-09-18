@@ -21,6 +21,7 @@ position:relative;padding-bottom:90px;transition:background .3s}
 .sidebar{display:none}
 .desktop-wrapper{display:contents}
 
+/* SPLASH */
 #splash{position:fixed;inset:0;z-index:99999;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -43,12 +44,13 @@ animation:bounce 1.4s ease-in-out infinite both}
 .splash-loader span:nth-child(3){animation-delay:.32s}
 @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
+/* LOGIN */
 #login{position:fixed;inset:0;z-index:9998;
 background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 padding:20px;padding-top:max(20px, env(safe-area-inset-top));
 padding-bottom:max(20px, env(safe-area-inset-bottom));
-overflow-y:auto;-webkit-overflow-scrolling:touch;
-display:block;transition:opacity .4s ease,visibility .4s ease}
+overflow-y:auto;-webkit-overflow-scrolling:touch;display:block;
+transition:opacity .4s ease,visibility .4s ease}
 #login.hide{opacity:0;visibility:hidden;pointer-events:none}
 .login-container{width:100%;max-width:420px;
 background:white;border-radius:24px;padding:28px 22px;
@@ -82,7 +84,6 @@ box-shadow:0 8px 24px rgba(102,126,234,.15)}
 border-radius:16px;display:flex;align-items:center;justify-content:center}
 .role-btn.employee .ico{background:#d1fae5;width:60px;height:60px;
 border-radius:16px;display:flex;align-items:center;justify-content:center}
-
 .pass-wrap{position:relative;margin-bottom:14px}
 .pass-input{width:100%;padding:14px 44px 14px 44px;border:2px solid #e5e7eb;
 border-radius:12px;font-size:16px;font-family:inherit;
@@ -122,6 +123,7 @@ text-align:center;font-weight:600}
 .login-error.show{display:block;animation:shake .3s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
+/* HEADER */
 .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
 box-shadow:0 4px 20px rgba(102,126,234,.3)}
@@ -141,6 +143,7 @@ display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px
 transition:background .2s;flex-shrink:0}
 .icon-btn:hover{background:rgba(255,255,255,.3)}
 
+/* STATS */
 .stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:white;border-radius:14px;padding:14px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
@@ -156,6 +159,7 @@ transition:transform .2s,background .3s}
 letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
 
+/* NAV */
 .nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
 display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
 position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;transition:background .3s}
@@ -170,6 +174,7 @@ color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
 body.employee-mode .nav-btn.active{background:linear-gradient(135deg,#10b981,#059669);
 box-shadow:0 4px 12px rgba(16,185,129,.3)}
 
+/* CONTENT */
 .content{padding:0 12px}
 .section{display:none}
 .section.active{display:block}
@@ -177,7 +182,6 @@ box-shadow:0 4px 12px rgba(16,185,129,.3)}
 box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
 gap:12px;animation:fadeIn .3s;transition:box-shadow .2s,background .3s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
-
 .avatar{width:42px;height:42px;border-radius:50%;display:flex;
 align-items:center;justify-content:center;font-weight:800;color:white;
 font-size:14px;flex-shrink:0}
@@ -187,13 +191,11 @@ font-size:14px;flex-shrink:0}
 .avatar.orange{background:#f59e0b}
 .avatar.red{background:#ef4444}
 .avatar.yellow{background:#eab308}
-
 .info{flex:1;min-width:0}
 .info .title{font-weight:700;font-size:14px;margin-bottom:2px;
 white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .info .sub{font-size:12px;color:#888;
 white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
 .badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
 .badge.blue{background:#dbeafe;color:#1e40af}
 .badge.green{background:#d1fae5;color:#065f46}
@@ -202,7 +204,6 @@ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .badge.purple{background:#ede9fe;color:#6b21a8}
 .badge.yellow{background:#fef9c3;color:#854d0e}
 .badge.gray{background:#f3f4f6;color:#4b5563}
-
 .actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .btn{padding:6px 12px;border:none;border-radius:8px;font-size:11px;
 font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
@@ -216,6 +217,7 @@ font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
 border-radius:8px;border:none;cursor:pointer}
 .btn-del:hover{background:#fecaca}
 
+/* SROK */
 .srok-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
 box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
 gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:background .3s}
@@ -274,20 +276,43 @@ outline:none;border-color:#667eea;background:white}
 .btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
 .btn-cancel{background:#f3f4f6;color:#666}
 
+/* SMENA TANLASH */
+.shift-select-btn{padding:12px 8px;border:2px solid #e5e7eb;border-radius:12px;
+background:white;cursor:pointer;font-family:inherit;transition:all .2s;
+text-align:center;display:flex;flex-direction:column;gap:4px;
+min-height:80px;justify-content:center}
+.shift-select-btn:hover{border-color:#667eea;background:#f0f4ff}
+.shift-select-btn.selected{border-color:#667eea;background:#ede9fe}
+
+/* KO'P FOTO GRID */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.photo-thumb{position:relative;aspect-ratio:1;border-radius:10px;
+overflow:hidden;background:#f3f4f6;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-thumb .remove{position:absolute;top:4px;right:4px;
+width:22px;height:22px;border-radius:50%;background:rgba(220,38,38,.9);
+color:white;border:none;cursor:pointer;font-size:12px;
+display:flex;align-items:center;justify-content:center;font-weight:700;
+box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.photo-thumb .remove:hover{background:#dc2626}
+.photo-count{position:absolute;bottom:4px;left:4px;
+background:rgba(0,0,0,.7);color:white;font-size:10px;
+padding:2px 6px;border-radius:8px;font-weight:600}
+.photo-add-btn{aspect-ratio:1;border-radius:10px;
+border:2px dashed #cbd5e1;background:#fafbfc;cursor:pointer;
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:4px;font-family:inherit;color:#667eea;font-weight:700;font-size:11px;
+transition:all .2s}
+.photo-add-btn:hover{border-color:#667eea;background:#f0f4ff;transform:scale(1.02)}
+.photo-add-btn .plus{font-size:24px;line-height:1}
 .photo-upload{border:2px dashed #cbd5e1;border-radius:12px;padding:16px;
-text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc;
-margin-bottom:12px;position:relative}
-.photo-upload:hover{border-color:#667eea;background:#f0f4ff}
-.photo-upload.done{border-color:#10b981;background:#f0fdf4;border-style:solid}
+transition:all .2s;background:#fafbfc;margin-bottom:12px;position:relative}
+.photo-upload.has-photos{border-color:#10b981;background:#f0fdf4;border-style:solid}
 .photo-upload .label-row{display:flex;align-items:center;gap:10px;
 justify-content:space-between;margin-bottom:8px}
 .photo-upload .label-row strong{font-size:13px;color:#333;font-weight:700}
-.photo-upload .label-row .check{font-size:20px;color:#10b981;display:none}
-.photo-upload.done .check{display:block}
+.photo-upload .label-row .check{font-size:20px;color:#10b981}
 .photo-upload .hint{font-size:11px;color:#888}
-.photo-upload .preview{width:100%;max-height:200px;border-radius:10px;
-object-fit:cover;margin-top:8px;display:none;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-.photo-upload.done .preview{display:block}
 
 .zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .zone-btn{padding:12px 8px;border:2px solid #e5e7eb;border-radius:10px;
@@ -302,13 +327,6 @@ flex-direction:column;align-items:center;gap:4px}
 margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:background .3s}
 .report-header{display:flex;justify-content:space-between;align-items:center;
 margin-bottom:10px;flex-wrap:wrap;gap:6px}
-.report-photos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.report-photo{position:relative;border-radius:10px;overflow:hidden;
-aspect-ratio:1;background:#f3f4f6;cursor:pointer}
-.report-photo img{width:100%;height:100%;object-fit:cover}
-.report-photo .caption{position:absolute;bottom:0;left:0;right:0;
-background:linear-gradient(transparent,rgba(0,0,0,.8));color:white;
-padding:16px 6px 4px;font-size:9px;font-weight:600;text-align:center}
 
 .toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
 background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
@@ -384,7 +402,7 @@ font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
   .srok-stats{grid-template-columns:repeat(5,1fr);padding:24px 32px 12px;gap:16px}
   .srok-stat .num{font-size:28px}
   .zone-grid{grid-template-columns:repeat(4,1fr)}
-  .report-photos{grid-template-columns:repeat(4,1fr)}
+  .photo-grid{grid-template-columns:repeat(5,1fr)}
 }
 @media (min-width:1200px){
   .desktop-wrapper{grid-template-columns:280px 1fr}
@@ -424,14 +442,20 @@ body.dark .role-btn .txt strong{color:#f1f5f9}
 body.dark .role-btn .txt span{color:#94a3b8}
 body.dark .login-btn.back{background:#334155;color:#cbd5e1}
 body.dark .photo-upload{background:#0f172a;border-color:#334155}
-body.dark .photo-upload:hover{border-color:#667eea;background:#1e1b4b}
-body.dark .photo-upload.done{background:#064e3b;border-color:#10b981}
+body.dark .photo-upload.has-photos{background:#064e3b;border-color:#10b981}
 body.dark .photo-upload .label-row strong{color:#f1f5f9}
+body.dark .photo-add-btn{background:#0f172a;border-color:#334155;color:#8b5cf6}
+body.dark .photo-add-btn:hover{background:#1e1b4b;border-color:#8b5cf6}
+body.dark .photo-thumb{background:#0f172a}
 body.dark .zone-btn{background:#0f172a;border-color:#334155;color:#cbd5e1}
 body.dark .zone-btn.active{background:#4c1d95;border-color:#8b5cf6;color:white}
 body.dark .login-info{background:#1e1b4b;color:#cbd5e1;border-left-color:#8b5cf6}
 body.dark .login-info strong{color:#f1f5f9}
 body.dark .login-error{background:#7f1d1d;color:#fecaca}
+body.dark .shift-select-btn{background:#0f172a;border-color:#334155;color:#cbd5e1}
+body.dark .shift-select-btn:hover{background:#1e1b4b;border-color:#667eea}
+body.dark .shift-select-btn.selected{background:#4c1d95;border-color:#8b5cf6}
+body.dark .shift-select-btn span{color:inherit !important}
 </style>
 </head>
 <body>
@@ -443,7 +467,6 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
   <div class="splash-loader"><span></span><span></span><span></span></div>
 </div>
 
-<!-- LOGIN -->
 <div id="login">
   <div class="login-container">
     <img src="logo.png" class="login-logo" alt="Logo" onerror="this.style.display='none'">
@@ -624,6 +647,9 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
 <div class="toast" id="toast"></div>
 
 <script>
+// =========================================================
+// SOZLAMALAR
+// =========================================================
 const ZONES = [
   {id:'bread', name:'🍞 Non bo\'limi'},
   {id:'dairy', name:'🥛 Sut bo\'limi'},
@@ -636,12 +662,21 @@ const ZONES = [
 ];
 
 const PHOTO_TYPES = [
-  {id:'shelf', name:'🛒 Addellar to\'la', hint:'Barcha addellar to\'la turganini rasmga oling'},
-  {id:'fridge', name:'❄️ Xolodilniklar', hint:'Xolodilniklar ishlayotganini va to\'la ekanini ko\'rsating'},
-  {id:'prices', name:'💰 Narxlar yangilangan', hint:'Narx yorliqlari yangilanganini tekshiring'},
-  {id:'cleanliness', name:'🧹 Tozalik', hint:'Bo\'lim tozaligini rasmga oling'}
+  {id:'shelf', name:'🛒 Addellar to\'la', hint:'Har bir addehni alohida rasmga oling (kamida 3 ta)', min:3},
+  {id:'fridge', name:'❄️ Xolodilniklar', hint:'Har bir xolodilnikni rasmga oling (kamida 2 ta)', min:2},
+  {id:'prices', name:'💰 Narxlar yangilangan', hint:'Narx yorliqlarini rasmga oling (kamida 2 ta)', min:2},
+  {id:'cleanliness', name:'🧹 Tozalik', hint:'Bo\'lim tozaligini rasmga oling (kamida 1 ta)', min:1}
 ];
 
+const REQUIRED_SHIFTS = [
+  {id:1, name:"1-smena", start_time:"06:00", end_time:"14:00", ico:"🌅"},
+  {id:2, name:"2-smena", start_time:"14:00", end_time:"22:00", ico:"☀️"},
+  {id:3, name:"3-smena", start_time:"22:00", end_time:"06:00", ico:"🌙"}
+];
+
+// =========================================================
+// MA'LUMOTLAR BAZASI
+// =========================================================
 const DB = {
   stores: [], employees: [], shifts: [], shift_instances: [],
   tasks: [], products: [], product_batches: [], issues: [], reports: [],
@@ -657,15 +692,34 @@ const DB = {
         if(!Array.isArray(this.reports)) this.reports = [];
       } catch(e){ this.seed(); }
     } else { this.seed(); }
+    this.ensureShifts();
+  },
+
+  ensureShifts(){
+    if(!Array.isArray(this.shifts)) this.shifts = [];
+    let changed = false;
+    REQUIRED_SHIFTS.forEach(req => {
+      const exists = this.shifts.find(s => s.id === req.id);
+      if(!exists){
+        this.shifts.push({
+          id: req.id, store_id: 1,
+          name: req.name,
+          start_time: req.start_time,
+          end_time: req.end_time
+        });
+        changed = true;
+      }
+    });
+    this.shifts.sort((a,b) => a.id - b.id);
+    if(changed) this.save();
   },
 
   seed(){
     this.stores = [{id:1, name:"Asosiy Do'kon", address:"Toshkent"}];
-    this.shifts = [
-      {id:1, store_id:1, name:"1-smena", start_time:"06:00", end_time:"14:00"},
-      {id:2, store_id:1, name:"2-smena", start_time:"14:00", end_time:"22:00"},
-      {id:3, store_id:1, name:"3-smena", start_time:"22:00", end_time:"06:00"}
-    ];
+    this.shifts = REQUIRED_SHIFTS.map(s => ({
+      id: s.id, store_id: 1, name: s.name,
+      start_time: s.start_time, end_time: s.end_time
+    }));
     this.product_batches = [];
     this.reports = [];
     this.managerPassword = null;
@@ -673,13 +727,18 @@ const DB = {
   },
 
   save(){
-    localStorage.setItem('store_control_db', JSON.stringify({
-      stores: this.stores, employees: this.employees, shifts: this.shifts,
-      shift_instances: this.shift_instances, tasks: this.tasks,
-      products: this.products, product_batches: this.product_batches,
-      issues: this.issues, reports: this.reports,
-      managerPassword: this.managerPassword
-    }));
+    try {
+      localStorage.setItem('store_control_db', JSON.stringify({
+        stores: this.stores, employees: this.employees, shifts: this.shifts,
+        shift_instances: this.shift_instances, tasks: this.tasks,
+        products: this.products, product_batches: this.product_batches,
+        issues: this.issues, reports: this.reports,
+        managerPassword: this.managerPassword
+      }));
+    } catch(e){
+      toast('⚠️ Xotira to\'lib qoldi! Eski hisobotlarni o\'chiring', 'error');
+      console.error(e);
+    }
   },
 
   nextId(table){
@@ -714,14 +773,22 @@ const DB = {
     if(typeof data.managerPassword === 'string' || data.managerPassword === null){
       this.managerPassword = data.managerPassword;
     }
+    this.ensureShifts();
     this.save();
   }
 };
 
+// =========================================================
+// HOLAT
+// =========================================================
 let currentUser = { role: null, employeeId: null, employeeName: null };
 let currentTab = 'employees';
 let tempEmployeeId = null;
+let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, note: '' };
 
+// =========================================================
+// PAROL XESHLASH
+// =========================================================
 function hashPassword(pwd){
   let hash = 0;
   const salt = 'store_control_2026_secure';
@@ -755,6 +822,9 @@ function showError(id, msg){
   setTimeout(() => el.classList.remove('show'), 4000);
 }
 
+// =========================================================
+// LOGIN
+// =========================================================
 function hideAllLoginSteps(){
   ['loginStep1','loginStepManager','loginStepManagerSetup',
    'loginStepEmployee','loginStepEmployeePass','loginStepEmployeeSetup']
@@ -901,6 +971,9 @@ function logout(){
   backToStep1();
 }
 
+// =========================================================
+// SROK
+// =========================================================
 function getSrokStatus(expiryDate){
   if(!expiryDate) return {cls:'normal', label:'—', days:null};
   const today = new Date(); today.setHours(0,0,0,0);
@@ -922,11 +995,14 @@ function srokStats(){
   return stats;
 }
 
+// =========================================================
+// YORDAMCHI
+// =========================================================
 function toast(msg, type){
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + (type||'');
   setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>t.classList.remove('show'),2800);
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 function empty(ico, txt){
   return '<div class="empty"><div class="ico">'+ico+'</div><p>'+txt.replace(/\n/g,'<br>')+'</p></div>';
@@ -957,6 +1033,9 @@ function shiftName(id){
   return s ? s.name : '—';
 }
 
+// =========================================================
+// FOTO SIQISH
+// =========================================================
 function compressImage(file, maxWidth = 700, quality = 0.7){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -978,6 +1057,9 @@ function compressImage(file, maxWidth = 700, quality = 0.7){
   });
 }
 
+// =========================================================
+// THEME
+// =========================================================
 function toggleTheme(){
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
@@ -992,6 +1074,9 @@ function toggleTheme(){
   }
 })();
 
+// =========================================================
+// STATS
+// =========================================================
 function loadStats(){
   const isEmp = currentUser.role === 'employee';
   let activeShifts, openTasks, reportsCount;
@@ -1025,6 +1110,9 @@ function loadStats(){
   setC('cnt-issue', openIssues);
 }
 
+// =========================================================
+// RENDER — XODIMLAR
+// =========================================================
 function renderEmployees(){
   const sec = document.getElementById('sec-employees');
   if(!DB.employees.length){
@@ -1052,7 +1140,7 @@ function renderEmployees(){
           ${passBadge}
         </div>
         <div style="display:flex;gap:6px">
-          ${isManager() && hasPass ? `<button class="btn btn-warning btn-sm" onclick="resetEmployeePassword(${e.id})">🔑 Parolni tiklash</button>` : ''}
+          ${isManager() && hasPass ? `<button class="btn btn-warning btn-sm" onclick="resetEmployeePassword(${e.id})">🔑 Parol</button>` : ''}
           ${isManager() ? `<button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>` : ''}
         </div>
       </div>
@@ -1061,6 +1149,9 @@ function renderEmployees(){
   }).join('');
 }
 
+// =========================================================
+// RENDER — SMENALAR
+// =========================================================
 function renderShifts(){
   const sec = document.getElementById('sec-shifts');
   const isMgr = isManager();
@@ -1116,23 +1207,28 @@ function renderShifts(){
   if(isMgr){
     allShifts = `
       <div style="margin:20px 0 10px;padding:0 4px;font-size:13px;font-weight:700;color:#666">
-        BARCHA SMENALAR
+        BARCHA SMENALAR (3 ta)
       </div>
-      ${DB.shifts.map(s => `
+      ${DB.shifts.slice(0,3).map(s => {
+        const info = REQUIRED_SHIFTS.find(r => r.id === s.id);
+        return `
         <div class="list-item">
-          <div class="avatar purple">${s.id}</div>
+          <div class="avatar purple">${info ? info.ico : s.id}</div>
           <div class="info">
             <div class="title">${esc(s.name)}</div>
             <div class="sub">${esc(s.start_time)} - ${esc(s.end_time)}</div>
           </div>
           ${badge('Smena', 'purple')}
         </div>
-      `).join('')}
+      `}).join('')}
     `;
   }
   sec.innerHTML = activeCard + allShifts;
 }
 
+// =========================================================
+// RENDER — HISOBOTLAR
+// =========================================================
 function renderReports(){
   const sec = document.getElementById('sec-reports');
   let reports = DB.reports;
@@ -1162,17 +1258,27 @@ function renderReports(){
           </div>
         </div>
         ${r.note ? `<div style="font-size:12px;color:#555;background:#f9fafb;padding:8px 10px;border-radius:8px;margin-bottom:10px">💬 ${esc(r.note)}</div>` : ''}
-        <div class="report-photos">
-          ${PHOTO_TYPES.map(pt => {
-            const photo = photos[pt.id];
-            if(!photo) return '';
-            return `
-              <div class="report-photo" onclick="viewPhoto('${photo.replace(/'/g, "\\'")}', '${pt.name}')">
-                <img src="${photo}" alt="${pt.name}">
-                <div class="caption">${pt.name}</div>
-              </div>`;
-          }).join('')}
-        </div>
+        ${PHOTO_TYPES.map(pt => {
+          let arr = photos[pt.id];
+          if(typeof arr === 'string') arr = [arr];
+          if(!Array.isArray(arr) || !arr.length) return '';
+          return `
+            <div style="margin-bottom:12px">
+              <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px;
+                          display:flex;justify-content:space-between;align-items:center">
+                <span>${pt.name}</span>
+                <span class="badge blue" style="font-size:10px">${arr.length} ta</span>
+              </div>
+              <div class="photo-grid">
+                ${arr.map((photo, idx) => `
+                  <div class="photo-thumb" onclick="viewPhoto('${photo.replace(/'/g, "\\'")}', '${pt.name} — ${idx+1}')">
+                    <img src="${photo}" alt="${pt.name}">
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
       </div>
     `;
   }).join('');
@@ -1190,6 +1296,9 @@ function viewPhoto(src, title){
   document.getElementById('modalBg').classList.add('show');
 }
 
+// =========================================================
+// RENDER — TOPSHIRIQLAR
+// =========================================================
 function renderTasks(){
   const sec = document.getElementById('sec-tasks');
   let tasks = DB.tasks;
@@ -1227,6 +1336,9 @@ function renderTasks(){
   }).join('');
 }
 
+// =========================================================
+// RENDER — TOVARLAR
+// =========================================================
 function renderProducts(){
   const sec = document.getElementById('sec-products');
   if(!DB.products.length){
@@ -1250,6 +1362,9 @@ function renderProducts(){
   }).join('');
 }
 
+// =========================================================
+// RENDER — SROK
+// =========================================================
 function renderExpiry(){
   const sec = document.getElementById('sec-expiry');
   if(!DB.product_batches.length){
@@ -1291,6 +1406,9 @@ function renderExpiry(){
   sec.innerHTML = statsHtml + '<div style="padding:0 12px">' + itemsHtml + '</div>';
 }
 
+// =========================================================
+// RENDER — MUAMMOLAR
+// =========================================================
 function renderIssues(){
   const sec = document.getElementById('sec-issues');
   if(!DB.issues.length){
@@ -1311,6 +1429,9 @@ function renderIssues(){
   `).join('');
 }
 
+// =========================================================
+// NAVIGATION
+// =========================================================
 function switchTab(name){
   currentTab = name;
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
@@ -1322,6 +1443,9 @@ function switchTab(name){
 document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
 document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
 
+// =========================================================
+// ACTIONS
+// =========================================================
 function startTask(id){
   const t = DB.tasks.find(x=>x.id===id);
   if(!t) return;
@@ -1359,11 +1483,12 @@ function resetEmployeePassword(empId){
   if(!confirm(`${emp.name} parolini o'chirib, yangidan yaratishga ruxsat berasizmi?\n\nXodim keyingi kirishda yangi parol o'rnatadi.`)) return;
   emp.passwordHash = null;
   DB.save(); refresh();
-  toast('✅ Parol o\'chirildi. Xodim keyingi kirishda yangi parol yaratadi', 'success');
+  toast('✅ Parol o\'chirildi', 'success');
 }
 
-let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, note: '' };
-
+// =========================================================
+// SMENANI YAKUNLASH — KO'P FOTO BILAN
+// =========================================================
 function openEndShiftModal(siId){
   const si = DB.shift_instances.find(x => x.id === siId);
   if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
@@ -1393,16 +1518,21 @@ function openEndShiftModal(siId){
       📸 Majburiy foto hisobotlar
     </div>
     ${PHOTO_TYPES.map(pt => `
-      <div class="photo-upload" id="upload-${pt.id}" onclick="triggerPhoto('${pt.id}')">
+      <div class="photo-upload" id="upload-${pt.id}">
         <div class="label-row">
           <div>
             <strong>${pt.name}</strong>
             <div class="hint">${pt.hint}</div>
           </div>
-          <span class="check">✅</span>
+          <span class="check" id="check-${pt.id}" style="display:none">✅</span>
         </div>
-        <img class="preview" id="preview-${pt.id}" alt="${pt.name}">
-        <input type="file" accept="image/*" capture="environment" 
+        <div class="photo-grid" id="grid-${pt.id}">
+          <button class="photo-add-btn" onclick="triggerPhoto('${pt.id}')">
+            <span class="plus">+</span>
+            <span>Foto qo'shish</span>
+          </button>
+        </div>
+        <input type="file" accept="image/*" multiple
                id="file-${pt.id}" style="display:none" 
                onchange="handlePhoto('${pt.id}', this)">
       </div>
@@ -1429,43 +1559,134 @@ function selectZone(zoneId){
 function triggerPhoto(typeId){ document.getElementById('file-' + typeId).click(); }
 
 async function handlePhoto(typeId, input){
-  if(!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  toast('📸 Foto qayta ishlanmoqda...', 'warning');
+  if(!input.files || !input.files.length) return;
+  const files = Array.from(input.files);
+  toast(`📸 ${files.length} ta foto qayta ishlanmoqda...`, 'warning');
+
+  if(!Array.isArray(endShiftData.photos[typeId])){
+    endShiftData.photos[typeId] = [];
+  }
+
   try {
-    const compressed = await compressImage(file, 700, 0.7);
-    endShiftData.photos[typeId] = compressed;
-    document.getElementById('upload-' + typeId).classList.add('done');
-    document.getElementById('preview-' + typeId).src = compressed;
-    toast('✅ Foto qo\'shildi', 'success');
-  } catch(e){ toast('❌ Xato: ' + e.message, 'error'); }
+    for(const file of files){
+      const compressed = await compressImage(file, 700, 0.7);
+      endShiftData.photos[typeId].push(compressed);
+    }
+    renderPhotoGrid(typeId);
+    toast(`✅ ${files.length} ta foto qo'shildi`, 'success');
+  } catch(e){
+    toast('❌ Xato: ' + e.message, 'error');
+  }
+  input.value = '';
+}
+
+function renderPhotoGrid(typeId){
+  const grid = document.getElementById('grid-' + typeId);
+  if(!grid) return;
+  const photos = endShiftData.photos[typeId] || [];
+  const uploadEl = document.getElementById('upload-' + typeId);
+  const checkEl = document.getElementById('check-' + typeId);
+
+  grid.innerHTML = photos.map((photo, i) => `
+    <div class="photo-thumb">
+      <img src="${photo}" alt="Foto ${i+1}">
+      <button class="remove" onclick="removePhoto('${typeId}', ${i})">✕</button>
+      <span class="photo-count">${i+1}</span>
+    </div>
+  `).join('') + `
+    <button class="photo-add-btn" onclick="triggerPhoto('${typeId}')">
+      <span class="plus">+</span>
+      <span>Yana</span>
+    </button>
+  `;
+
+  if(photos.length > 0){
+    uploadEl.classList.add('has-photos');
+    if(checkEl) checkEl.style.display = 'block';
+  } else {
+    uploadEl.classList.remove('has-photos');
+    if(checkEl) checkEl.style.display = 'none';
+  }
+}
+
+function removePhoto(typeId, index){
+  if(!confirm('Bu fotoni o\'chirasizmi?')) return;
+  if(Array.isArray(endShiftData.photos[typeId])){
+    endShiftData.photos[typeId].splice(index, 1);
+    renderPhotoGrid(typeId);
+    toast('🗑️ Foto o\'chirildi', 'success');
+  }
 }
 
 function confirmEndShift(){
   if(!endShiftData.zone){ toast('⚠️ Bo\'limni tanlang!', 'error'); return; }
-  const missing = PHOTO_TYPES.filter(pt => !endShiftData.photos[pt.id]);
-  if(missing.length){ toast('⚠️ ' + missing.length + ' ta foto yetishmayapti!', 'error'); return; }
+
+  const missing = [];
+  PHOTO_TYPES.forEach(pt => {
+    const photos = endShiftData.photos[pt.id] || [];
+    const minReq = pt.min || 1;
+    if(photos.length < minReq){
+      missing.push(`${pt.name.split(' ')[0]} ${photos.length}/${minReq}`);
+    }
+  });
+
+  if(missing.length){
+    toast('⚠️ Kam foto: ' + missing.join(', '), 'error');
+    return;
+  }
+
   const si = DB.shift_instances.find(x => x.id === endShiftData.shiftInstanceId);
   if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
+
   si.status = 'ended';
   si.ended_at = new Date().toISOString();
   si.zone = endShiftData.zone;
+
   const report = {
     id: DB.nextId('reports'),
     shift_instance_id: si.id, shift_id: si.shift_id,
     employee_id: si.employee_id, zone: endShiftData.zone,
-    photos: { ...endShiftData.photos },
+    photos: JSON.parse(JSON.stringify(endShiftData.photos)),
     note: document.getElementById('endShiftNote').value.trim() || null,
     started_at: si.started_at, ended_at: si.ended_at
   };
   DB.reports.push(report);
   DB.save(); closeModal(); refresh();
-  toast('✅ Smena yakunlandi! 🎉', 'success');
+
+  const total = Object.values(endShiftData.photos).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0);
+  toast(`✅ Smena yakunlandi! ${total} ta foto saqlandi 🎉`, 'success');
 }
 
+// =========================================================
+// SMENA TANLASH (kartalar)
+// =========================================================
+function selectShift(shiftId){
+  document.querySelectorAll('.shift-select-btn').forEach(b => {
+    b.classList.remove('selected');
+  });
+  const sel = document.querySelector(`.shift-select-btn[data-shift="${shiftId}"]`);
+  if(sel) sel.classList.add('selected');
+  const input = document.getElementById('f_shift');
+  if(input) input.value = shiftId;
+}
+
+// =========================================================
+// MODAL
+// =========================================================
 function openModal(){
   const today = new Date().toISOString().slice(0,10);
   const isMgr = isManager();
+
+  const shiftButtons = (DB.shifts.slice(0,3)).map(s => {
+    const info = REQUIRED_SHIFTS.find(r => r.id === s.id);
+    return `
+      <button type="button" class="shift-select-btn" data-shift="${s.id}" onclick="selectShift(${s.id})">
+        <span style="font-size:24px">${info ? info.ico : '🕐'}</span>
+        <span style="font-size:12px;font-weight:700">${esc(s.name)}</span>
+        <span style="font-size:10px;opacity:.7">${esc(s.start_time)}-${esc(s.end_time)}</span>
+      </button>
+    `;
+  }).join('');
 
   const forms = {
     employees: `
@@ -1479,11 +1700,12 @@ function openModal(){
       <div class="field"><label>Telefon</label><input id="f_phone" placeholder="+998901234567" inputmode="tel"></div>
       <div class="field"><label>Rol</label>
         <select id="f_role"><option value="employee">Xodim</option><option value="manager">Menejer</option></select></div>
-      <div class="field"><label>Smena *</label>
-        <select id="f_shift">
-          <option value="">— Smenani tanlang —</option>
-          ${DB.shifts.map(s => `<option value="${s.id}">${s.name} (${s.start_time}-${s.end_time})</option>`).join('')}
-        </select>
+      <div class="field">
+        <label>Smena * (3 ta variant)</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
+          ${shiftButtons}
+        </div>
+        <input type="hidden" id="f_shift" value="">
         <span class="hint">Xodim qaysi smenada ishlaydi</span>
       </div>
       <div class="modal-actions">
@@ -1497,11 +1719,13 @@ function openModal(){
           <option value="">— Xodimni tanlang —</option>
           ${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}
         </select></div>
-      <div class="field"><label>Smena *</label>
-        <select id="f_shift">
-          <option value="">— Smenani tanlang —</option>
-          ${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}
-        </select></div>
+      <div class="field">
+        <label>Smena *</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
+          ${shiftButtons}
+        </div>
+        <input type="hidden" id="f_shift" value="">
+      </div>
       <div class="modal-actions">
         <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
         <button class="btn btn-success btn-lg" onclick="save('shifts')">▶️ Boshlash</button>
@@ -1511,11 +1735,13 @@ function openModal(){
         <strong>👷 ${esc(currentUser.employeeName)}</strong>
         Siz o'z smenangizni boshlamoqdasiz
       </div>
-      <div class="field"><label>Qaysi smena? *</label>
-        <select id="f_shift">
-          <option value="">— Smenani tanlang —</option>
-          ${DB.shifts.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.start_time}-${s.end_time})</option>`).join('')}
-        </select></div>
+      <div class="field">
+        <label>Qaysi smena? *</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
+          ${shiftButtons}
+        </div>
+        <input type="hidden" id="f_shift" value="">
+      </div>
       <div class="modal-actions">
         <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
         <button class="btn btn-success btn-lg" onclick="save('shifts')">▶️ Boshlash</button>
@@ -1574,6 +1800,9 @@ function closeModal(e){
   document.getElementById('modalBg').classList.remove('show');
 }
 
+// =========================================================
+// SETTINGS
+// =========================================================
 function openSettings(){
   if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
   const stats = `
@@ -1605,8 +1834,7 @@ function openSettings(){
 }
 
 function openChangePassword(){
-  const modal = document.getElementById('modalContent');
-  modal.innerHTML = `
+  document.getElementById('modalContent').innerHTML = `
     <h3>🔑 Parolni o'zgartirish</h3>
     <div class="field"><label>Joriy parol</label><input type="password" id="cp_old" placeholder="••••••"></div>
     <div class="field"><label>Yangi parol (min 4 belgi)</label><input type="password" id="cp_new1" placeholder="••••••"></div>
@@ -1657,6 +1885,9 @@ function clearData(){
   toast('🗑️ Tozalandi','success');
 }
 
+// =========================================================
+// SAVE
+// =========================================================
 function save(type){
   const v = id => (document.getElementById(id)?.value || '').trim();
   const n = id => parseInt(document.getElementById(id)?.value) || null;
@@ -1674,7 +1905,6 @@ function save(type){
     });
   }
   else if(type==='shifts'){
-    // Xodim: o'zi uchun. Menejer: tanlangan xodim uchun
     const empId = isManager() ? n('f_emp') : currentUser.employeeId;
     const shiftId = n('f_shift');
     if(!empId){ toast('Xodim tanlanishi shart','error'); return; }
@@ -1735,6 +1965,9 @@ function save(type){
   DB.save(); closeModal(); toast('✅ Saqlandi','success'); refresh();
 }
 
+// =========================================================
+// REFRESH
+// =========================================================
 function refresh(){
   if(!currentUser.role) return;
   loadStats();
@@ -1752,6 +1985,9 @@ function refresh(){
   }
 }
 
+// =========================================================
+// INIT
+// =========================================================
 DB.load();
 loadUser();
 
