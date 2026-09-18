@@ -284,7 +284,7 @@ min-height:80px;justify-content:center}
 .shift-select-btn:hover{border-color:#667eea;background:#f0f4ff}
 .shift-select-btn.selected{border-color:#667eea;background:#ede9fe}
 
-/* KO'P FOTO GRID */
+/* KO'P FOTO */
 .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
 .photo-thumb{position:relative;aspect-ratio:1;border-radius:10px;
 overflow:hidden;background:#f3f4f6;box-shadow:0 2px 8px rgba(0,0,0,.08)}
@@ -322,6 +322,32 @@ flex-direction:column;align-items:center;gap:4px}
 .zone-btn:hover{border-color:#667eea;background:#f0f4ff}
 .zone-btn.active{border-color:#667eea;background:#ede9fe;color:#6b21a8}
 .zone-btn .ico{font-size:20px}
+
+/* SROK TEKSHIRUVI */
+.srok-check-section{background:#fffbeb;border:2px dashed #f59e0b;border-radius:12px;
+padding:14px;margin:16px 0}
+.srok-check-section .section-title{font-size:13px;font-weight:700;color:#92400e;
+display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.srok-entry{background:white;border-radius:10px;padding:10px;margin-bottom:8px;
+box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.srok-entry .row{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:6px}
+.srok-entry input,.srok-entry select{width:100%;padding:8px 10px;
+border:2px solid #e5e7eb;border-radius:8px;font-size:13px;font-family:inherit;
+background:#fafbfc}
+.srok-entry input:focus,.srok-entry select:focus{
+outline:none;border-color:#f59e0b;background:white}
+.srok-entry .row2{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center}
+.srok-entry .remove-btn{background:#fee2e2;color:#dc2626;border:none;
+width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700}
+.srok-entry .remove-btn:hover{background:#fecaca}
+.srok-add-btn{width:100%;padding:10px;border:2px dashed #f59e0b;border-radius:10px;
+background:white;cursor:pointer;font-family:inherit;
+font-size:12px;font-weight:700;color:#92400e;transition:all .2s}
+.srok-add-btn:hover{background:#fef3c7;border-style:solid}
+.srok-empty{text-align:center;padding:16px;color:#999;font-size:12px}
+.srok-info-bar{background:#fef3c7;color:#92400e;padding:8px 12px;
+border-radius:8px;font-size:11px;font-weight:600;
+margin-bottom:10px;display:flex;align-items:center;gap:6px}
 
 .report-card{background:white;border-radius:14px;padding:14px;
 margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:background .3s}
@@ -455,7 +481,14 @@ body.dark .login-error{background:#7f1d1d;color:#fecaca}
 body.dark .shift-select-btn{background:#0f172a;border-color:#334155;color:#cbd5e1}
 body.dark .shift-select-btn:hover{background:#1e1b4b;border-color:#667eea}
 body.dark .shift-select-btn.selected{background:#4c1d95;border-color:#8b5cf6}
-body.dark .shift-select-btn span{color:inherit !important}
+body.dark .srok-check-section{background:#78350f;border-color:#f59e0b}
+body.dark .srok-check-section .section-title{color:#fbbf24}
+body.dark .srok-entry{background:#1e293b}
+body.dark .srok-entry input,body.dark .srok-entry select{
+  background:#0f172a;color:#f1f5f9;border-color:#334155}
+body.dark .srok-add-btn{background:#0f172a;color:#fbbf24;border-color:#f59e0b}
+body.dark .srok-add-btn:hover{background:#78350f}
+body.dark .srok-info-bar{background:#78350f;color:#fbbf24}
 </style>
 </head>
 <body>
@@ -669,9 +702,9 @@ const PHOTO_TYPES = [
 ];
 
 const REQUIRED_SHIFTS = [
-  {id:1, name:"1-smena", start_time:"06:00", end_time:"14:00", ico:"🌅"},
-  {id:2, name:"2-smena", start_time:"14:00", end_time:"22:00", ico:"☀️"},
-  {id:3, name:"3-smena", start_time:"22:00", end_time:"06:00", ico:"🌙"}
+  {id:1, name:"1-smena", start_time:"08:00", end_time:"16:00", ico:"🌅"},
+  {id:2, name:"2-smena", start_time:"16:00", end_time:"00:00", ico:"🌆"},
+  {id:3, name:"3-smena", start_time:"00:00", end_time:"08:00", ico:"🌙"}
 ];
 
 // =========================================================
@@ -700,7 +733,15 @@ const DB = {
     let changed = false;
     REQUIRED_SHIFTS.forEach(req => {
       const exists = this.shifts.find(s => s.id === req.id);
-      if(!exists){
+      if(exists){
+        // Vaqtlarni ham yangilash
+        if(exists.start_time !== req.start_time || exists.end_time !== req.end_time){
+          exists.start_time = req.start_time;
+          exists.end_time = req.end_time;
+          exists.name = req.name;
+          changed = true;
+        }
+      } else {
         this.shifts.push({
           id: req.id, store_id: 1,
           name: req.name,
@@ -711,6 +752,8 @@ const DB = {
       }
     });
     this.shifts.sort((a,b) => a.id - b.id);
+    // Faqat 3 tasini saqlash
+    this.shifts = this.shifts.slice(0,3);
     if(changed) this.save();
   },
 
@@ -784,11 +827,16 @@ const DB = {
 let currentUser = { role: null, employeeId: null, employeeName: null };
 let currentTab = 'employees';
 let tempEmployeeId = null;
-let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, note: '' };
+let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, srokCheck: [], note: '', isClosingShift: false };
 
 // =========================================================
-// PAROL XESHLASH
+// YORDAMCHI
 // =========================================================
+function isClosingShift(shiftId){
+  const shift = DB.shifts.find(s => s.id === shiftId);
+  return shift && (shift.end_time === "00:00" || shift.id === 2);
+}
+
 function hashPassword(pwd){
   let hash = 0;
   const salt = 'store_control_2026_secure';
@@ -972,7 +1020,7 @@ function logout(){
 }
 
 // =========================================================
-// SROK
+// SROK HISOBLASH
 // =========================================================
 function getSrokStatus(expiryDate){
   if(!expiryDate) return {cls:'normal', label:'—', days:null};
@@ -1033,9 +1081,6 @@ function shiftName(id){
   return s ? s.name : '—';
 }
 
-// =========================================================
-// FOTO SIQISH
-// =========================================================
 function compressImage(file, maxWidth = 700, quality = 0.7){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1057,9 +1102,6 @@ function compressImage(file, maxWidth = 700, quality = 0.7){
   });
 }
 
-// =========================================================
-// THEME
-// =========================================================
 function toggleTheme(){
   document.body.classList.toggle('dark');
   const isDark = document.body.classList.contains('dark');
@@ -1167,6 +1209,7 @@ function renderShifts(){
       if(!emp || !shift) return '';
       const started = fmtDateTime(si.started_at);
       const canEnd = isMgr || si.employee_id === currentUser.employeeId;
+      const closing = isClosingShift(si.shift_id);
       return `
         <div class="list-item" style="flex-direction:column;align-items:stretch;border-left:4px solid #10b981">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -1177,6 +1220,7 @@ function renderShifts(){
             </div>
             ${badge(shift.name, 'green')}
           </div>
+          ${closing ? '<div style="font-size:11px;color:#8b5cf6;font-weight:700;margin-bottom:8px">🌆 Kun tugashi smenasi — sroki o\'tgan tovarlar hisoboti kerak</div>' : ''}
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
             <span style="font-size:12px;color:#10b981;font-weight:700">🟢 Faol</span>
             ${canEnd ? `<button class="btn btn-warning btn-sm" onclick="openEndShiftModal(${si.id})">⏹️ Smenani yakunlash</button>` : ''}
@@ -1211,12 +1255,13 @@ function renderShifts(){
       </div>
       ${DB.shifts.slice(0,3).map(s => {
         const info = REQUIRED_SHIFTS.find(r => r.id === s.id);
+        const closing = isClosingShift(s.id);
         return `
         <div class="list-item">
           <div class="avatar purple">${info ? info.ico : s.id}</div>
           <div class="info">
-            <div class="title">${esc(s.name)}</div>
-            <div class="sub">${esc(s.start_time)} - ${esc(s.end_time)}</div>
+            <div class="title">${esc(s.name)} ${closing ? '🌆' : ''}</div>
+            <div class="sub">${esc(s.start_time)} - ${esc(s.end_time)}${closing ? ' • Kun tugashi' : ''}</div>
           </div>
           ${badge('Smena', 'purple')}
         </div>
@@ -1244,6 +1289,7 @@ function renderReports(){
     const emp = DB.employees.find(e => e.id === r.employee_id);
     const shift = DB.shifts.find(s => s.id === r.shift_id);
     const photos = r.photos || {};
+    const srokCheck = r.srokCheck || [];
     return `
       <div class="report-card">
         <div class="report-header">
@@ -1255,9 +1301,11 @@ function renderReports(){
           </div>
           <div style="display:flex;gap:4px;flex-wrap:wrap">
             ${badge(zoneName(r.zone), 'purple')}
+            ${r.isClosingShift ? '<span class="badge red" style="font-size:9px">🌆 Kun tugashi</span>' : ''}
           </div>
         </div>
         ${r.note ? `<div style="font-size:12px;color:#555;background:#f9fafb;padding:8px 10px;border-radius:8px;margin-bottom:10px">💬 ${esc(r.note)}</div>` : ''}
+        
         ${PHOTO_TYPES.map(pt => {
           let arr = photos[pt.id];
           if(typeof arr === 'string') arr = [arr];
@@ -1279,6 +1327,63 @@ function renderReports(){
             </div>
           `;
         }).join('')}
+
+        ${photos.srok_removed && Array.isArray(photos.srok_removed) && photos.srok_removed.length ? `
+          <div style="margin-bottom:12px">
+            <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:6px;
+                        display:flex;justify-content:space-between;align-items:center">
+              <span>📅 Sroki o'tgan tovarlar</span>
+              <span class="badge red" style="font-size:10px">${photos.srok_removed.length} ta</span>
+            </div>
+            <div class="photo-grid">
+              ${photos.srok_removed.map((photo, idx) => `
+                <div class="photo-thumb" onclick="viewPhoto('${photo.replace(/'/g, "\\'")}', 'Sroki o\\'tgan tovar — ${idx+1}')">
+                  <img src="${photo}" alt="Srok">
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${srokCheck.length ? `
+          <div style="margin-top:12px;background:#fffbeb;border-radius:10px;padding:10px">
+            <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:8px;
+                        display:flex;justify-content:space-between;align-items:center">
+              <span>📅 Srok tekshiruvi</span>
+              <span class="badge orange" style="font-size:10px">${srokCheck.length} ta</span>
+            </div>
+            <table style="width:100%;font-size:12px;border-collapse:collapse">
+              <thead>
+                <tr style="border-bottom:1px solid #fcd34d">
+                  <th style="text-align:left;padding:4px;color:#92400e;font-weight:700">Tovar</th>
+                  <th style="text-align:center;padding:4px;color:#92400e;font-weight:700">Soni</th>
+                  <th style="text-align:right;padding:4px;color:#92400e;font-weight:700">Holat</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${srokCheck.map(item => `
+                  <tr style="border-bottom:1px solid #fef3c7">
+                    <td style="padding:5px 4px;color:#333">${esc(item.product_name)}</td>
+                    <td style="padding:5px 4px;text-align:center;font-weight:700;color:#333">${item.quantity || 0}</td>
+                    <td style="padding:5px 4px;text-align:right">
+                      <span class="badge ${
+                        item.status === 'good' ? 'green' :
+                        item.status === 'discount' ? 'orange' :
+                        item.status === 'damaged' ? 'red' :
+                        item.status === 'removed' ? 'gray' : 'gray'
+                      }" style="font-size:9px">
+                        ${item.status === 'good' ? '✅ Yaxshi' :
+                          item.status === 'discount' ? '💰 Chegirma' :
+                          item.status === 'damaged' ? '⚠️ Nosoz' :
+                          item.status === 'removed' ? '🗑️ Olib tashlandi' : '—'}
+                      </span>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : ''}
       </div>
     `;
   }).join('');
@@ -1487,22 +1592,77 @@ function resetEmployeePassword(empId){
 }
 
 // =========================================================
-// SMENANI YAKUNLASH — KO'P FOTO BILAN
+// SMENANI YAKUNLASH
 // =========================================================
 function openEndShiftModal(siId){
   const si = DB.shift_instances.find(x => x.id === siId);
   if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
   const emp = DB.employees.find(e => e.id === si.employee_id);
   const shift = DB.shifts.find(s => s.id === si.shift_id);
-  endShiftData = { shiftInstanceId: siId, zone: null, photos: {}, note: '' };
+  const closingShift = isClosingShift(si.shift_id);
+
+  // Foto turlarini smenaga qarab aniqlash
+  const photoTypes = [...PHOTO_TYPES];
+  if(closingShift){
+    photoTypes.push({
+      id: 'srok_removed',
+      name: '📅 Sroki o\'tgan tovarlar',
+      hint: 'Addeldan olib tashlangan tovarlarni rasmga oling (kamida 2 ta)',
+      min: 2
+    });
+  }
+
+  endShiftData = {
+    shiftInstanceId: siId,
+    zone: null,
+    photos: {},
+    srokCheck: [],
+    note: '',
+    isClosingShift: closingShift
+  };
+
+  // 3 kun ichida tugaydigan tovarlarni topish
+  const today = new Date(); today.setHours(0,0,0,0);
+  const threeDays = new Date(today); threeDays.setDate(threeDays.getDate() + 3);
+  const expiringProducts = DB.product_batches
+    .filter(b => {
+      if(b.quantity <= 0) return false;
+      const exp = new Date(b.expiry_date); exp.setHours(0,0,0,0);
+      return exp >= today && exp <= threeDays;
+    })
+    .map(b => {
+      const prod = DB.products.find(p => p.id === b.product_id);
+      return {
+        product_name: prod ? prod.name : '—',
+        quantity: b.quantity,
+        expiry_date: b.expiry_date,
+        status: 'good',
+        batch_id: b.id
+      };
+    });
+
+  // Bir xil tovarni birlashtirish
+  const merged = [];
+  expiringProducts.forEach(item => {
+    const existing = merged.find(m => m.product_name === item.product_name);
+    if(existing){
+      existing.quantity += item.quantity;
+    } else {
+      merged.push({...item});
+    }
+  });
+
+  endShiftData.srokCheck = merged;
 
   const modal = document.getElementById('modalContent');
   modal.innerHTML = `
     <h3>⏹️ Smenani yakunlash</h3>
     <div style="background:#f0f4ff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px">
       <strong>${esc(emp ? emp.name : '—')}</strong><br>
-      <span style="color:#666">${esc(shift ? shift.name : '—')}</span>
+      <span style="color:#666">${esc(shift ? shift.name : '—')} • ${shift ? shift.start_time+'-'+shift.end_time : ''}</span>
+      ${closingShift ? '<div style="margin-top:6px;font-size:11px;color:#8b5cf6;font-weight:700">🌆 Kun tugashi smenasi</div>' : ''}
     </div>
+
     <div class="field">
       <label>📍 Qaysi bo'limda ishladingiz? *</label>
       <div class="zone-grid" id="zoneGrid">
@@ -1514,10 +1674,11 @@ function openEndShiftModal(siId){
         `).join('')}
       </div>
     </div>
+
     <div style="font-size:13px;font-weight:700;color:#555;margin:16px 0 10px">
       📸 Majburiy foto hisobotlar
     </div>
-    ${PHOTO_TYPES.map(pt => `
+    ${photoTypes.map(pt => `
       <div class="photo-upload" id="upload-${pt.id}">
         <div class="label-row">
           <div>
@@ -1537,8 +1698,28 @@ function openEndShiftModal(siId){
                onchange="handlePhoto('${pt.id}', this)">
       </div>
     `).join('')}
-    <div class="field">
-      <label>💬 Izoh (ixtiyoriy)</label>
+
+    <!-- SROK TEKSHIRUVI -->
+    <div class="srok-check-section">
+      <div class="section-title">
+        <span>📅</span>
+        <span>${closingShift ? 'Sroki o\'tgan tovarlar hisoboti' : '3 kun ichida tugaydigan tovarlar'}</span>
+      </div>
+      <div class="srok-info-bar">
+        ℹ️ ${closingShift 
+          ? 'Kun davomida addeldan olingan tovarlarning soni va holatini kiriting' 
+          : 'Muddati yaqinlashgan tovarlarni tekshirib, soni va holatini kiriting'}
+      </div>
+      <div id="srokCheckList">
+        ${renderSrokCheckList()}
+      </div>
+      <button class="srok-add-btn" onclick="addSrokEntry()">
+        + Tovar qo'shish
+      </button>
+    </div>
+
+    <div class="field" style="margin-top:16px">
+      <label>💬 Umumiy izoh (ixtiyoriy)</label>
       <textarea id="endShiftNote" rows="2" placeholder="Qo'shimcha ma'lumot..."></textarea>
     </div>
     <div class="modal-actions">
@@ -1547,6 +1728,55 @@ function openEndShiftModal(siId){
     </div>
   `;
   document.getElementById('modalBg').classList.add('show');
+}
+
+function renderSrokCheckList(){
+  if(!endShiftData.srokCheck.length){
+    return '<div class="srok-empty">Hozircha tovar yo\'q. "+ Tovar qo\'shish" tugmasini bosing</div>';
+  }
+  return endShiftData.srokCheck.map((item, i) => `
+    <div class="srok-entry" data-index="${i}">
+      <div class="row">
+        <input type="text" placeholder="Tovar nomi" 
+               value="${esc(item.product_name)}" 
+               onchange="updateSrokEntry(${i}, 'product_name', this.value)">
+      </div>
+      <div class="row2">
+        <input type="number" placeholder="Soni" min="0"
+               value="${item.quantity || 0}" 
+               onchange="updateSrokEntry(${i}, 'quantity', parseInt(this.value) || 0)">
+        <select onchange="updateSrokEntry(${i}, 'status', this.value)">
+          <option value="good" ${item.status==='good'?'selected':''}>✅ Yaxshi</option>
+          <option value="discount" ${item.status==='discount'?'selected':''}>💰 Chegirma</option>
+          <option value="damaged" ${item.status==='damaged'?'selected':''}>⚠️ Nosoz</option>
+          <option value="removed" ${item.status==='removed'?'selected':''}>🗑️ Olib tashlandi</option>
+        </select>
+        <button class="remove-btn" onclick="removeSrokEntry(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateSrokEntry(index, field, value){
+  if(endShiftData.srokCheck[index]){
+    endShiftData.srokCheck[index][field] = value;
+  }
+}
+
+function addSrokEntry(){
+  endShiftData.srokCheck.push({
+    product_name: '',
+    quantity: 0,
+    status: 'good'
+  });
+  const list = document.getElementById('srokCheckList');
+  if(list) list.innerHTML = renderSrokCheckList();
+}
+
+function removeSrokEntry(index){
+  endShiftData.srokCheck.splice(index, 1);
+  const list = document.getElementById('srokCheckList');
+  if(list) list.innerHTML = renderSrokCheckList();
 }
 
 function selectZone(zoneId){
@@ -1621,8 +1851,13 @@ function removePhoto(typeId, index){
 function confirmEndShift(){
   if(!endShiftData.zone){ toast('⚠️ Bo\'limni tanlang!', 'error'); return; }
 
+  const allowedTypes = [...PHOTO_TYPES];
+  if(endShiftData.isClosingShift){
+    allowedTypes.push({id:'srok_removed', name:'📅 Sroki o\'tgan', min: 2});
+  }
+
   const missing = [];
-  PHOTO_TYPES.forEach(pt => {
+  allowedTypes.forEach(pt => {
     const photos = endShiftData.photos[pt.id] || [];
     const minReq = pt.min || 1;
     if(photos.length < minReq){
@@ -1642,11 +1877,16 @@ function confirmEndShift(){
   si.ended_at = new Date().toISOString();
   si.zone = endShiftData.zone;
 
+  const srokCheckFiltered = (endShiftData.srokCheck || [])
+    .filter(item => item.product_name && item.product_name.trim());
+
   const report = {
     id: DB.nextId('reports'),
     shift_instance_id: si.id, shift_id: si.shift_id,
     employee_id: si.employee_id, zone: endShiftData.zone,
     photos: JSON.parse(JSON.stringify(endShiftData.photos)),
+    srokCheck: srokCheckFiltered,
+    isClosingShift: endShiftData.isClosingShift || false,
     note: document.getElementById('endShiftNote').value.trim() || null,
     started_at: si.started_at, ended_at: si.ended_at
   };
@@ -1654,11 +1894,11 @@ function confirmEndShift(){
   DB.save(); closeModal(); refresh();
 
   const total = Object.values(endShiftData.photos).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0);
-  toast(`✅ Smena yakunlandi! ${total} ta foto saqlandi 🎉`, 'success');
+  toast(`✅ Smena yakunlandi! ${total} foto, ${srokCheckFiltered.length} srok yozuvi 🎉`, 'success');
 }
 
 // =========================================================
-// SMENA TANLASH (kartalar)
+// SMENA TANLASH
 // =========================================================
 function selectShift(shiftId){
   document.querySelectorAll('.shift-select-btn').forEach(b => {
