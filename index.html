@@ -2,2253 +2,721 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#667eea">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Store Control">
-<title>Store Control</title>
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="apple-touch-icon" href="logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRIPGO — Sayohatni tanla</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-background:#f0f2f5;color:#333;line-height:1.5;overscroll-behavior:none;
--webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
-button,input,select,textarea{font-family:inherit}
-.app{max-width:500px;margin:0 auto;min-height:100vh;background:#f0f2f5;
-position:relative;padding-bottom:90px;transition:background .3s}
-.sidebar{display:none}
-.desktop-wrapper{display:contents}
-
-/* SPLASH */
-#splash{position:fixed;inset:0;z-index:99999;
-background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-transition:opacity .5s ease,visibility .5s ease}
-#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-.splash-logo{width:120px;height:120px;border-radius:28px;
-box-shadow:0 20px 60px rgba(0,0,0,.35);animation:splashScale .8s ease-out;object-fit:cover}
-@keyframes splashScale{0%{transform:scale(0) rotate(-180deg);opacity:0}
-60%{transform:scale(1.15) rotate(10deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-.splash-title{margin-top:24px;font-size:28px;font-weight:800;color:white;
-letter-spacing:.5px;animation:splashFade .8s ease-out .3s both}
-.splash-subtitle{margin-top:6px;font-size:13px;color:rgba(255,255,255,.75);
-letter-spacing:2px;text-transform:uppercase;animation:splashFade .8s ease-out .4s both}
-@keyframes splashFade{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.splash-loader{margin-top:40px;display:flex;gap:8px;animation:splashFade .8s ease-out .6s both}
-.splash-loader span{width:10px;height:10px;border-radius:50%;background:white;
-animation:bounce 1.4s ease-in-out infinite both}
-.splash-loader span:nth-child(1){animation-delay:0s}
-.splash-loader span:nth-child(2){animation-delay:.16s}
-.splash-loader span:nth-child(3){animation-delay:.32s}
-@keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-
-/* LOGIN */
-#login{position:fixed;inset:0;z-index:9998;
-background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-padding:20px;padding-top:max(20px, env(safe-area-inset-top));
-padding-bottom:max(20px, env(safe-area-inset-bottom));
-overflow-y:auto;-webkit-overflow-scrolling:touch;display:block;
-transition:opacity .4s ease,visibility .4s ease}
-#login.hide{opacity:0;visibility:hidden;pointer-events:none}
-.login-container{width:100%;max-width:420px;
-background:white;border-radius:24px;padding:28px 22px;
-box-shadow:0 30px 80px rgba(0,0,0,.3);animation:loginIn .5s ease-out;margin:0 auto}
-@keyframes loginIn{from{opacity:0;transform:translateY(30px) scale(.95)}
-to{opacity:1;transform:translateY(0) scale(1)}}
-@media (min-width:500px) and (min-height:700px){
-  #login{display:flex;align-items:center;justify-content:center}
-  .login-container{margin:auto}
-}
-.login-logo{width:80px;height:80px;border-radius:20px;margin:0 auto 20px;
-display:block;object-fit:cover;box-shadow:0 10px 30px rgba(102,126,234,.4)}
-.login-title{text-align:center;font-size:24px;font-weight:800;color:#333;margin-bottom:6px}
-.login-subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:24px}
-.login-question{text-align:center;font-size:14px;color:#666;font-weight:600;margin-bottom:16px}
-.role-btn{width:100%;padding:18px;border:2px solid #e5e7eb;border-radius:16px;
-background:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;
-gap:14px;margin-bottom:12px;transition:all .2s;text-align:left;min-height:80px}
-.role-btn:hover{border-color:#667eea;transform:translateY(-2px);
-box-shadow:0 8px 24px rgba(102,126,234,.15)}
-.role-btn:active{transform:translateY(0)}
-.role-btn .ico{font-size:36px;flex-shrink:0}
-.role-btn .txt{flex:1}
-.role-btn .txt strong{display:block;font-size:16px;color:#333;margin-bottom:2px}
-.role-btn .txt span{font-size:12px;color:#888}
-.role-btn .arrow{font-size:20px;color:#ccc;transition:transform .2s}
-.role-btn:hover .arrow{transform:translateX(4px);color:#667eea}
-.role-btn.manager:hover{border-color:#8b5cf6}
-.role-btn.employee:hover{border-color:#10b981}
-.role-btn.manager .ico{background:#ede9fe;width:60px;height:60px;
-border-radius:16px;display:flex;align-items:center;justify-content:center}
-.role-btn.employee .ico{background:#d1fae5;width:60px;height:60px;
-border-radius:16px;display:flex;align-items:center;justify-content:center}
-.pass-wrap{position:relative;margin-bottom:14px}
-.pass-input{width:100%;padding:14px 44px 14px 44px;border:2px solid #e5e7eb;
-border-radius:12px;font-size:16px;font-family:inherit;
-background:#fafbfc;transition:border-color .2s,background .3s;letter-spacing:2px}
-.pass-input:focus{outline:none;border-color:#667eea;background:white}
-.pass-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);
-font-size:18px;opacity:.5;pointer-events:none}
-.pass-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);
-background:none;border:none;font-size:18px;cursor:pointer;padding:6px;opacity:.6}
-.pass-toggle:hover{opacity:1}
-.pass-label{display:block;font-size:12px;font-weight:700;color:#555;
-margin-bottom:6px;text-align:left}
-.emp-select{width:100%;padding:14px;border:2px solid #e5e7eb;
-border-radius:12px;font-size:16px;font-family:inherit;background:#fafbfc;margin-bottom:14px;
--webkit-appearance:none;appearance:none;
-background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23667eea'><path d='M7 10l5 5 5-5z'/></svg>");
-background-repeat:no-repeat;background-position:right 12px center;background-size:20px;
-padding-right:40px}
-.emp-select:focus{outline:none;border-color:#667eea;background-color:white}
-.login-btn{width:100%;padding:16px;border:none;border-radius:12px;
-font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;
-transition:all .2s;margin-bottom:10px;display:flex;align-items:center;
-justify-content:center;gap:8px;min-height:52px}
-.login-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
-.login-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(102,126,234,.4)}
-.login-btn.primary.green{background:linear-gradient(135deg,#10b981,#059669)}
-.login-btn.primary.green:hover{box-shadow:0 8px 20px rgba(16,185,129,.4)}
-.login-btn.back{background:#f3f4f6;color:#666}
-.login-btn.back:hover{background:#e5e7eb}
-.login-info{background:#f0f4ff;border-radius:12px;padding:14px;
-margin-bottom:18px;font-size:13px;color:#555;text-align:center;
-border-left:3px solid #667eea;line-height:1.5}
-.login-info strong{color:#333;display:block;margin-bottom:4px;font-size:14px}
-.login-error{background:#fee2e2;color:#991b1b;padding:10px 14px;
-border-radius:10px;font-size:13px;margin-bottom:14px;display:none;
-text-align:center;font-weight:600}
-.login-error.show{display:block;animation:shake .3s}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-
-/* HEADER */
-.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-color:white;padding:16px 20px;position:sticky;top:0;z-index:100;
-box-shadow:0 4px 20px rgba(102,126,234,.3)}
-.header.employee{background:linear-gradient(135deg,#10b981 0%,#059669 100%);
-box-shadow:0 4px 20px rgba(16,185,129,.3)}
-.header-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.header h1{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.header h1 img{width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0}
-.header h1 span{overflow:hidden;text-overflow:ellipsis}
-.header-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
-.role-badge{background:rgba(255,255,255,.25);padding:5px 10px;border-radius:20px;
-font-size:10px;font-weight:700;backdrop-filter:blur(10px);white-space:nowrap}
-.icon-btn{background:rgba(255,255,255,.2);border:none;color:white;
-width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;
-display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
-transition:background .2s;flex-shrink:0}
-.icon-btn:hover{background:rgba(255,255,255,.3)}
-
-/* STATS */
-.stats{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:white;border-radius:14px;padding:14px;
-box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative;overflow:hidden;
-transition:transform .2s,background .3s}
-.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#667eea}
-.stat.blue::before{background:#3b82f6}
-.stat.green::before{background:#10b981}
-.stat.orange::before{background:#f59e0b}
-.stat.red::before{background:#ef4444}
-.stat.purple::before{background:#8b5cf6}
-.stat.yellow::before{background:#eab308}
-.stat .label{font-size:10px;color:#888;font-weight:600;
-letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
-.stat .value{font-size:24px;font-weight:800;color:#333;line-height:1}
-
-/* NAV */
-.nav{background:white;margin:0 12px 12px;padding:5px;border-radius:14px;
-display:flex;gap:3px;box-shadow:0 2px 8px rgba(0,0,0,.04);
-position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none;transition:background .3s}
-.nav::-webkit-scrollbar{display:none}
-.nav-btn{min-width:60px;flex:1;padding:8px 4px;border:none;background:transparent;
-border-radius:10px;cursor:pointer;font-size:10px;font-weight:600;
-color:#666;display:flex;flex-direction:column;align-items:center;
-gap:3px;font-family:inherit;transition:all .2s}
-.nav-btn .ico{font-size:18px;line-height:1}
-.nav-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);
-color:white;box-shadow:0 4px 12px rgba(102,126,234,.3)}
-body.employee-mode .nav-btn.active{background:linear-gradient(135deg,#10b981,#059669);
-box-shadow:0 4px 12px rgba(16,185,129,.3)}
-
-/* CONTENT */
-.content{padding:0 12px}
-.section{display:none}
-.section.active{display:block}
-.list-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
-box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
-gap:12px;animation:fadeIn .3s;transition:box-shadow .2s,background .3s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
-.avatar{width:42px;height:42px;border-radius:50%;display:flex;
-align-items:center;justify-content:center;font-weight:800;color:white;
-font-size:14px;flex-shrink:0}
-.avatar.blue{background:#3b82f6}
-.avatar.green{background:#10b981}
-.avatar.purple{background:#8b5cf6}
-.avatar.orange{background:#f59e0b}
-.avatar.red{background:#ef4444}
-.avatar.yellow{background:#eab308}
-.info{flex:1;min-width:0}
-.info .title{font-weight:700;font-size:14px;margin-bottom:2px;
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.info .sub{font-size:12px;color:#888;
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
-.badge.blue{background:#dbeafe;color:#1e40af}
-.badge.green{background:#d1fae5;color:#065f46}
-.badge.orange{background:#fef3c7;color:#92400e}
-.badge.red{background:#fee2e2;color:#991b1b}
-.badge.purple{background:#ede9fe;color:#6b21a8}
-.badge.yellow{background:#fef9c3;color:#854d0e}
-.badge.gray{background:#f3f4f6;color:#4b5563}
-.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.btn{padding:6px 12px;border:none;border-radius:8px;font-size:11px;
-font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
-.btn:active{transform:scale(.95)}
-.btn-sm{padding:6px 10px;font-size:11px}
-.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:white}
-.btn-success{background:#10b981;color:white}
-.btn-danger{background:#ef4444;color:white}
-.btn-warning{background:#f59e0b;color:white}
-.btn-del{background:#fee2e2;color:#dc2626;padding:6px 8px;font-size:14px;
-border-radius:8px;border:none;cursor:pointer}
-.btn-del:hover{background:#fecaca}
-
-/* SROK */
-.srok-item{background:white;border-radius:14px;padding:14px;margin-bottom:8px;
-box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;
-gap:12px;border-left:4px solid #e5e7eb;animation:fadeIn .3s;transition:background .3s}
-.srok-item.expired{border-left-color:#ef4444;background:#fef2f2}
-.srok-item.today{border-left-color:#dc2626;background:#fee2e2}
-.srok-item.critical{border-left-color:#f59e0b;background:#fffbeb}
-.srok-item.warning{border-left-color:#eab308;background:#fefce8}
-.srok-item.normal{border-left-color:#10b981}
-.srok-days{font-size:20px;font-weight:800;color:#666;text-align:center;min-width:50px}
-.srok-days.expired{color:#ef4444}
-.srok-days.today{color:#dc2626}
-.srok-days.critical{color:#f59e0b}
-.srok-days.warning{color:#eab308}
-.srok-days.normal{color:#10b981}
-.srok-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;margin-bottom:8px}
-.srok-stat{background:white;border-radius:12px;padding:12px;text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,.04);border-top:3px solid #e5e7eb;transition:background .3s}
-.srok-stat.expired{border-top-color:#ef4444}
-.srok-stat.today{border-top-color:#dc2626}
-.srok-stat.critical{border-top-color:#f59e0b}
-.srok-stat.warning{border-top-color:#eab308}
-.srok-stat.normal{border-top-color:#10b981}
-.srok-stat .num{font-size:22px;font-weight:800;margin-bottom:2px}
-.srok-stat .lbl{font-size:10px;color:#888;font-weight:600;text-transform:uppercase}
-
-.empty{text-align:center;padding:50px 20px;color:#999}
-.empty .ico{font-size:56px;margin-bottom:12px;opacity:.4}
-.empty p{font-size:13px}
-
-.fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;
-border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);
-color:white;border:none;font-size:24px;cursor:pointer;
-box-shadow:0 6px 20px rgba(102,126,234,.4);z-index:50;
-display:flex;align-items:center;justify-content:center;transition:transform .2s}
-.fab:active{transform:scale(.9)}
-.fab:hover{transform:scale(1.05)}
-
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);
-backdrop-filter:blur(4px);z-index:1000;display:none;
-align-items:flex-end;justify-content:center}
-.modal-bg.show{display:flex}
-.modal{background:white;border-radius:24px 24px 0 0;padding:24px;
-width:100%;max-width:500px;max-height:92vh;overflow-y:auto;
-animation:slideUp .3s ease;transition:background .3s}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal h3{margin-bottom:18px;font-size:18px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;font-weight:700;color:#555;margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;padding:12px 14px;
-border:2px solid #e5e7eb;border-radius:12px;font-size:15px;
-font-family:inherit;background:#fafbfc;transition:border-color .2s,background .3s}
-.field input:focus,.field select:focus,.field textarea:focus{
-outline:none;border-color:#667eea;background:white}
-.field .hint{font-size:11px;color:#999;margin-top:4px;display:block}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-.btn-lg{padding:12px 24px;font-size:14px;border-radius:12px}
-.btn-cancel{background:#f3f4f6;color:#666}
-
-/* SMENA TANLASH */
-.shift-select-btn{padding:12px 8px;border:2px solid #e5e7eb;border-radius:12px;
-background:white;cursor:pointer;font-family:inherit;transition:all .2s;
-text-align:center;display:flex;flex-direction:column;gap:4px;
-min-height:80px;justify-content:center}
-.shift-select-btn:hover{border-color:#667eea;background:#f0f4ff}
-.shift-select-btn.selected{border-color:#667eea;background:#ede9fe}
-
-/* KO'P FOTO */
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
-.photo-thumb{position:relative;aspect-ratio:1;border-radius:10px;
-overflow:hidden;background:#f3f4f6;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.photo-thumb .remove{position:absolute;top:4px;right:4px;
-width:22px;height:22px;border-radius:50%;background:rgba(220,38,38,.9);
-color:white;border:none;cursor:pointer;font-size:12px;
-display:flex;align-items:center;justify-content:center;font-weight:700;
-box-shadow:0 2px 6px rgba(0,0,0,.3)}
-.photo-thumb .remove:hover{background:#dc2626}
-.photo-count{position:absolute;bottom:4px;left:4px;
-background:rgba(0,0,0,.7);color:white;font-size:10px;
-padding:2px 6px;border-radius:8px;font-weight:600}
-.photo-add-btn{aspect-ratio:1;border-radius:10px;
-border:2px dashed #cbd5e1;background:#fafbfc;cursor:pointer;
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-gap:4px;font-family:inherit;color:#667eea;font-weight:700;font-size:11px;
-transition:all .2s}
-.photo-add-btn:hover{border-color:#667eea;background:#f0f4ff;transform:scale(1.02)}
-.photo-add-btn .plus{font-size:24px;line-height:1}
-.photo-upload{border:2px dashed #cbd5e1;border-radius:12px;padding:16px;
-transition:all .2s;background:#fafbfc;margin-bottom:12px;position:relative}
-.photo-upload.has-photos{border-color:#10b981;background:#f0fdf4;border-style:solid}
-.photo-upload .label-row{display:flex;align-items:center;gap:10px;
-justify-content:space-between;margin-bottom:8px}
-.photo-upload .label-row strong{font-size:13px;color:#333;font-weight:700}
-.photo-upload .label-row .check{font-size:20px;color:#10b981}
-.photo-upload .hint{font-size:11px;color:#888}
-
-.zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.zone-btn{padding:12px 8px;border:2px solid #e5e7eb;border-radius:10px;
-background:white;cursor:pointer;font-family:inherit;font-size:12px;
-font-weight:600;color:#555;transition:all .2s;display:flex;
-flex-direction:column;align-items:center;gap:4px}
-.zone-btn:hover{border-color:#667eea;background:#f0f4ff}
-.zone-btn.active{border-color:#667eea;background:#ede9fe;color:#6b21a8}
-.zone-btn .ico{font-size:20px}
-
-/* SROK TEKSHIRUVI */
-.srok-check-section{background:#fffbeb;border:2px dashed #f59e0b;border-radius:12px;
-padding:14px;margin:16px 0}
-.srok-check-section .section-title{font-size:13px;font-weight:700;color:#92400e;
-display:flex;align-items:center;gap:6px;margin-bottom:10px}
-.srok-entry{background:white;border-radius:10px;padding:10px;margin-bottom:8px;
-box-shadow:0 2px 6px rgba(0,0,0,.04)}
-.srok-entry .row{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:6px}
-.srok-entry input,.srok-entry select{width:100%;padding:8px 10px;
-border:2px solid #e5e7eb;border-radius:8px;font-size:13px;font-family:inherit;
-background:#fafbfc}
-.srok-entry input:focus,.srok-entry select:focus{
-outline:none;border-color:#f59e0b;background:white}
-.srok-entry .row2{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center}
-.srok-entry .remove-btn{background:#fee2e2;color:#dc2626;border:none;
-width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700}
-.srok-entry .remove-btn:hover{background:#fecaca}
-.srok-add-btn{width:100%;padding:10px;border:2px dashed #f59e0b;border-radius:10px;
-background:white;cursor:pointer;font-family:inherit;
-font-size:12px;font-weight:700;color:#92400e;transition:all .2s}
-.srok-add-btn:hover{background:#fef3c7;border-style:solid}
-.srok-empty{text-align:center;padding:16px;color:#999;font-size:12px}
-.srok-info-bar{background:#fef3c7;color:#92400e;padding:8px 12px;
-border-radius:8px;font-size:11px;font-weight:600;
-margin-bottom:10px;display:flex;align-items:center;gap:6px}
-
-.report-card{background:white;border-radius:14px;padding:14px;
-margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:background .3s}
-.report-header{display:flex;justify-content:space-between;align-items:center;
-margin-bottom:10px;flex-wrap:wrap;gap:6px}
-
-.toast{position:fixed;bottom:90px;left:50%;transform:translate(-50%,200px);
-background:#1f2937;color:white;padding:12px 20px;border-radius:12px;
-font-size:13px;font-weight:600;z-index:2000;transition:transform .3s;
-max-width:90%;text-align:center}
-.toast.show{transform:translate(-50%,0)}
-.toast.success{background:#059669}
-.toast.error{background:#dc2626}
-.toast.warning{background:#d97706}
-
-.data-actions{display:flex;gap:8px;margin-top:12px}
-.data-actions button{flex:1;padding:10px;border:none;border-radius:10px;
-font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-.data-actions .export{background:#dbeafe;color:#1e40af}
-.data-actions .import{background:#d1fae5;color:#065f46}
-.data-actions .clear{background:#fee2e2;color:#991b1b}
-
-@media (min-width:768px){
-  body{background:#e5e7eb}
-  .desktop-wrapper{display:grid;grid-template-columns:260px 1fr;
-    min-height:100vh;max-width:1400px;margin:0 auto;background:#f0f2f5;
-    box-shadow:0 0 60px rgba(0,0,0,.1);transition:background .3s}
-  .sidebar{display:flex;flex-direction:column;
-    background:linear-gradient(180deg,#667eea 0%,#764ba2 100%);
-    color:white;padding:24px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
-  body.employee-mode .sidebar{background:linear-gradient(180deg,#10b981 0%,#059669 100%)}
-  .sidebar-logo{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,.15);
-    margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
-  .sidebar-logo img{width:36px;height:36px;border-radius:10px;object-fit:cover}
-  .sidebar-nav{display:flex;flex-direction:column;gap:4px;padding:0 12px;flex:1}
-  .sidebar-btn{padding:12px 16px;border:none;background:transparent;
-    color:rgba(255,255,255,.8);border-radius:10px;cursor:pointer;font-size:14px;
-    font-weight:600;font-family:inherit;display:flex;align-items:center;
-    gap:12px;transition:all .2s;text-align:left}
-  .sidebar-btn .ico{font-size:20px}
-  .sidebar-btn:hover{background:rgba(255,255,255,.1);color:white}
-  .sidebar-btn.active{background:rgba(255,255,255,.2);color:white;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-  .sidebar-btn .badge-count{margin-left:auto;background:rgba(255,255,255,.25);
-    padding:2px 8px;border-radius:10px;font-size:11px}
-  .sidebar-user{padding:16px 20px;border-top:1px solid rgba(255,255,255,.15);
-    font-size:12px;color:rgba(255,255,255,.9)}
-  .sidebar-user .name{font-weight:700;margin-bottom:2px}
-  .sidebar-user .role{font-size:10px;opacity:.7;text-transform:uppercase;
-    letter-spacing:1px;margin-bottom:8px}
-  .sidebar-user .logout{background:rgba(255,255,255,.15);border:none;color:white;
-    padding:6px 12px;border-radius:8px;font-size:11px;cursor:pointer;
-    font-family:inherit;width:100%;font-weight:600}
-  .sidebar-user .logout:hover{background:rgba(255,255,255,.25)}
-  .main{display:flex;flex-direction:column;min-height:100vh;background:#f0f2f5;transition:background .3s}
-  .header{padding:20px 32px;position:sticky;top:0;z-index:100}
-  .header h1{font-size:22px}
-  .header h1 img{width:38px;height:38px}
-  .stats{padding:24px 32px 12px;grid-template-columns:repeat(6,1fr);gap:16px}
-  .stat{padding:18px 20px;border-radius:16px}
-  .stat .label{font-size:11px}
-  .stat .value{font-size:32px}
-  .nav{display:none}
-  .content{padding:12px 32px 32px}
-  .list-item,.srok-item{padding:18px 20px;border-radius:16px;margin-bottom:12px}
-  .avatar{width:48px;height:48px;font-size:16px}
-  .info .title{font-size:15px}
-  .info .sub{font-size:13px}
-  .badge{font-size:11px;padding:5px 12px}
-  .empty{padding:80px 20px}
-  .empty .ico{font-size:80px}
-  .empty p{font-size:15px}
-  .fab{width:64px;height:64px;font-size:28px;bottom:32px;right:32px}
-  .modal-bg{align-items:center;padding:20px}
-  .modal{border-radius:20px;max-width:600px;animation:fadeInScale .25s ease}
-  @keyframes fadeInScale{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-  .toast{bottom:32px;left:auto;right:32px;transform:translate(0,200px)}
-  .toast.show{transform:translate(0,0)}
-  .srok-stats{grid-template-columns:repeat(5,1fr);padding:24px 32px 12px;gap:16px}
-  .srok-stat .num{font-size:28px}
-  .zone-grid{grid-template-columns:repeat(4,1fr)}
-  .photo-grid{grid-template-columns:repeat(5,1fr)}
-}
-@media (min-width:1200px){
-  .desktop-wrapper{grid-template-columns:280px 1fr}
-  .stats{grid-template-columns:repeat(6,1fr);gap:20px}
-  .stat .value{font-size:36px}
-  .content{padding:12px 40px 40px}
+:root {
+  --green: #16866a;
+  --dark: #172b3a;
+  --muted: #667785;
+  --light: #f7faf9;
 }
 
-body.dark{background:#0f172a !important;color:#f1f5f9 !important}
-body.dark .app,body.dark .desktop-wrapper,body.dark .main{background:#0f172a !important}
-body.dark .header{background:linear-gradient(135deg,#4c1d95 0%,#1e1b4b 100%) !important}
-body.dark.employee-mode .header{background:linear-gradient(135deg,#064e3b 0%,#022c22 100%) !important}
-body.dark .stat,body.dark .list-item,body.dark .srok-item,body.dark .nav,body.dark .srok-stat,
-body.dark .report-card{background:#1e293b !important;color:#f1f5f9 !important}
-body.dark .stat .label,body.dark .info .sub,body.dark .srok-stat .lbl{color:#94a3b8 !important}
-body.dark .stat .value,body.dark .info .title,body.dark .srok-stat .num{color:#f1f5f9 !important}
-body.dark .nav-btn{color:#94a3b8 !important}
-body.dark .modal{background:#1e293b !important;color:#f1f5f9 !important}
-body.dark .field input,body.dark .field select,body.dark .field textarea,
-body.dark .pass-input,body.dark .emp-select{
-  background:#0f172a !important;color:#f1f5f9 !important;border-color:#334155 !important}
-body.dark .field label,body.dark .pass-label{color:#cbd5e1 !important}
-body.dark .btn-cancel{background:#334155 !important;color:#cbd5e1 !important}
-body.dark .sidebar{background:linear-gradient(180deg,#4c1d95 0%,#1e1b4b 100%) !important}
-body.dark.employee-mode .sidebar{background:linear-gradient(180deg,#064e3b 0%,#022c22 100%) !important}
-body.dark .empty{color:#64748b !important}
-body.dark .srok-item.expired{background:#7f1d1d !important}
-body.dark .srok-item.today{background:#7f1d1d !important}
-body.dark .srok-item.critical{background:#78350f !important}
-body.dark .srok-item.warning{background:#713f12 !important}
-body.dark .srok-item.normal{background:#1e293b !important}
-body.dark #login .login-container{background:#1e293b;color:#f1f5f9}
-body.dark .login-title{color:#f1f5f9}
-body.dark .login-subtitle,body.dark .login-question{color:#94a3b8}
-body.dark .role-btn{background:#0f172a;border-color:#334155}
-body.dark .role-btn .txt strong{color:#f1f5f9}
-body.dark .role-btn .txt span{color:#94a3b8}
-body.dark .login-btn.back{background:#334155;color:#cbd5e1}
-body.dark .photo-upload{background:#0f172a;border-color:#334155}
-body.dark .photo-upload.has-photos{background:#064e3b;border-color:#10b981}
-body.dark .photo-upload .label-row strong{color:#f1f5f9}
-body.dark .photo-add-btn{background:#0f172a;border-color:#334155;color:#8b5cf6}
-body.dark .photo-add-btn:hover{background:#1e1b4b;border-color:#8b5cf6}
-body.dark .photo-thumb{background:#0f172a}
-body.dark .zone-btn{background:#0f172a;border-color:#334155;color:#cbd5e1}
-body.dark .zone-btn.active{background:#4c1d95;border-color:#8b5cf6;color:white}
-body.dark .login-info{background:#1e1b4b;color:#cbd5e1;border-left-color:#8b5cf6}
-body.dark .login-info strong{color:#f1f5f9}
-body.dark .login-error{background:#7f1d1d;color:#fecaca}
-body.dark .shift-select-btn{background:#0f172a;border-color:#334155;color:#cbd5e1}
-body.dark .shift-select-btn:hover{background:#1e1b4b;border-color:#667eea}
-body.dark .shift-select-btn.selected{background:#4c1d95;border-color:#8b5cf6}
-body.dark .srok-check-section{background:#78350f;border-color:#f59e0b}
-body.dark .srok-check-section .section-title{color:#fbbf24}
-body.dark .srok-entry{background:#1e293b}
-body.dark .srok-entry input,body.dark .srok-entry select{
-  background:#0f172a;color:#f1f5f9;border-color:#334155}
-body.dark .srok-add-btn{background:#0f172a;color:#fbbf24;border-color:#f59e0b}
-body.dark .srok-add-btn:hover{background:#78350f}
-body.dark .srok-info-bar{background:#78350f;color:#fbbf24}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--light);
+  color: var(--dark);
+}
+
+header {
+  background: white;
+  padding: 20px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.logo span {
+  color: var(--dark);
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: var(--green);
+}
+
+main {
+  max-width: 1200px;
+  margin: auto;
+  padding: 25px;
+}
+
+.hero {
+  min-height: 400px;
+  border-radius: 20px;
+  padding: 50px;
+  display: flex;
+  align-items: center;
+  color: white;
+  background:
+    linear-gradient(90deg, #102b36dd, #102b3620),
+    url("https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600")
+    center/cover;
+}
+
+.hero-content {
+  max-width: 550px;
+}
+
+.hero h1 {
+  font-size: 48px;
+}
+
+.hero p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+button {
+  background: var(--green);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #106d56;
+}
+
+.section {
+  margin-top: 45px;
+}
+
+.section h2 {
+  font-size: 28px;
+}
+
+.subtitle {
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid #e5ece9;
+}
+
+.card img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.card h3 {
+  margin-top: 10px;
+}
+
+.tag {
+  color: var(--green);
+  background: #eef7f3;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.price {
+  font-size: 19px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.panel {
+  background: white;
+  border-radius: 15px;
+  padding: 22px;
+  border: 1px solid #e5ece9;
+}
+
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0 15px;
+  border: 1px solid #dbe5e1;
+  border-radius: 8px;
+  font: inherit;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+.proposal {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+footer {
+  background: var(--dark);
+  color: white;
+  padding: 30px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #0009;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-box {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 450px;
+  width: 100%;
+}
+
+@media(max-width: 800px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  nav {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
+@media(max-width: 600px) {
+  header {
+    display: block;
+  }
+
+  nav {
+    margin-top: 15px;
+  }
+
+  .grid, .two {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 25px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+}
 </style>
 </head>
+
 <body>
 
-<div id="splash">
-  <img src="logo.png" class="splash-logo" alt="Store Control" onerror="this.style.display='none'">
-  <div class="splash-title">Store Control</div>
-  <div class="splash-subtitle">Supermarket tizimi</div>
-  <div class="splash-loader"><span></span><span></span><span></span></div>
-</div>
+<header>
+  <div class="logo">TRIP<span>GO</span></div>
 
-<div id="login">
-  <div class="login-container">
-    <img src="logo.png" class="login-logo" alt="Logo" onerror="this.style.display='none'">
-    <div class="login-title">Store Control</div>
-    <div class="login-subtitle">Supermarket boshqaruv tizimi</div>
+  <nav>
+    <a href="#home">Bosh sahifa</a>
+    <a href="#trips">Sayohatlar</a>
+    <a href="#ideas">Takliflar</a>
+    <a href="#albums">Albomlar</a>
+    <a href="#market">Market</a>
+    <a href="#profile">Profilim</a>
+  </nav>
+</header>
 
-    <div id="loginStep1">
-      <div class="login-question">👤 Kim sifatida kirmoqchisiz?</div>
-      <button class="role-btn manager" onclick="selectRole('manager')">
-        <div class="ico">👨‍💼</div>
-        <div class="txt"><strong>Menejer</strong><span>To'liq boshqaruv huquqi</span></div>
-        <div class="arrow">›</div>
-      </button>
-      <button class="role-btn employee" onclick="selectRole('employee')">
-        <div class="ico">👷</div>
-        <div class="txt"><strong>Xodim</strong><span>Faqat o'z vazifalarini ko'rish</span></div>
-        <div class="arrow">›</div>
-      </button>
+<main>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <h1>Keyingi manzilingiz qayer?</h1>
+
+    <p>
+      O‘zbekiston bo‘ylab bir kunlik sayohatlarni
+      kashf eting, o‘zingizga mos yo‘nalishni tanlang
+      va yangi xotiralar yarating.
+    </p>
+
+    <a href="#trips">
+      <button>Sayohatlarni ko‘rish</button>
+    </a>
+  </div>
+</section>
+
+<section class="section" id="trips">
+  <h2>Rejalashtirilgan sayohatlar</h2>
+  <p class="subtitle">O‘zingizga mos yo‘nalishni tanlang</p>
+
+  <div class="grid" id="tripGrid"></div>
+</section>
+
+<section class="section" id="ideas">
+  <h2>Sayohat takliflari</h2>
+  <p class="subtitle">
+    Keyingi safar qayerga borishni xohlaysiz?
+  </p>
+
+  <div class="two">
+
+    <div class="panel">
+      <h3>Yangi taklif yuborish</h3>
+
+      <label>Manzil nomi</label>
+      <input id="ideaName" placeholder="Masalan: Zomin tog‘lari">
+
+      <label>Taklifingiz haqida</label>
+      <textarea id="ideaText"
+        placeholder="Nima uchun shu joyga borish kerak?"></textarea>
+
+      <button onclick="addIdea()">Taklif yuborish</button>
     </div>
 
-    <div id="loginStepManager" style="display:none">
-      <div class="login-question">🔒 Menejer parolini kiriting</div>
-      <div class="login-error" id="errManager"></div>
-      <label class="pass-label">Parol</label>
-      <div class="pass-wrap">
-        <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="mgrPass" placeholder="••••••" autocomplete="off"
-               onkeydown="if(event.key==='Enter') loginManager()">
-        <button class="pass-toggle" onclick="togglePass('mgrPass', this)">👁️</button>
-      </div>
-      <button class="login-btn primary" onclick="loginManager()"><span>🔓 Kirish</span></button>
-      <button class="login-btn back" onclick="backToStep1()"><span>← Orqaga</span></button>
+    <div class="panel">
+      <h3>Foydalanuvchilar takliflari</h3>
+      <div id="ideaList"></div>
     </div>
 
-    <div id="loginStepManagerSetup" style="display:none">
-      <div class="login-question">🔐 Yangi parol yarating</div>
-      <div class="login-info"><strong>Birinchi kirish</strong>
-        Iltimos, o'zingizga parol o'ylab toping.<br>Har safar shu parol bilan kirasiz.</div>
-      <div class="login-error" id="errManagerSetup"></div>
-      <label class="pass-label">Yangi parol (min 4 belgi)</label>
-      <div class="pass-wrap">
-        <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="setupPass1" placeholder="••••••" autocomplete="off">
-        <button class="pass-toggle" onclick="togglePass('setupPass1', this)">👁️</button>
+  </div>
+</section>
+
+<section class="section" id="albums">
+  <h2>Sayohat albomlari</h2>
+  <p class="subtitle">O‘tgan safarlardan lavhalar</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=900">
+      <div class="card-body">
+        <span class="tag">Tarix</span>
+        <h3>Samarqand</h3>
+        <p>Registon va qadimiy obidalar</p>
       </div>
-      <label class="pass-label">Parolni takrorlang</label>
-      <div class="pass-wrap">
-        <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="setupPass2" placeholder="••••••" autocomplete="off"
-               onkeydown="if(event.key==='Enter') setupManagerPassword()">
-        <button class="pass-toggle" onclick="togglePass('setupPass2', this)">👁️</button>
-      </div>
-      <button class="login-btn primary" onclick="setupManagerPassword()"><span>✅ Parolni saqlash</span></button>
-      <button class="login-btn back" onclick="backToStep1()"><span>← Orqaga</span></button>
     </div>
 
-    <div id="loginStepEmployee" style="display:none">
-      <div class="login-question">👷 Xodim kirishi</div>
-      <div class="login-error" id="errEmployee"></div>
-      <label class="pass-label">Xodimni tanlang</label>
-      <select class="emp-select" id="employeeSelect">
-        <option value="">— Xodimni tanlang —</option>
-      </select>
-      <button class="login-btn primary green" onclick="nextEmployeeStep()"><span>➡️ Davom etish</span></button>
-      <button class="login-btn back" onclick="backToStep1()"><span>← Orqaga</span></button>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900">
+      <div class="card-body">
+        <span class="tag">Tabiat</span>
+        <h3>Tog‘ sayohati</h3>
+        <p>Tabiat qo‘ynida unutilmas kun</p>
+      </div>
     </div>
 
-    <div id="loginStepEmployeePass" style="display:none">
-      <div class="login-question">🔒 Parolni kiriting</div>
-      <div class="login-info" id="empPassInfo"></div>
-      <div class="login-error" id="errEmployeePass"></div>
-      <label class="pass-label">Parol</label>
-      <div class="pass-wrap">
-        <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="empPass" placeholder="••••••" autocomplete="off"
-               onkeydown="if(event.key==='Enter') loginEmployeePass()">
-        <button class="pass-toggle" onclick="togglePass('empPass', this)">👁️</button>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=900">
+      <div class="card-body">
+        <span class="tag">Dam olish</span>
+        <h3>Ko‘l bo‘yida</h3>
+        <p>Do‘stlar bilan maroqli dam</p>
       </div>
-      <button class="login-btn primary green" onclick="loginEmployeePass()"><span>🔓 Kirish</span></button>
-      <button class="login-btn back" onclick="backToEmployeeSelect()"><span>← Orqaga</span></button>
     </div>
 
-    <div id="loginStepEmployeeSetup" style="display:none">
-      <div class="login-question">🎉 Xush kelibsiz!</div>
-      <div class="login-info" id="empSetupInfo"></div>
-      <div class="login-error" id="errEmployeeSetup"></div>
-      <label class="pass-label">Yangi parol (min 4 belgi)</label>
-      <div class="pass-wrap">
-        <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="empSetupPass1" placeholder="••••••" autocomplete="off">
-        <button class="pass-toggle" onclick="togglePass('empSetupPass1', this)">👁️</button>
+  </div>
+</section>
+
+<section class="section" id="market">
+  <h2>Sayohat marketi</h2>
+  <p class="subtitle">
+    Safar uchun kerakli mahsulotlar
+  </p>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900">
+      <div class="card-body">
+        <span class="tag">Sayohat jihozi</span>
+        <h3>Sayohat ryukzagi</h3>
+        <div class="price">249 000 so‘m</div>
+        <button onclick="addCart('Sayohat ryukzagi',249000)">
+          Savatga qo‘shish
+        </button>
       </div>
-      <label class="pass-label">Parolni takrorlang</label>
-      <div class="pass-wrap">
-        <span class="pass-icon">🔒</span>
-        <input type="password" class="pass-input" id="empSetupPass2" placeholder="••••••" autocomplete="off"
-               onkeydown="if(event.key==='Enter') setupEmployeePassword()">
-        <button class="pass-toggle" onclick="togglePass('empSetupPass2', this)">👁️</button>
-      </div>
-      <button class="login-btn primary green" onclick="setupEmployeePassword()"><span>✅ Parolni saqlash va kirish</span></button>
-      <button class="login-btn back" onclick="backToEmployeeSelect()"><span>← Orqaga</span></button>
     </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900">
+      <div class="card-body">
+        <span class="tag">Kiyim</span>
+        <h3>Sport oyoq kiyimi</h3>
+        <div class="price">399 000 so‘m</div>
+        <button onclick="addCart('Sport oyoq kiyimi',399000)">
+          Savatga qo‘shish
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=900">
+      <div class="card-body">
+        <span class="tag">Aksessuar</span>
+        <h3>Suv idishi</h3>
+        <div class="price">59 000 so‘m</div>
+        <button onclick="addCart('Suv idishi',59000)">
+          Savatga qo‘shish
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel" style="margin-top:20px">
+    <h3>Savat: <span id="cartCount">0</span> ta mahsulot</h3>
+    <div id="cartItems">Hozircha savat bo‘sh.</div>
+    <h3 id="cartTotal"></h3>
+  </div>
+</section>
+
+<section class="section" id="profile">
+  <h2>Profilim</h2>
+  <p class="subtitle">Shaxsiy ma’lumotlar va bronlar</p>
+
+  <div class="two">
+
+    <div class="panel">
+      <h3>Shaxsiy ma’lumotlar</h3>
+
+      <label>Ismingiz</label>
+      <input id="userName" placeholder="Ism familiya">
+
+      <label>Telefon raqam</label>
+      <input id="userPhone" placeholder="+998 90 123 45 67">
+
+      <button onclick="saveProfile()">Saqlash</button>
+      <p id="profileStatus"></p>
+    </div>
+
+    <div class="panel">
+      <h3>Mening bronlarim</h3>
+      <div id="myBookings">Hozircha bron mavjud emas.</div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  TRIPGO · O‘zbekiston bo‘ylab sayohatni oson rejalashtiring
+</footer>
+
+<div class="modal" id="bookingModal">
+  <div class="modal-box">
+    <button onclick="closeModal()">Yopish</button>
+
+    <h2 id="modalTitle">Sayohatga bron</h2>
+    <p id="modalInfo"></p>
+
+    <label>Ismingiz</label>
+    <input id="bookName" placeholder="Ism familiya">
+
+    <label>Telefon raqam</label>
+    <input id="bookPhone" placeholder="+998...">
+
+    <label>Odamlar soni</label>
+    <select id="people">
+      <option value="1">1 kishi</option>
+      <option value="2">2 kishi</option>
+      <option value="3">3 kishi</option>
+      <option value="4">4 kishi</option>
+      <option value="5">5 kishi</option>
+    </select>
+
+    <button onclick="confirmBooking()">
+      Bron so‘rovini yuborish
+    </button>
   </div>
 </div>
 
-<div class="desktop-wrapper" id="mainApp" style="display:none">
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
-      <span>Store Control</span>
-    </div>
-    <nav class="sidebar-nav">
-      <button class="sidebar-btn active" data-tab="employees"><span class="ico">👥</span><span>Xodimlar</span><span class="badge-count" id="cnt-emp">0</span></button>
-      <button class="sidebar-btn" data-tab="shifts"><span class="ico">🕐</span><span>Smenalar</span><span class="badge-count" id="cnt-shift">0</span></button>
-      <button class="sidebar-btn" data-tab="reports"><span class="ico">📸</span><span>Hisobotlar</span><span class="badge-count" id="cnt-reports">0</span></button>
-      <button class="sidebar-btn" data-tab="tasks"><span class="ico">📋</span><span>Topshiriqlar</span><span class="badge-count" id="cnt-task">0</span></button>
-      <button class="sidebar-btn" data-tab="products"><span class="ico">📦</span><span>Tovarlar</span><span class="badge-count" id="cnt-prod">0</span></button>
-      <button class="sidebar-btn" data-tab="expiry"><span class="ico">⏰</span><span>Srok</span><span class="badge-count" id="cnt-srok">0</span></button>
-      <button class="sidebar-btn" data-tab="issues"><span class="ico">⚠️</span><span>Muammolar</span><span class="badge-count" id="cnt-issue">0</span></button>
-    </nav>
-    <div class="sidebar-user">
-      <div class="name" id="sidebarUserName">—</div>
-      <div class="role" id="sidebarUserRole">—</div>
-      <button class="logout" onclick="logout()">🚪 Chiqish</button>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="app">
-      <div class="header" id="appHeader">
-        <div class="header-top">
-          <h1><img src="logo.png" alt="Logo" onerror="this.style.display='none'"><span id="headerTitle">Store Control</span></h1>
-          <div class="header-right">
-            <span class="role-badge" id="headerRole">👨‍💼 MENEJER</span>
-            <button class="icon-btn" onclick="refresh()" title="Yangilash">🔄</button>
-            <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Rejim">🌙</button>
-            <button class="icon-btn" onclick="openSettings()" id="settingsBtn" title="Sozlamalar">⚙️</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat blue"><div class="label">Xodimlar</div><div class="value" id="sEmp">0</div></div>
-        <div class="stat green"><div class="label">Faol smena</div><div class="value" id="sShift">0</div></div>
-        <div class="stat purple"><div class="label">Hisobotlar</div><div class="value" id="sReports">0</div></div>
-        <div class="stat orange"><div class="label">Topshiriq</div><div class="value" id="sTask">0</div></div>
-        <div class="stat red"><div class="label">Muammo</div><div class="value" id="sIssue">0</div></div>
-        <div class="stat yellow"><div class="label">⚠️ Srok</div><div class="value" id="sSrok">0</div></div>
-      </div>
-
-      <div class="nav">
-        <button class="nav-btn active" data-tab="employees"><span class="ico">👥</span>Xodimlar</button>
-        <button class="nav-btn" data-tab="shifts"><span class="ico">🕐</span>Smenalar</button>
-        <button class="nav-btn" data-tab="reports"><span class="ico">📸</span>Hisobot</button>
-        <button class="nav-btn" data-tab="tasks"><span class="ico">📋</span>Topshiriq</button>
-        <button class="nav-btn" data-tab="products"><span class="ico">📦</span>Tovarlar</button>
-        <button class="nav-btn" data-tab="expiry"><span class="ico">⏰</span>Srok</button>
-        <button class="nav-btn" data-tab="issues"><span class="ico">⚠️</span>Muammo</button>
-      </div>
-
-      <div class="content">
-        <div class="section active" id="sec-employees"></div>
-        <div class="section" id="sec-shifts"></div>
-        <div class="section" id="sec-reports"></div>
-        <div class="section" id="sec-tasks"></div>
-        <div class="section" id="sec-products"></div>
-        <div class="section" id="sec-expiry"></div>
-        <div class="section" id="sec-issues"></div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<button class="fab" id="fabBtn" onclick="openModal()" style="display:none">➕</button>
-<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
-  <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
-</div>
-<div class="toast" id="toast"></div>
-
 <script>
-// =========================================================
-// SOZLAMALAR
-// =========================================================
-const ZONES = [
-  {id:'bread', name:'🍞 Non bo\'limi'},
-  {id:'dairy', name:'🥛 Sut bo\'limi'},
-  {id:'meat', name:'🥩 Go\'sht bo\'limi'},
-  {id:'vegetables', name:'🥬 Sabzavot'},
-  {id:'fruits', name:'🍎 Mevalar'},
-  {id:'frozen', name:'❄️ Muzlatilgan'},
-  {id:'drinks', name:'🥤 Ichimliklar'},
-  {id:'warehouse', name:'📦 Omborxona'}
+
+const trips = [
+  {
+    id: 1,
+    name: "Zomin tog‘lari",
+    place: "Jizzax viloyati",
+    price: 180000,
+    date: "Sana keyin belgilanadi",
+    type: "Tabiat",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900",
+    description: "Tog‘ havosi va go‘zal tabiat qo‘ynida bir kun."
+  },
+  {
+    id: 2,
+    name: "Samarqand",
+    place: "Samarqand viloyati",
+    price: 220000,
+    date: "Sana keyin belgilanadi",
+    type: "Tarix",
+    image: "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=900",
+    description: "Tarixiy obidalar va qadimiy shahar bilan tanishing."
+  },
+  {
+    id: 3,
+    name: "Chorvoq",
+    place: "Toshkent viloyati",
+    price: 160000,
+    date: "Sana keyin belgilanadi",
+    type: "Tabiat",
+    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=900",
+    description: "Suv va tog‘ manzaralari orasida hordiq chiqaring."
+  }
 ];
 
-const PHOTO_TYPES = [
-  {id:'shelf', name:'🛒 Addellar to\'la', hint:'Har bir addehni alohida rasmga oling (kamida 3 ta)', min:3},
-  {id:'fridge', name:'❄️ Xolodilniklar', hint:'Har bir xolodilnikni rasmga oling (kamida 2 ta)', min:2},
-  {id:'prices', name:'💰 Narxlar yangilangan', hint:'Narx yorliqlarini rasmga oling (kamida 2 ta)', min:2},
-  {id:'cleanliness', name:'🧹 Tozalik', hint:'Bo\'lim tozaligini rasmga oling (kamida 1 ta)', min:1}
-];
+let selectedTrip = null;
+let cart = JSON.parse(localStorage.getItem("tripgo_cart") || "[]");
 
-const REQUIRED_SHIFTS = [
-  {id:1, name:"1-smena", start_time:"08:00", end_time:"16:00", ico:"🌅"},
-  {id:2, name:"2-smena", start_time:"16:00", end_time:"00:00", ico:"🌆"},
-  {id:3, name:"3-smena", start_time:"00:00", end_time:"08:00", ico:"🌙"}
-];
-
-// =========================================================
-// MA'LUMOTLAR BAZASI
-// =========================================================
-const DB = {
-  stores: [], employees: [], shifts: [], shift_instances: [],
-  tasks: [], products: [], product_batches: [], issues: [], reports: [],
-  managerPassword: null,
-
-  load(){
-    const data = localStorage.getItem('store_control_db');
-    if(data){
-      try {
-        const parsed = JSON.parse(data);
-        Object.assign(this, parsed);
-        if(!Array.isArray(this.product_batches)) this.product_batches = [];
-        if(!Array.isArray(this.reports)) this.reports = [];
-      } catch(e){ this.seed(); }
-    } else { this.seed(); }
-    this.ensureShifts();
-  },
-
-  ensureShifts(){
-    if(!Array.isArray(this.shifts)) this.shifts = [];
-    let changed = false;
-    REQUIRED_SHIFTS.forEach(req => {
-      const exists = this.shifts.find(s => s.id === req.id);
-      if(exists){
-        // Vaqtlarni ham yangilash
-        if(exists.start_time !== req.start_time || exists.end_time !== req.end_time){
-          exists.start_time = req.start_time;
-          exists.end_time = req.end_time;
-          exists.name = req.name;
-          changed = true;
-        }
-      } else {
-        this.shifts.push({
-          id: req.id, store_id: 1,
-          name: req.name,
-          start_time: req.start_time,
-          end_time: req.end_time
-        });
-        changed = true;
-      }
-    });
-    this.shifts.sort((a,b) => a.id - b.id);
-    // Faqat 3 tasini saqlash
-    this.shifts = this.shifts.slice(0,3);
-    if(changed) this.save();
-  },
-
-  seed(){
-    this.stores = [{id:1, name:"Asosiy Do'kon", address:"Toshkent"}];
-    this.shifts = REQUIRED_SHIFTS.map(s => ({
-      id: s.id, store_id: 1, name: s.name,
-      start_time: s.start_time, end_time: s.end_time
-    }));
-    this.product_batches = [];
-    this.reports = [];
-    this.managerPassword = null;
-    this.save();
-  },
-
-  save(){
-    try {
-      localStorage.setItem('store_control_db', JSON.stringify({
-        stores: this.stores, employees: this.employees, shifts: this.shifts,
-        shift_instances: this.shift_instances, tasks: this.tasks,
-        products: this.products, product_batches: this.product_batches,
-        issues: this.issues, reports: this.reports,
-        managerPassword: this.managerPassword
-      }));
-    } catch(e){
-      toast('⚠️ Xotira to\'lib qoldi! Eski hisobotlarni o\'chiring', 'error');
-      console.error(e);
-    }
-  },
-
-  nextId(table){
-    const items = this[table];
-    if(!items.length) return 1;
-    return Math.max(...items.map(i=>i.id)) + 1;
-  },
-
-  export(){
-    const data = {
-      stores: this.stores, employees: this.employees, shifts: this.shifts,
-      shift_instances: this.shift_instances, tasks: this.tasks,
-      products: this.products, product_batches: this.product_batches,
-      issues: this.issues, reports: this.reports,
-      managerPassword: this.managerPassword,
-      exported_at: new Date().toISOString()
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'store-control-' + new Date().toISOString().slice(0,10) + '.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  },
-
-  import(data){
-    if(!data || typeof data !== 'object') throw new Error('Noto\'g\'ri format');
-    ['stores','employees','shifts','shift_instances','tasks','products','product_batches','issues','reports'].forEach(k=>{
-      if(Array.isArray(data[k])) this[k] = data[k];
-    });
-    if(typeof data.managerPassword === 'string' || data.managerPassword === null){
-      this.managerPassword = data.managerPassword;
-    }
-    this.ensureShifts();
-    this.save();
-  }
-};
-
-// =========================================================
-// HOLAT
-// =========================================================
-let currentUser = { role: null, employeeId: null, employeeName: null };
-let currentTab = 'employees';
-let tempEmployeeId = null;
-let endShiftData = { shiftInstanceId: null, zone: null, photos: {}, srokCheck: [], note: '', isClosingShift: false };
-
-// =========================================================
-// YORDAMCHI
-// =========================================================
-function isClosingShift(shiftId){
-  const shift = DB.shifts.find(s => s.id === shiftId);
-  return shift && (shift.end_time === "00:00" || shift.id === 2);
+function money(number) {
+  return number.toLocaleString("uz-UZ") + " so‘m";
 }
 
-function hashPassword(pwd){
-  let hash = 0;
-  const salt = 'store_control_2026_secure';
-  const str = salt + pwd + salt;
-  for(let i = 0; i < str.length; i++){
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return 'h' + Math.abs(hash).toString(36);
-}
+function renderTrips() {
+  const grid = document.getElementById("tripGrid");
 
-function loadUser(){
-  const data = localStorage.getItem('store_control_user');
-  if(data){ try{ const p = JSON.parse(data); if(p.role) currentUser = p; }catch(e){} }
-}
-function saveUser(){ localStorage.setItem('store_control_user', JSON.stringify(currentUser)); }
-function clearUser(){ localStorage.removeItem('store_control_user'); currentUser = {role:null,employeeId:null,employeeName:null}; }
-function isManager(){ return currentUser.role === 'manager'; }
+  grid.innerHTML = trips.map(trip => `
+    <div class="card">
+      <img src="${trip.image}" alt="${trip.name}">
 
-function togglePass(inputId, btn){
-  const input = document.getElementById(inputId);
-  if(input.type === 'password'){ input.type = 'text'; btn.textContent = '🙈'; }
-  else { input.type = 'password'; btn.textContent = '👁️'; }
-}
-function showError(id, msg){
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 4000);
-}
+      <div class="card-body">
+        <span class="tag">${trip.type}</span>
 
-// =========================================================
-// LOGIN
-// =========================================================
-function hideAllLoginSteps(){
-  ['loginStep1','loginStepManager','loginStepManagerSetup',
-   'loginStepEmployee','loginStepEmployeePass','loginStepEmployeeSetup']
-    .forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
-}
+        <h3>${trip.name}</h3>
 
-function selectRole(role){
-  hideAllLoginSteps();
-  if(role === 'manager'){
-    if(!DB.managerPassword){
-      document.getElementById('loginStepManagerSetup').style.display = 'block';
-    } else {
-      document.getElementById('loginStepManager').style.display = 'block';
-      setTimeout(() => document.getElementById('mgrPass').focus(), 200);
-    }
-  } else {
-    if(!DB.employees.length){
-      toast('⚠️ Xodimlar yo\'q. Menejerga murojaat qiling!', 'error');
-      return;
-    }
-    const select = document.getElementById('employeeSelect');
-    select.innerHTML = '<option value="">— Xodimni tanlang —</option>' +
-      DB.employees.map(e => `<option value="${e.id}">${esc(e.name)}</option>`).join('');
-    document.getElementById('loginStepEmployee').style.display = 'block';
-  }
-}
+        <p>📍 ${trip.place}</p>
+        <p>📅 ${trip.date}</p>
+        <p>${trip.description}</p>
 
-function backToStep1(){
-  hideAllLoginSteps();
-  document.getElementById('loginStep1').style.display = 'block';
-  ['mgrPass','empPass','setupPass1','setupPass2','empSetupPass1','empSetupPass2'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.value = '';
-  });
-  document.getElementById('employeeSelect').value = '';
-  tempEmployeeId = null;
-}
+        <div class="price">${money(trip.price)}</div>
 
-function backToEmployeeSelect(){
-  hideAllLoginSteps();
-  document.getElementById('loginStepEmployee').style.display = 'block';
-  document.getElementById('empPass').value = '';
-  document.getElementById('empSetupPass1').value = '';
-  document.getElementById('empSetupPass2').value = '';
-}
-
-function setupManagerPassword(){
-  const p1 = document.getElementById('setupPass1').value;
-  const p2 = document.getElementById('setupPass2').value;
-  if(p1.length < 4){ showError('errManagerSetup', '⚠️ Parol kamida 4 belgi!'); return; }
-  if(p1 !== p2){ showError('errManagerSetup', '⚠️ Parollar mos kelmadi!'); return; }
-  DB.managerPassword = hashPassword(p1);
-  DB.save();
-  toast('✅ Parol yaratildi!', 'success');
-  currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
-  saveUser(); enterApp();
-}
-
-function loginManager(){
-  const pwd = document.getElementById('mgrPass').value;
-  if(!pwd){ showError('errManager', '⚠️ Parolni kiriting!'); return; }
-  if(hashPassword(pwd) !== DB.managerPassword){
-    showError('errManager', '❌ Parol noto\'g\'ri!');
-    document.getElementById('mgrPass').value = ''; return;
-  }
-  currentUser = { role: 'manager', employeeId: null, employeeName: 'Menejer' };
-  saveUser(); enterApp();
-}
-
-function nextEmployeeStep(){
-  const empId = parseInt(document.getElementById('employeeSelect').value);
-  if(!empId){ showError('errEmployee', '⚠️ Xodimni tanlang!'); return; }
-  const emp = DB.employees.find(e => e.id === empId);
-  if(!emp){ showError('errEmployee', '❌ Xodim topilmadi!'); return; }
-  tempEmployeeId = empId;
-  if(!emp.passwordHash){
-    document.getElementById('empSetupInfo').innerHTML =
-      `<strong>Xush kelibsiz, ${esc(emp.name)}!</strong><br>
-       Siz birinchi marta kirmoqdasiz.<br>
-       Iltimos, o'zingizga parol o'ylab toping.`;
-    hideAllLoginSteps();
-    document.getElementById('loginStepEmployeeSetup').style.display = 'block';
-  } else {
-    document.getElementById('empPassInfo').innerHTML =
-      `<strong>Salom, ${esc(emp.name)}!</strong><br>Parolingizni kiriting.`;
-    hideAllLoginSteps();
-    document.getElementById('loginStepEmployeePass').style.display = 'block';
-    setTimeout(() => document.getElementById('empPass').focus(), 200);
-  }
-}
-
-function loginEmployeePass(){
-  const pwd = document.getElementById('empPass').value;
-  if(!pwd){ showError('errEmployeePass', '⚠️ Parolni kiriting!'); return; }
-  const emp = DB.employees.find(e => e.id === tempEmployeeId);
-  if(!emp){ showError('errEmployeePass', '❌ Xodim topilmadi!'); return; }
-  if(hashPassword(pwd) !== emp.passwordHash){
-    showError('errEmployeePass', '❌ Parol noto\'g\'ri!');
-    document.getElementById('empPass').value = ''; return;
-  }
-  currentUser = { role: 'employee', employeeId: emp.id, employeeName: emp.name };
-  saveUser(); enterApp();
-}
-
-function setupEmployeePassword(){
-  const p1 = document.getElementById('empSetupPass1').value;
-  const p2 = document.getElementById('empSetupPass2').value;
-  if(p1.length < 4){ showError('errEmployeeSetup', '⚠️ Parol kamida 4 belgi!'); return; }
-  if(p1 !== p2){ showError('errEmployeeSetup', '⚠️ Parollar mos kelmadi!'); return; }
-  const emp = DB.employees.find(e => e.id === tempEmployeeId);
-  if(!emp){ showError('errEmployeeSetup', '❌ Xodim topilmadi!'); return; }
-  emp.passwordHash = hashPassword(p1);
-  DB.save();
-  toast('✅ Parol yaratildi!', 'success');
-  currentUser = { role: 'employee', employeeId: emp.id, employeeName: emp.name };
-  saveUser();
-  setTimeout(() => enterApp(), 800);
-}
-
-function enterApp(){
-  document.getElementById('login').classList.add('hide');
-  document.getElementById('mainApp').style.display = '';
-  applyRole();
-  refresh();
-}
-
-function applyRole(){
-  const isEmployee = currentUser.role === 'employee';
-  document.body.classList.toggle('employee-mode', isEmployee);
-  document.getElementById('appHeader').classList.toggle('employee', isEmployee);
-  document.getElementById('headerRole').textContent = isEmployee ? '👷 XODIM' : '👨‍💼 MENEJER';
-  document.getElementById('headerTitle').textContent = isEmployee ? currentUser.employeeName : 'Store Control';
-  document.getElementById('sidebarUserName').textContent = isEmployee ? currentUser.employeeName : 'Menejer';
-  document.getElementById('sidebarUserRole').textContent = isEmployee ? 'Xodim' : 'Menejer';
-  document.getElementById('settingsBtn').style.display = isEmployee ? 'none' : 'flex';
-}
-
-function logout(){
-  if(!confirm('Tizimdan chiqmoqchimisiz?')) return;
-  clearUser();
-  document.getElementById('login').classList.remove('hide');
-  document.getElementById('mainApp').style.display = 'none';
-  document.body.classList.remove('employee-mode');
-  backToStep1();
-}
-
-// =========================================================
-// SROK HISOBLASH
-// =========================================================
-function getSrokStatus(expiryDate){
-  if(!expiryDate) return {cls:'normal', label:'—', days:null};
-  const today = new Date(); today.setHours(0,0,0,0);
-  const exp = new Date(expiryDate); exp.setHours(0,0,0,0);
-  const days = Math.floor((exp - today) / (1000*60*60*24));
-  if(days < 0) return {cls:'expired', label:'Muddati o\'tgan', days, ico:'🔴'};
-  if(days === 0) return {cls:'today', label:'Bugun tugaydi', days, ico:'🟡'};
-  if(days <= 3) return {cls:'critical', label:'Tez tugaydi', days, ico:'🟠'};
-  if(days <= 7) return {cls:'warning', label:'Ogohlantirish', days, ico:'🟢'};
-  return {cls:'normal', label:'Normada', days, ico:'⚪'};
-}
-function srokStats(){
-  const stats = {expired:0, today:0, critical:0, warning:0, normal:0};
-  DB.product_batches.forEach(b=>{
-    if(b.quantity <= 0) return;
-    const s = getSrokStatus(b.expiry_date);
-    stats[s.cls] = (stats[s.cls]||0) + 1;
-  });
-  return stats;
-}
-
-// =========================================================
-// YORDAMCHI
-// =========================================================
-function toast(msg, type){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + (type||'');
-  setTimeout(()=>t.classList.add('show'),10);
-  setTimeout(()=>t.classList.remove('show'),3000);
-}
-function empty(ico, txt){
-  return '<div class="empty"><div class="ico">'+ico+'</div><p>'+txt.replace(/\n/g,'<br>')+'</p></div>';
-}
-function badge(txt, cls){ return '<span class="badge '+(cls||'gray')+'">'+txt+'</span>'; }
-function esc(s){
-  return String(s==null?'':s).replace(/[&<>"']/g, c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
-function fmtDate(d){
-  if(!d) return '—';
-  const dt = new Date(d);
-  return dt.toLocaleDateString('uz-UZ', {day:'2-digit', month:'2-digit', year:'numeric'});
-}
-function fmtDateTime(d){
-  if(!d) return '—';
-  const dt = new Date(d);
-  return dt.toLocaleDateString('uz-UZ', {day:'2-digit', month:'2-digit'}) + ' ' +
-    dt.toLocaleTimeString('uz-UZ', {hour:'2-digit', minute:'2-digit'});
-}
-function zoneName(id){
-  const z = ZONES.find(x => x.id === id);
-  return z ? z.name : '—';
-}
-function shiftName(id){
-  const s = DB.shifts.find(x => x.id === id);
-  return s ? s.name : '—';
-}
-
-function compressImage(file, maxWidth = 700, quality = 0.7){
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let w = img.width, h = img.height;
-        if(w > maxWidth){ h = (maxWidth / w) * h; w = maxWidth; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', quality));
-      };
-      img.onerror = reject;
-      img.src = e.target.result;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-function toggleTheme(){
-  document.body.classList.toggle('dark');
-  const isDark = document.body.classList.contains('dark');
-  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
-  localStorage.setItem('store_theme', isDark ? 'dark' : 'light');
-}
-(function(){
-  const saved = localStorage.getItem('store_theme');
-  if(saved === 'dark'){
-    document.body.classList.add('dark');
-    setTimeout(()=>{ const b = document.getElementById('themeBtn'); if(b) b.textContent = '☀️'; }, 100);
-  }
-})();
-
-// =========================================================
-// STATS
-// =========================================================
-function loadStats(){
-  const isEmp = currentUser.role === 'employee';
-  let activeShifts, openTasks, reportsCount;
-  if(isEmp){
-    activeShifts = DB.shift_instances.filter(s => s.status==='active' && s.employee_id === currentUser.employeeId).length;
-    openTasks = DB.tasks.filter(t => t.assigned_employee_id === currentUser.employeeId && t.status !== 'completed').length;
-    reportsCount = DB.reports.filter(r => r.employee_id === currentUser.employeeId).length;
-  } else {
-    activeShifts = DB.shift_instances.filter(s=>s.status==='active').length;
-    openTasks = DB.tasks.filter(t=>t.status!=='completed').length;
-    reportsCount = DB.reports.length;
-  }
-  const openIssues = DB.issues.filter(i=>i.status==='open').length;
-  const srokS = srokStats();
-  const problemSrok = srokS.expired + srokS.today + srokS.critical;
-  document.getElementById('sEmp').textContent = isEmp ? '—' : DB.employees.length;
-  document.getElementById('sShift').textContent = activeShifts;
-  document.getElementById('sReports').textContent = reportsCount;
-  document.getElementById('sTask').textContent = openTasks;
-  document.getElementById('sIssue').textContent = openIssues;
-  const srEl = document.getElementById('sSrok');
-  srEl.textContent = problemSrok;
-  srEl.style.color = problemSrok === 0 ? '#10b981' : (problemSrok < 3 ? '#f59e0b' : '#ef4444');
-  const setC = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
-  setC('cnt-emp', isEmp ? '—' : DB.employees.length);
-  setC('cnt-shift', activeShifts);
-  setC('cnt-reports', reportsCount);
-  setC('cnt-task', openTasks);
-  setC('cnt-prod', DB.products.length);
-  setC('cnt-srok', problemSrok);
-  setC('cnt-issue', openIssues);
-}
-
-// =========================================================
-// RENDER — XODIMLAR
-// =========================================================
-function renderEmployees(){
-  const sec = document.getElementById('sec-employees');
-  if(!DB.employees.length){
-    sec.innerHTML = empty('👥','Xodimlar yo\'q.\n➕ tugmasini bosing!');
-    return;
-  }
-  sec.innerHTML = DB.employees.map(e => {
-    const hasPass = !!e.passwordHash;
-    const passBadge = hasPass
-      ? '<span class="badge green">✅ Parol bor</span>'
-      : '<span class="badge orange">⏳ Parol yo\'q</span>';
-    return `
-    <div class="list-item" style="flex-direction:column;align-items:stretch">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="avatar blue">${e.id}</div>
-        <div class="info">
-          <div class="title">${esc(e.name)}</div>
-          <div class="sub">${esc(e.phone)||'—'}</div>
-        </div>
-        ${badge(e.role,'blue')}
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:6px">
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${badge(shiftName(e.shift_id), 'purple')}
-          ${passBadge}
-        </div>
-        <div style="display:flex;gap:6px">
-          ${isManager() && hasPass ? `<button class="btn btn-warning btn-sm" onclick="resetEmployeePassword(${e.id})">🔑 Parol</button>` : ''}
-          ${isManager() ? `<button class="btn-del" onclick="deleteItem('employees',${e.id})">🗑️</button>` : ''}
-        </div>
+        <button onclick="openBooking(${trip.id})">
+          Batafsil / Bron
+        </button>
       </div>
     </div>
-  `;
-  }).join('');
+  `).join("");
 }
 
-// =========================================================
-// RENDER — SMENALAR
-// =========================================================
-function renderShifts(){
-  const sec = document.getElementById('sec-shifts');
-  const isMgr = isManager();
-  let instances = DB.shift_instances.filter(s => s.status === 'active');
-  if(!isMgr){
-    instances = instances.filter(s => s.employee_id === currentUser.employeeId);
-  }
-  let activeCard = '';
-  if(instances.length){
-    activeCard = instances.map(si => {
-      const emp = DB.employees.find(e => e.id === si.employee_id);
-      const shift = DB.shifts.find(s => s.id === si.shift_id);
-      if(!emp || !shift) return '';
-      const started = fmtDateTime(si.started_at);
-      const canEnd = isMgr || si.employee_id === currentUser.employeeId;
-      const closing = isClosingShift(si.shift_id);
-      return `
-        <div class="list-item" style="flex-direction:column;align-items:stretch;border-left:4px solid #10b981">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div class="avatar green">🕐</div>
-            <div class="info">
-              <div class="title">${esc(emp.name)}</div>
-              <div class="sub">${esc(shift.name)} • ${started}</div>
-            </div>
-            ${badge(shift.name, 'green')}
-          </div>
-          ${closing ? '<div style="font-size:11px;color:#8b5cf6;font-weight:700;margin-bottom:8px">🌆 Kun tugashi smenasi — sroki o\'tgan tovarlar hisoboti kerak</div>' : ''}
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-            <span style="font-size:12px;color:#10b981;font-weight:700">🟢 Faol</span>
-            ${canEnd ? `<button class="btn btn-warning btn-sm" onclick="openEndShiftModal(${si.id})">⏹️ Smenani yakunlash</button>` : ''}
-          </div>
-        </div>`;
-    }).join('');
-  } else {
-    if(!isMgr){
-      activeCard = `
-        <div class="list-item" style="flex-direction:column;align-items:center;text-align:center;padding:32px 20px;border-left:4px solid #10b981">
-          <div style="font-size:64px;margin-bottom:14px">🕐</div>
-          <div style="font-size:15px;color:#666;margin-bottom:6px;font-weight:600">
-            Sizda faol smena yo'q
-          </div>
-          <div style="font-size:12px;color:#999;margin-bottom:20px">
-            Smenani boshlash uchun quyidagi tugmani bosing
-          </div>
-          <button class="btn btn-success" style="font-size:15px;padding:14px 32px;border-radius:12px;font-weight:700" onclick="openModal()">
-            ▶️ Smenani boshlash
-          </button>
-        </div>
-      `;
-    } else {
-      activeCard = empty('🕐', 'Faol smenalar yo\'q');
-    }
-  }
-  let allShifts = '';
-  if(isMgr){
-    allShifts = `
-      <div style="margin:20px 0 10px;padding:0 4px;font-size:13px;font-weight:700;color:#666">
-        BARCHA SMENALAR (3 ta)
-      </div>
-      ${DB.shifts.slice(0,3).map(s => {
-        const info = REQUIRED_SHIFTS.find(r => r.id === s.id);
-        const closing = isClosingShift(s.id);
-        return `
-        <div class="list-item">
-          <div class="avatar purple">${info ? info.ico : s.id}</div>
-          <div class="info">
-            <div class="title">${esc(s.name)} ${closing ? '🌆' : ''}</div>
-            <div class="sub">${esc(s.start_time)} - ${esc(s.end_time)}${closing ? ' • Kun tugashi' : ''}</div>
-          </div>
-          ${badge('Smena', 'purple')}
-        </div>
-      `}).join('')}
-    `;
-  }
-  sec.innerHTML = activeCard + allShifts;
+function openBooking(id) {
+  selectedTrip = trips.find(trip => trip.id === id);
+
+  document.getElementById("modalTitle").textContent =
+    selectedTrip.name;
+
+  document.getElementById("modalInfo").textContent =
+    selectedTrip.description + " Narxi: " + money(selectedTrip.price);
+
+  document.getElementById("bookingModal").style.display = "flex";
 }
 
-// =========================================================
-// RENDER — HISOBOTLAR
-// =========================================================
-function renderReports(){
-  const sec = document.getElementById('sec-reports');
-  let reports = DB.reports;
-  if(!isManager()){
-    reports = reports.filter(r => r.employee_id === currentUser.employeeId);
-  }
-  reports = [...reports].sort((a,b) => new Date(b.ended_at) - new Date(a.ended_at));
-  if(!reports.length){
-    sec.innerHTML = empty('📸', isManager() ? 'Hisobotlar yo\'q' : 'Sizda hisobotlar yo\'q');
+function closeModal() {
+  document.getElementById("bookingModal").style.display = "none";
+}
+
+function confirmBooking() {
+  const name = document.getElementById("bookName").value.trim();
+  const phone = document.getElementById("bookPhone").value.trim();
+  const people = Number(document.getElementById("people").value);
+
+  if (!name || !phone) {
+    alert("Ism va telefon raqamni kiriting.");
     return;
   }
-  sec.innerHTML = reports.map(r => {
-    const emp = DB.employees.find(e => e.id === r.employee_id);
-    const shift = DB.shifts.find(s => s.id === r.shift_id);
-    const photos = r.photos || {};
-    const srokCheck = r.srokCheck || [];
-    return `
-      <div class="report-card">
-        <div class="report-header">
-          <div>
-            <div style="font-weight:700;font-size:14px">${esc(emp ? emp.name : '—')}</div>
-            <div style="font-size:11px;color:#888;margin-top:2px">
-              ${esc(shift ? shift.name : '—')} • ${fmtDateTime(r.ended_at)}
-            </div>
-          </div>
-          <div style="display:flex;gap:4px;flex-wrap:wrap">
-            ${badge(zoneName(r.zone), 'purple')}
-            ${r.isClosingShift ? '<span class="badge red" style="font-size:9px">🌆 Kun tugashi</span>' : ''}
-          </div>
-        </div>
-        ${r.note ? `<div style="font-size:12px;color:#555;background:#f9fafb;padding:8px 10px;border-radius:8px;margin-bottom:10px">💬 ${esc(r.note)}</div>` : ''}
-        
-        ${PHOTO_TYPES.map(pt => {
-          let arr = photos[pt.id];
-          if(typeof arr === 'string') arr = [arr];
-          if(!Array.isArray(arr) || !arr.length) return '';
-          return `
-            <div style="margin-bottom:12px">
-              <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px;
-                          display:flex;justify-content:space-between;align-items:center">
-                <span>${pt.name}</span>
-                <span class="badge blue" style="font-size:10px">${arr.length} ta</span>
-              </div>
-              <div class="photo-grid">
-                ${arr.map((photo, idx) => `
-                  <div class="photo-thumb" onclick="viewPhoto('${photo.replace(/'/g, "\\'")}', '${pt.name} — ${idx+1}')">
-                    <img src="${photo}" alt="${pt.name}">
-                  </div>
-                `).join('')}
-              </div>
-            </div>
-          `;
-        }).join('')}
 
-        ${photos.srok_removed && Array.isArray(photos.srok_removed) && photos.srok_removed.length ? `
-          <div style="margin-bottom:12px">
-            <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:6px;
-                        display:flex;justify-content:space-between;align-items:center">
-              <span>📅 Sroki o'tgan tovarlar</span>
-              <span class="badge red" style="font-size:10px">${photos.srok_removed.length} ta</span>
-            </div>
-            <div class="photo-grid">
-              ${photos.srok_removed.map((photo, idx) => `
-                <div class="photo-thumb" onclick="viewPhoto('${photo.replace(/'/g, "\\'")}', 'Sroki o\\'tgan tovar — ${idx+1}')">
-                  <img src="${photo}" alt="Srok">
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
+  let bookings = JSON.parse(
+    localStorage.getItem("tripgo_bookings") || "[]"
+  );
 
-        ${srokCheck.length ? `
-          <div style="margin-top:12px;background:#fffbeb;border-radius:10px;padding:10px">
-            <div style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:8px;
-                        display:flex;justify-content:space-between;align-items:center">
-              <span>📅 Srok tekshiruvi</span>
-              <span class="badge orange" style="font-size:10px">${srokCheck.length} ta</span>
-            </div>
-            <table style="width:100%;font-size:12px;border-collapse:collapse">
-              <thead>
-                <tr style="border-bottom:1px solid #fcd34d">
-                  <th style="text-align:left;padding:4px;color:#92400e;font-weight:700">Tovar</th>
-                  <th style="text-align:center;padding:4px;color:#92400e;font-weight:700">Soni</th>
-                  <th style="text-align:right;padding:4px;color:#92400e;font-weight:700">Holat</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${srokCheck.map(item => `
-                  <tr style="border-bottom:1px solid #fef3c7">
-                    <td style="padding:5px 4px;color:#333">${esc(item.product_name)}</td>
-                    <td style="padding:5px 4px;text-align:center;font-weight:700;color:#333">${item.quantity || 0}</td>
-                    <td style="padding:5px 4px;text-align:right">
-                      <span class="badge ${
-                        item.status === 'good' ? 'green' :
-                        item.status === 'discount' ? 'orange' :
-                        item.status === 'damaged' ? 'red' :
-                        item.status === 'removed' ? 'gray' : 'gray'
-                      }" style="font-size:9px">
-                        ${item.status === 'good' ? '✅ Yaxshi' :
-                          item.status === 'discount' ? '💰 Chegirma' :
-                          item.status === 'damaged' ? '⚠️ Nosoz' :
-                          item.status === 'removed' ? '🗑️ Olib tashlandi' : '—'}
-                      </span>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        ` : ''}
-      </div>
-    `;
-  }).join('');
+  bookings.push({
+    name,
+    phone,
+    people,
+    trip: selectedTrip.name,
+    total: selectedTrip.price * people
+  });
+
+  localStorage.setItem("tripgo_bookings", JSON.stringify(bookings));
+
+  closeModal();
+  renderProfile();
+
+  alert("Bron so‘rovi saqlandi!");
 }
 
-function viewPhoto(src, title){
-  const modal = document.getElementById('modalContent');
-  modal.innerHTML = `
-    <h3>${title}</h3>
-    <img src="${src}" style="width:100%;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15)">
-    <div class="modal-actions">
-      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Yopish</button>
-    </div>
-  `;
-  document.getElementById('modalBg').classList.add('show');
-}
+function addIdea() {
+  const name = document.getElementById("ideaName").value.trim();
+  const description = document.getElementById("ideaText").value.trim();
 
-// =========================================================
-// RENDER — TOPSHIRIQLAR
-// =========================================================
-function renderTasks(){
-  const sec = document.getElementById('sec-tasks');
-  let tasks = DB.tasks;
-  if(!isManager()){
-    tasks = tasks.filter(t => t.assigned_employee_id === currentUser.employeeId);
-  }
-  if(!tasks.length){
-    sec.innerHTML = empty('📋', isManager() ? 'Topshiriqlar yo\'q' : 'Sizda topshiriqlar yo\'q 🎉');
+  if (!name) {
+    alert("Manzil nomini kiriting.");
     return;
   }
-  const pCls = {high:'red', normal:'orange', low:'gray'};
-  const sCls = {pending:'orange', in_progress:'blue', completed:'green'};
-  const sLbl = {pending:'Kutilmoqda', in_progress:'Jarayonda', completed:'Bajarilgan'};
-  sec.innerHTML = tasks.map(t => {
-    const emp = DB.employees.find(e => e.id === t.assigned_employee_id);
-    const canAct = isManager() || t.assigned_employee_id === currentUser.employeeId;
-    return `
-    <div class="list-item" style="flex-direction:column;align-items:stretch">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="info">
-          <div class="title">${esc(t.title)}</div>
-          <div class="sub">${emp ? esc(emp.name) : '—'}</div>
-        </div>
-        ${badge(t.priority, pCls[t.priority]||'gray')}
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px">
-        ${badge(sLbl[t.status]||t.status, sCls[t.status]||'gray')}
-        <div class="actions" style="margin:0">
-          ${canAct && t.status==='pending' ? `<button class="btn btn-success btn-sm" onclick="startTask(${t.id})">▶️ Boshlash</button>` : ''}
-          ${canAct && t.status==='in_progress' ? `<button class="btn btn-primary btn-sm" onclick="completeTask(${t.id})">✅ Yakunlash</button>` : ''}
-          ${isManager() ? `<button class="btn-del" onclick="deleteItem('tasks',${t.id})">🗑️</button>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+
+  let ideas = JSON.parse(localStorage.getItem("tripgo_ideas") || "[]");
+
+  ideas.push({
+    name,
+    description,
+    votes: 0
+  });
+
+  localStorage.setItem("tripgo_ideas", JSON.stringify(ideas));
+
+  document.getElementById("ideaName").value = "";
+  document.getElementById("ideaText").value = "";
+
+  renderIdeas();
 }
 
-// =========================================================
-// RENDER — TOVARLAR
-// =========================================================
-function renderProducts(){
-  const sec = document.getElementById('sec-products');
-  if(!DB.products.length){
-    sec.innerHTML = empty('📦','Tovarlar yo\'q');
-    return;
-  }
-  sec.innerHTML = DB.products.map(p => {
-    const batches = DB.product_batches.filter(b => b.product_id === p.id && b.quantity > 0);
-    const totalQty = batches.reduce((s,b) => s+b.quantity, 0);
-    const prob = batches.filter(b => getSrokStatus(b.expiry_date).cls !== 'normal').length;
-    return `
-      <div class="list-item">
-        <div class="avatar purple">📦</div>
-        <div class="info">
-          <div class="title">${esc(p.name)}</div>
-          <div class="sub">${esc(p.category)||'—'} • ${totalQty} dona ${prob ? '• ⚠️ '+prob : ''}</div>
-        </div>
-        ${badge(p.category||'—','purple')}
-        ${isManager() ? `<button class="btn-del" onclick="deleteItem('products',${p.id})">🗑️</button>` : ''}
-      </div>`;
-  }).join('');
+function voteIdea(index) {
+  let ideas = JSON.parse(localStorage.getItem("tripgo_ideas") || "[]");
+
+  ideas[index].votes++;
+
+  localStorage.setItem("tripgo_ideas", JSON.stringify(ideas));
+
+  renderIdeas();
 }
 
-// =========================================================
-// RENDER — SROK
-// =========================================================
-function renderExpiry(){
-  const sec = document.getElementById('sec-expiry');
-  if(!DB.product_batches.length){
-    sec.innerHTML = empty('⏰','Srok yozuvlari yo\'q');
-    return;
-  }
-  const s = srokStats();
-  const statsHtml = `
-    <div class="srok-stats">
-      <div class="srok-stat expired"><div class="num" style="color:#ef4444">${s.expired}</div><div class="lbl">Muddati o'tgan</div></div>
-      <div class="srok-stat today"><div class="num" style="color:#dc2626">${s.today}</div><div class="lbl">Bugun</div></div>
-      <div class="srok-stat critical"><div class="num" style="color:#f59e0b">${s.critical}</div><div class="lbl">3 kun ichida</div></div>
-      <div class="srok-stat warning"><div class="num" style="color:#eab308">${s.warning}</div><div class="lbl">7 kun ichida</div></div>
-      <div class="srok-stat normal"><div class="num" style="color:#10b981">${s.normal}</div><div class="lbl">Normada</div></div>
-    </div>`;
-  const sorted = [...DB.product_batches].sort((a,b) =>
-    new Date(a.expiry_date) - new Date(b.expiry_date));
-  const itemsHtml = sorted.map(b => {
-    const product = DB.products.find(p => p.id === b.product_id);
-    if(!product) return '';
-    const s = getSrokStatus(b.expiry_date);
-    return `
-    <div class="srok-item ${s.cls}">
-      <div class="srok-days ${s.cls}">
-        <div>${s.ico}</div>
-        <div style="font-size:11px;font-weight:600">${s.days !== null ? (s.days < 0 ? '!'+Math.abs(s.days) : s.days) : '—'}</div>
-      </div>
-      <div class="info">
-        <div class="title">${esc(product.name)}</div>
-        <div class="sub">${fmtDate(b.expiry_date)} • ${b.quantity} dona</div>
-        <div style="margin-top:4px"><span class="badge ${
-          s.cls === 'expired' || s.cls === 'today' ? 'red' :
-          s.cls === 'critical' ? 'orange' :
-          s.cls === 'warning' ? 'yellow' : 'green'}">${s.label}</span></div>
-      </div>
-      ${isManager() ? `<button class="btn-del" onclick="deleteBatch(${b.id})">🗑️</button>` : ''}
-    </div>`;
-  }).join('');
-  sec.innerHTML = statsHtml + '<div style="padding:0 12px">' + itemsHtml + '</div>';
+function renderIdeas() {
+  let ideas = JSON.parse(localStorage.getItem("tripgo_ideas") || "[]");
+
+  document.getElementById("ideaList").innerHTML =
+    ideas.length
+      ? ideas.map((idea, index) => `
+          <div class="proposal">
+            <div>
+              <b>${idea.name}</b>
+              <p>${idea.description}</p>
+            </div>
+
+            <button onclick="voteIdea(${index})">
+              👍 ${idea.votes}
+            </button>
+          </div>
+        `).join("")
+      : "Hozircha takliflar yo‘q.";
 }
 
-// =========================================================
-// RENDER — MUAMMOLAR
-// =========================================================
-function renderIssues(){
-  const sec = document.getElementById('sec-issues');
-  if(!DB.issues.length){
-    sec.innerHTML = empty('⚠️','Muammolar yo\'q. Ajoyib! 🎉');
-    return;
-  }
-  const pCls = {high:'red', normal:'orange', low:'gray'};
-  sec.innerHTML = DB.issues.map(i => `
-    <div class="list-item">
-      <div class="avatar orange">⚠️</div>
-      <div class="info">
-        <div class="title">${esc(i.title)}</div>
-        <div class="sub">${esc(i.status)}</div>
-      </div>
-      ${badge(i.priority, pCls[i.priority]||'gray')}
-      ${isManager() ? `<button class="btn-del" onclick="deleteItem('issues',${i.id})">🗑️</button>` : ''}
-    </div>
-  `).join('');
+function addCart(name, price) {
+  cart.push({name, price});
+
+  localStorage.setItem("tripgo_cart", JSON.stringify(cart));
+
+  renderCart();
 }
 
-// =========================================================
-// NAVIGATION
-// =========================================================
-function switchTab(name){
-  currentTab = name;
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
-  document.querySelectorAll('.sidebar-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('sec-'+name).classList.add('active');
-  refresh();
-}
-document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
-document.querySelectorAll('.sidebar-btn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
+function removeCart(index) {
+  cart.splice(index, 1);
 
-// =========================================================
-// ACTIONS
-// =========================================================
-function startTask(id){
-  const t = DB.tasks.find(x=>x.id===id);
-  if(!t) return;
-  if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
-    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error'); return;
-  }
-  t.status = 'in_progress'; DB.save(); refresh(); toast('✅ Boshlandi','success');
-}
-function completeTask(id){
-  const t = DB.tasks.find(x=>x.id===id);
-  if(!t) return;
-  if(!isManager() && t.assigned_employee_id !== currentUser.employeeId){
-    toast('❌ Bu sizning topshirig\'ingiz emas!', 'error'); return;
-  }
-  t.status = 'completed'; t.completed_at = new Date().toISOString();
-  DB.save(); refresh(); toast('✅ Yakunlandi','success');
-}
-function deleteItem(table, id){
-  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-  if(!confirm('O\'chirishni tasdiqlaysizmi?')) return;
-  DB[table] = DB[table].filter(i=>i.id!==id);
-  DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
-}
-function deleteBatch(id){
-  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-  if(!confirm('Bu partiyani o\'chirasizmi?')) return;
-  DB.product_batches = DB.product_batches.filter(b=>b.id!==id);
-  DB.save(); refresh(); toast('🗑️ O\'chirildi','success');
+  localStorage.setItem("tripgo_cart", JSON.stringify(cart));
+
+  renderCart();
 }
 
-function resetEmployeePassword(empId){
-  if(!isManager()) return;
-  const emp = DB.employees.find(e => e.id === empId);
-  if(!emp) return;
-  if(!confirm(`${emp.name} parolini o'chirib, yangidan yaratishga ruxsat berasizmi?\n\nXodim keyingi kirishda yangi parol o'rnatadi.`)) return;
-  emp.passwordHash = null;
-  DB.save(); refresh();
-  toast('✅ Parol o\'chirildi', 'success');
+function renderCart() {
+  document.getElementById("cartCount").textContent = cart.length;
+
+  document.getElementById("cartItems").innerHTML =
+    cart.length
+      ? cart.map((item, index) => `
+          <p>
+            ${item.name} — ${money(item.price)}
+            <button onclick="removeCart(${index})">×</button>
+          </p>
+        `).join("")
+      : "Hozircha savat bo‘sh.";
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+  document.getElementById("cartTotal").textContent =
+    cart.length ? "Jami: " + money(total) : "";
 }
 
-// =========================================================
-// SMENANI YAKUNLASH
-// =========================================================
-function openEndShiftModal(siId){
-  const si = DB.shift_instances.find(x => x.id === siId);
-  if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
-  const emp = DB.employees.find(e => e.id === si.employee_id);
-  const shift = DB.shifts.find(s => s.id === si.shift_id);
-  const closingShift = isClosingShift(si.shift_id);
-
-  // Foto turlarini smenaga qarab aniqlash
-  const photoTypes = [...PHOTO_TYPES];
-  if(closingShift){
-    photoTypes.push({
-      id: 'srok_removed',
-      name: '📅 Sroki o\'tgan tovarlar',
-      hint: 'Addeldan olib tashlangan tovarlarni rasmga oling (kamida 2 ta)',
-      min: 2
-    });
-  }
-
-  endShiftData = {
-    shiftInstanceId: siId,
-    zone: null,
-    photos: {},
-    srokCheck: [],
-    note: '',
-    isClosingShift: closingShift
+function saveProfile() {
+  const profile = {
+    name: document.getElementById("userName").value,
+    phone: document.getElementById("userPhone").value
   };
 
-  // 3 kun ichida tugaydigan tovarlarni topish
-  const today = new Date(); today.setHours(0,0,0,0);
-  const threeDays = new Date(today); threeDays.setDate(threeDays.getDate() + 3);
-  const expiringProducts = DB.product_batches
-    .filter(b => {
-      if(b.quantity <= 0) return false;
-      const exp = new Date(b.expiry_date); exp.setHours(0,0,0,0);
-      return exp >= today && exp <= threeDays;
-    })
-    .map(b => {
-      const prod = DB.products.find(p => p.id === b.product_id);
-      return {
-        product_name: prod ? prod.name : '—',
-        quantity: b.quantity,
-        expiry_date: b.expiry_date,
-        status: 'good',
-        batch_id: b.id
-      };
-    });
+  localStorage.setItem("tripgo_profile", JSON.stringify(profile));
 
-  // Bir xil tovarni birlashtirish
-  const merged = [];
-  expiringProducts.forEach(item => {
-    const existing = merged.find(m => m.product_name === item.product_name);
-    if(existing){
-      existing.quantity += item.quantity;
-    } else {
-      merged.push({...item});
-    }
-  });
-
-  endShiftData.srokCheck = merged;
-
-  const modal = document.getElementById('modalContent');
-  modal.innerHTML = `
-    <h3>⏹️ Smenani yakunlash</h3>
-    <div style="background:#f0f4ff;border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px">
-      <strong>${esc(emp ? emp.name : '—')}</strong><br>
-      <span style="color:#666">${esc(shift ? shift.name : '—')} • ${shift ? shift.start_time+'-'+shift.end_time : ''}</span>
-      ${closingShift ? '<div style="margin-top:6px;font-size:11px;color:#8b5cf6;font-weight:700">🌆 Kun tugashi smenasi</div>' : ''}
-    </div>
-
-    <div class="field">
-      <label>📍 Qaysi bo'limda ishladingiz? *</label>
-      <div class="zone-grid" id="zoneGrid">
-        ${ZONES.map(z => `
-          <button class="zone-btn" data-zone="${z.id}" onclick="selectZone('${z.id}')">
-            <span class="ico">${z.name.split(' ')[0]}</span>
-            <span>${z.name.replace(/^[^\s]+\s/, '')}</span>
-          </button>
-        `).join('')}
-      </div>
-    </div>
-
-    <div style="font-size:13px;font-weight:700;color:#555;margin:16px 0 10px">
-      📸 Majburiy foto hisobotlar
-    </div>
-    ${photoTypes.map(pt => `
-      <div class="photo-upload" id="upload-${pt.id}">
-        <div class="label-row">
-          <div>
-            <strong>${pt.name}</strong>
-            <div class="hint">${pt.hint}</div>
-          </div>
-          <span class="check" id="check-${pt.id}" style="display:none">✅</span>
-        </div>
-        <div class="photo-grid" id="grid-${pt.id}">
-          <button class="photo-add-btn" onclick="triggerPhoto('${pt.id}')">
-            <span class="plus">+</span>
-            <span>Foto qo'shish</span>
-          </button>
-        </div>
-        <input type="file" accept="image/*" multiple
-               id="file-${pt.id}" style="display:none" 
-               onchange="handlePhoto('${pt.id}', this)">
-      </div>
-    `).join('')}
-
-    <!-- SROK TEKSHIRUVI -->
-    <div class="srok-check-section">
-      <div class="section-title">
-        <span>📅</span>
-        <span>${closingShift ? 'Sroki o\'tgan tovarlar hisoboti' : '3 kun ichida tugaydigan tovarlar'}</span>
-      </div>
-      <div class="srok-info-bar">
-        ℹ️ ${closingShift 
-          ? 'Kun davomida addeldan olingan tovarlarning soni va holatini kiriting' 
-          : 'Muddati yaqinlashgan tovarlarni tekshirib, soni va holatini kiriting'}
-      </div>
-      <div id="srokCheckList">
-        ${renderSrokCheckList()}
-      </div>
-      <button class="srok-add-btn" onclick="addSrokEntry()">
-        + Tovar qo'shish
-      </button>
-    </div>
-
-    <div class="field" style="margin-top:16px">
-      <label>💬 Umumiy izoh (ixtiyoriy)</label>
-      <textarea id="endShiftNote" rows="2" placeholder="Qo'shimcha ma'lumot..."></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-      <button class="btn btn-warning btn-lg" onclick="confirmEndShift()">✅ Yakunlash</button>
-    </div>
-  `;
-  document.getElementById('modalBg').classList.add('show');
+  document.getElementById("profileStatus").textContent =
+    "Ma’lumotlar saqlandi.";
 }
 
-function renderSrokCheckList(){
-  if(!endShiftData.srokCheck.length){
-    return '<div class="srok-empty">Hozircha tovar yo\'q. "+ Tovar qo\'shish" tugmasini bosing</div>';
-  }
-  return endShiftData.srokCheck.map((item, i) => `
-    <div class="srok-entry" data-index="${i}">
-      <div class="row">
-        <input type="text" placeholder="Tovar nomi" 
-               value="${esc(item.product_name)}" 
-               onchange="updateSrokEntry(${i}, 'product_name', this.value)">
-      </div>
-      <div class="row2">
-        <input type="number" placeholder="Soni" min="0"
-               value="${item.quantity || 0}" 
-               onchange="updateSrokEntry(${i}, 'quantity', parseInt(this.value) || 0)">
-        <select onchange="updateSrokEntry(${i}, 'status', this.value)">
-          <option value="good" ${item.status==='good'?'selected':''}>✅ Yaxshi</option>
-          <option value="discount" ${item.status==='discount'?'selected':''}>💰 Chegirma</option>
-          <option value="damaged" ${item.status==='damaged'?'selected':''}>⚠️ Nosoz</option>
-          <option value="removed" ${item.status==='removed'?'selected':''}>🗑️ Olib tashlandi</option>
-        </select>
-        <button class="remove-btn" onclick="removeSrokEntry(${i})">✕</button>
-      </div>
-    </div>
-  `).join('');
+function renderProfile() {
+  const bookings = JSON.parse(
+    localStorage.getItem("tripgo_bookings") || "[]"
+  );
+
+  document.getElementById("myBookings").innerHTML =
+    bookings.length
+      ? bookings.map(booking => `
+          <p>
+            ${booking.trip} —
+            ${booking.people} kishi —
+            ${money(booking.total)}
+          </p>
+        `).join("")
+      : "Hozircha bron mavjud emas.";
+
+  const profile = JSON.parse(
+    localStorage.getItem("tripgo_profile") || "{}"
+  );
+
+  document.getElementById("userName").value = profile.name || "";
+  document.getElementById("userPhone").value = profile.phone || "";
 }
 
-function updateSrokEntry(index, field, value){
-  if(endShiftData.srokCheck[index]){
-    endShiftData.srokCheck[index][field] = value;
-  }
-}
+renderTrips();
+renderIdeas();
+renderCart();
+renderProfile();
 
-function addSrokEntry(){
-  endShiftData.srokCheck.push({
-    product_name: '',
-    quantity: 0,
-    status: 'good'
-  });
-  const list = document.getElementById('srokCheckList');
-  if(list) list.innerHTML = renderSrokCheckList();
-}
-
-function removeSrokEntry(index){
-  endShiftData.srokCheck.splice(index, 1);
-  const list = document.getElementById('srokCheckList');
-  if(list) list.innerHTML = renderSrokCheckList();
-}
-
-function selectZone(zoneId){
-  endShiftData.zone = zoneId;
-  document.querySelectorAll('.zone-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.zone === zoneId);
-  });
-}
-
-function triggerPhoto(typeId){ document.getElementById('file-' + typeId).click(); }
-
-async function handlePhoto(typeId, input){
-  if(!input.files || !input.files.length) return;
-  const files = Array.from(input.files);
-  toast(`📸 ${files.length} ta foto qayta ishlanmoqda...`, 'warning');
-
-  if(!Array.isArray(endShiftData.photos[typeId])){
-    endShiftData.photos[typeId] = [];
-  }
-
-  try {
-    for(const file of files){
-      const compressed = await compressImage(file, 700, 0.7);
-      endShiftData.photos[typeId].push(compressed);
-    }
-    renderPhotoGrid(typeId);
-    toast(`✅ ${files.length} ta foto qo'shildi`, 'success');
-  } catch(e){
-    toast('❌ Xato: ' + e.message, 'error');
-  }
-  input.value = '';
-}
-
-function renderPhotoGrid(typeId){
-  const grid = document.getElementById('grid-' + typeId);
-  if(!grid) return;
-  const photos = endShiftData.photos[typeId] || [];
-  const uploadEl = document.getElementById('upload-' + typeId);
-  const checkEl = document.getElementById('check-' + typeId);
-
-  grid.innerHTML = photos.map((photo, i) => `
-    <div class="photo-thumb">
-      <img src="${photo}" alt="Foto ${i+1}">
-      <button class="remove" onclick="removePhoto('${typeId}', ${i})">✕</button>
-      <span class="photo-count">${i+1}</span>
-    </div>
-  `).join('') + `
-    <button class="photo-add-btn" onclick="triggerPhoto('${typeId}')">
-      <span class="plus">+</span>
-      <span>Yana</span>
-    </button>
-  `;
-
-  if(photos.length > 0){
-    uploadEl.classList.add('has-photos');
-    if(checkEl) checkEl.style.display = 'block';
-  } else {
-    uploadEl.classList.remove('has-photos');
-    if(checkEl) checkEl.style.display = 'none';
-  }
-}
-
-function removePhoto(typeId, index){
-  if(!confirm('Bu fotoni o\'chirasizmi?')) return;
-  if(Array.isArray(endShiftData.photos[typeId])){
-    endShiftData.photos[typeId].splice(index, 1);
-    renderPhotoGrid(typeId);
-    toast('🗑️ Foto o\'chirildi', 'success');
-  }
-}
-
-function confirmEndShift(){
-  if(!endShiftData.zone){ toast('⚠️ Bo\'limni tanlang!', 'error'); return; }
-
-  const allowedTypes = [...PHOTO_TYPES];
-  if(endShiftData.isClosingShift){
-    allowedTypes.push({id:'srok_removed', name:'📅 Sroki o\'tgan', min: 2});
-  }
-
-  const missing = [];
-  allowedTypes.forEach(pt => {
-    const photos = endShiftData.photos[pt.id] || [];
-    const minReq = pt.min || 1;
-    if(photos.length < minReq){
-      missing.push(`${pt.name.split(' ')[0]} ${photos.length}/${minReq}`);
-    }
-  });
-
-  if(missing.length){
-    toast('⚠️ Kam foto: ' + missing.join(', '), 'error');
-    return;
-  }
-
-  const si = DB.shift_instances.find(x => x.id === endShiftData.shiftInstanceId);
-  if(!si){ toast('❌ Smena topilmadi', 'error'); return; }
-
-  si.status = 'ended';
-  si.ended_at = new Date().toISOString();
-  si.zone = endShiftData.zone;
-
-  const srokCheckFiltered = (endShiftData.srokCheck || [])
-    .filter(item => item.product_name && item.product_name.trim());
-
-  const report = {
-    id: DB.nextId('reports'),
-    shift_instance_id: si.id, shift_id: si.shift_id,
-    employee_id: si.employee_id, zone: endShiftData.zone,
-    photos: JSON.parse(JSON.stringify(endShiftData.photos)),
-    srokCheck: srokCheckFiltered,
-    isClosingShift: endShiftData.isClosingShift || false,
-    note: document.getElementById('endShiftNote').value.trim() || null,
-    started_at: si.started_at, ended_at: si.ended_at
-  };
-  DB.reports.push(report);
-  DB.save(); closeModal(); refresh();
-
-  const total = Object.values(endShiftData.photos).reduce((s, a) => s + (Array.isArray(a) ? a.length : 0), 0);
-  toast(`✅ Smena yakunlandi! ${total} foto, ${srokCheckFiltered.length} srok yozuvi 🎉`, 'success');
-}
-
-// =========================================================
-// SMENA TANLASH
-// =========================================================
-function selectShift(shiftId){
-  document.querySelectorAll('.shift-select-btn').forEach(b => {
-    b.classList.remove('selected');
-  });
-  const sel = document.querySelector(`.shift-select-btn[data-shift="${shiftId}"]`);
-  if(sel) sel.classList.add('selected');
-  const input = document.getElementById('f_shift');
-  if(input) input.value = shiftId;
-}
-
-// =========================================================
-// MODAL
-// =========================================================
-function openModal(){
-  const today = new Date().toISOString().slice(0,10);
-  const isMgr = isManager();
-
-  const shiftButtons = (DB.shifts.slice(0,3)).map(s => {
-    const info = REQUIRED_SHIFTS.find(r => r.id === s.id);
-    return `
-      <button type="button" class="shift-select-btn" data-shift="${s.id}" onclick="selectShift(${s.id})">
-        <span style="font-size:24px">${info ? info.ico : '🕐'}</span>
-        <span style="font-size:12px;font-weight:700">${esc(s.name)}</span>
-        <span style="font-size:10px;opacity:.7">${esc(s.start_time)}-${esc(s.end_time)}</span>
-      </button>
-    `;
-  }).join('');
-
-  const forms = {
-    employees: `
-      <h3>➕ Yangi xodim</h3>
-      <div class="login-info" style="text-align:left;font-size:12px;margin-bottom:14px">
-        <strong>ℹ️ Eslatma:</strong>
-        Xodim parolni <b>o'zi</b> birinchi kirganda yaratadi.
-        Siz faqat ma'lumotlarini kiritasiz.
-      </div>
-      <div class="field"><label>Ism *</label><input id="f_name" placeholder="Ali Valiyev" autofocus></div>
-      <div class="field"><label>Telefon</label><input id="f_phone" placeholder="+998901234567" inputmode="tel"></div>
-      <div class="field"><label>Rol</label>
-        <select id="f_role"><option value="employee">Xodim</option><option value="manager">Menejer</option></select></div>
-      <div class="field">
-        <label>Smena * (3 ta variant)</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
-          ${shiftButtons}
-        </div>
-        <input type="hidden" id="f_shift" value="">
-        <span class="hint">Xodim qaysi smenada ishlaydi</span>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-primary btn-lg" onclick="save('employees')">Saqlash</button>
-      </div>`,
-    shifts: isMgr ? `
-      <h3>🕐 Smena boshlash</h3>
-      <div class="field"><label>Xodim *</label>
-        <select id="f_emp">
-          <option value="">— Xodimni tanlang —</option>
-          ${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}
-        </select></div>
-      <div class="field">
-        <label>Smena *</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
-          ${shiftButtons}
-        </div>
-        <input type="hidden" id="f_shift" value="">
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-success btn-lg" onclick="save('shifts')">▶️ Boshlash</button>
-      </div>` : `
-      <h3>🕐 Mening smenamni boshlash</h3>
-      <div class="login-info" style="text-align:left;font-size:13px">
-        <strong>👷 ${esc(currentUser.employeeName)}</strong>
-        Siz o'z smenangizni boshlamoqdasiz
-      </div>
-      <div class="field">
-        <label>Qaysi smena? *</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px">
-          ${shiftButtons}
-        </div>
-        <input type="hidden" id="f_shift" value="">
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-success btn-lg" onclick="save('shifts')">▶️ Boshlash</button>
-      </div>`,
-    tasks: `
-      <h3>➕ Yangi topshiriq</h3>
-      <div class="field"><label>Sarlavha *</label><input id="f_title" placeholder="Non bo'limini tekshirish" autofocus></div>
-      <div class="field"><label>Tavsif</label><textarea id="f_desc" rows="2"></textarea></div>
-      <div class="field"><label>Xodim</label>
-        <select id="f_emp"><option value="">— Hech kim —</option>${DB.employees.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
-      <div class="field"><label>Prioritet</label>
-        <select id="f_priority"><option value="low">Past</option><option value="normal" selected>O'rta</option><option value="high">Yuqori</option></select></div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-primary btn-lg" onclick="save('tasks')">Saqlash</button>
-      </div>`,
-    products: `
-      <h3>➕ Yangi tovar</h3>
-      <div class="field"><label>Nomi *</label><input id="f_name" placeholder="Oq non" autofocus></div>
-      <div class="field"><label>Shtrix kod</label><input id="f_barcode" inputmode="numeric"></div>
-      <div class="field"><label>Kategoriya</label><input id="f_category" placeholder="non"></div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-primary btn-lg" onclick="save('products')">Saqlash</button>
-      </div>`,
-    expiry: `
-      <h3>⏰ Yangi partiya (srok)</h3>
-      <div class="field"><label>Tovar *</label>
-        <select id="f_prod"><option value="">— Tanlang —</option>${DB.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div>
-      <div class="field"><label>Partiya raqami</label><input id="f_batch" placeholder="P001"></div>
-      <div class="field"><label>Miqdor (dona) *</label><input id="f_qty" type="number" value="1" min="1" inputmode="numeric"></div>
-      <div class="field"><label>Kelgan sana</label><input id="f_received" type="date" value="${today}"></div>
-      <div class="field"><label>Srok tugash sanasi *</label><input id="f_expiry" type="date"></div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-primary btn-lg" onclick="save('expiry')">Saqlash</button>
-      </div>`,
-    issues: `
-      <h3>➕ Yangi muammo</h3>
-      <div class="field"><label>Sarlavha *</label><input id="f_title" placeholder="Kassa ishlamayapti" autofocus></div>
-      <div class="field"><label>Tavsif</label><textarea id="f_desc" rows="2"></textarea></div>
-      <div class="field"><label>Prioritet</label>
-        <select id="f_priority"><option value="low">Past</option><option value="normal" selected>O'rta</option><option value="high">Yuqori</option></select></div>
-      <div class="modal-actions">
-        <button class="btn btn-cancel btn-lg" onclick="closeModal()">Bekor</button>
-        <button class="btn btn-primary btn-lg" onclick="save('issues')">Saqlash</button>
-      </div>`
-  };
-  if(!isMgr && currentTab !== 'issues' && currentTab !== 'shifts') return;
-  document.getElementById('modalContent').innerHTML = forms[currentTab] || forms.employees;
-  document.getElementById('modalBg').classList.add('show');
-}
-
-function closeModal(e){
-  if(e && e.target.id !== 'modalBg') return;
-  document.getElementById('modalBg').classList.remove('show');
-}
-
-// =========================================================
-// SETTINGS
-// =========================================================
-function openSettings(){
-  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-  const stats = `
-    <h3>⚙️ Sozlamalar</h3>
-    <button class="login-btn primary" style="margin-bottom:16px" onclick="openChangePassword()">
-      🔑 Parolni o'zgartirish
-    </button>
-    <div style="background:#f9fafb;border-radius:12px;padding:14px;margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Xodimlar</span><strong>${DB.employees.length}</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Faol smenalar</span><strong>${DB.shift_instances.filter(s=>s.status==='active').length}</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e5e7eb">
-        <span style="font-size:13px;color:#666">Foto hisobotlar</span><strong>${DB.reports.length}</strong></div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0">
-        <span style="font-size:13px;color:#666">Tovarlar</span><strong>${DB.products.length}</strong></div>
-    </div>
-    <div class="data-actions">
-      <button class="export" onclick="exportData()">💾 Eksport</button>
-      <button class="import" onclick="importData()">📂 Import</button>
-      <button class="clear" onclick="clearData()">🗑️ Tozalash</button>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel btn-lg" onclick="closeModal()">Yopish</button>
-    </div>
-  `;
-  document.getElementById('modalContent').innerHTML = stats;
-  document.getElementById('modalBg').classList.add('show');
-}
-
-function openChangePassword(){
-  document.getElementById('modalContent').innerHTML = `
-    <h3>🔑 Parolni o'zgartirish</h3>
-    <div class="field"><label>Joriy parol</label><input type="password" id="cp_old" placeholder="••••••"></div>
-    <div class="field"><label>Yangi parol (min 4 belgi)</label><input type="password" id="cp_new1" placeholder="••••••"></div>
-    <div class="field"><label>Yangi parolni takrorlang</label><input type="password" id="cp_new2" placeholder="••••••"></div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel btn-lg" onclick="openSettings()">Bekor</button>
-      <button class="btn btn-primary btn-lg" onclick="saveChangePassword()">Saqlash</button>
-    </div>
-  `;
-}
-
-function saveChangePassword(){
-  const oldPass = document.getElementById('cp_old').value;
-  const p1 = document.getElementById('cp_new1').value;
-  const p2 = document.getElementById('cp_new2').value;
-  if(hashPassword(oldPass) !== DB.managerPassword){ toast('❌ Joriy parol noto\'g\'ri!', 'error'); return; }
-  if(p1.length < 4){ toast('⚠️ Kamida 4 belgi!', 'error'); return; }
-  if(p1 !== p2){ toast('⚠️ Parollar mos kelmadi!', 'error'); return; }
-  DB.managerPassword = hashPassword(p1);
-  DB.save(); closeModal();
-  toast('✅ Parol yangilandi!', 'success');
-}
-
-function exportData(){ DB.export(); toast('✅ Yuklandi','success'); }
-function importData(){
-  const input = document.createElement('input');
-  input.type = 'file'; input.accept = '.json';
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        DB.import(data); toast('✅ Import OK','success'); closeModal(); refresh();
-      } catch(err){ toast('❌ ' + err.message, 'error'); }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
-function clearData(){
-  if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-  if(!confirm('BARCHA ma\'lumotlarni o\'chirasizmi?')) return;
-  if(!confirm('Ishonchingiz komilmi?')) return;
-  localStorage.removeItem('store_control_db');
-  DB.load(); closeModal(); refresh();
-  toast('🗑️ Tozalandi','success');
-}
-
-// =========================================================
-// SAVE
-// =========================================================
-function save(type){
-  const v = id => (document.getElementById(id)?.value || '').trim();
-  const n = id => parseInt(document.getElementById(id)?.value) || null;
-
-  if(type==='employees'){
-    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-    if(!v('f_name')) return toast('Ism kiritilishi shart','error');
-    if(!n('f_shift')) return toast('Smenani tanlang!','error');
-    DB.employees.push({
-      id: DB.nextId('employees'), store_id: 1,
-      name: v('f_name'), phone: v('f_phone')||null,
-      role: v('f_role'), shift_id: n('f_shift'),
-      passwordHash: null,
-      status: 'active', created_at: new Date().toISOString()
-    });
-  }
-  else if(type==='shifts'){
-    const empId = isManager() ? n('f_emp') : currentUser.employeeId;
-    const shiftId = n('f_shift');
-    if(!empId){ toast('Xodim tanlanishi shart','error'); return; }
-    if(!shiftId){ toast('Smenani tanlang!','error'); return; }
-    const exists = DB.shift_instances.find(s => s.employee_id === empId && s.status === 'active');
-    if(exists){ toast('Bu xodimda allaqachon faol smena bor!','error'); return; }
-    DB.shift_instances.push({
-      id: DB.nextId('shift_instances'), shift_id: shiftId,
-      employee_id: empId, status: 'active', started_at: new Date().toISOString()
-    });
-  }
-  else if(type==='tasks'){
-    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-    if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
-    DB.tasks.push({
-      id: DB.nextId('tasks'), store_id: 1, title: v('f_title'),
-      description: v('f_desc')||null, assigned_employee_id: n('f_emp'),
-      priority: v('f_priority'), status: 'pending', is_photo_required: false,
-      created_at: new Date().toISOString()
-    });
-  }
-  else if(type==='products'){
-    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-    if(!v('f_name')) return toast('Nomi kiritilishi shart','error');
-    DB.products.push({
-      id: DB.nextId('products'), store_id: 1, name: v('f_name'),
-      barcode: v('f_barcode')||null, category: v('f_category')||null,
-      created_at: new Date().toISOString()
-    });
-  }
-  else if(type==='expiry'){
-    if(!isManager()){ toast('❌ Faqat menejer!', 'error'); return; }
-    const prodId = n('f_prod'), qty = n('f_qty'), expiry = v('f_expiry');
-    if(!prodId) return toast('Tovar tanlanishi shart','error');
-    if(!qty || qty < 1) return toast('Miqdor kiritilishi shart','error');
-    if(!expiry) return toast('Srok sanasi kiritilishi shart','error');
-    DB.product_batches.push({
-      id: DB.nextId('product_batches'), product_id: prodId,
-      batch_number: v('f_batch')||null, quantity: qty,
-      received_date: v('f_received')||new Date().toISOString().slice(0,10),
-      expiry_date: expiry, created_at: new Date().toISOString()
-    });
-    const s = getSrokStatus(expiry);
-    if(s.cls === 'expired') toast('⚠️ Muddati o\'tgan!','error');
-    else if(s.cls === 'today') toast('⚠️ Bugun tugaydi!','error');
-    else if(s.cls === 'critical') toast('⚠️ ' + s.days + ' kun ichida!','warning');
-    else toast('✅ Saqlandi','success');
-    DB.save(); closeModal(); refresh(); return;
-  }
-  else if(type==='issues'){
-    if(!v('f_title')) return toast('Sarlavha kiritilishi shart','error');
-    DB.issues.push({
-      id: DB.nextId('issues'), store_id: 1, title: v('f_title'),
-      description: v('f_desc')||null, priority: v('f_priority'),
-      status: 'open', created_at: new Date().toISOString()
-    });
-  }
-  DB.save(); closeModal(); toast('✅ Saqlandi','success'); refresh();
-}
-
-// =========================================================
-// REFRESH
-// =========================================================
-function refresh(){
-  if(!currentUser.role) return;
-  loadStats();
-  const renderers = {
-    employees: renderEmployees, shifts: renderShifts, reports: renderReports,
-    tasks: renderTasks, products: renderProducts, expiry: renderExpiry, issues: renderIssues
-  };
-  (renderers[currentTab] || renderEmployees)();
-  const fab = document.getElementById('fabBtn');
-  if(isManager()){
-    fab.style.display = (currentTab !== 'reports') ? 'flex' : 'none';
-  } else {
-    const canAdd = currentTab === 'issues' || currentTab === 'shifts';
-    fab.style.display = canAdd ? 'flex' : 'none';
-  }
-}
-
-// =========================================================
-// INIT
-// =========================================================
-DB.load();
-loadUser();
-
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const splash = document.getElementById('splash');
-    if(splash){
-      splash.classList.add('hide');
-      setTimeout(() => splash.remove(), 600);
-    }
-  }, 1500);
-});
-
-let lastWidth = window.innerWidth;
-window.addEventListener('resize', () => {
-  const w = window.innerWidth;
-  const wasMobile = lastWidth < 768;
-  const isMobile = w < 768;
-  if(wasMobile !== isMobile){ refresh(); }
-  lastWidth = w;
-});
 </script>
+
 </body>
 </html>
